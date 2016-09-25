@@ -1,5 +1,5 @@
 package project;
 
-public enum WorkFlow {
+public enum WorkFolw {
 	TO_DO, IN_PROGRESS, CODE_REVIEW, DONE;
 }

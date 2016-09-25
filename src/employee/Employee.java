@@ -3,8 +3,6 @@ package employee;
 import exceptions.EmployeeException;
 
 public class Employee {
-	private static final String EMAIL_REGEX = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
-	private static final int MIN_LENGTH_FOR_PASSWORD = 6;
 	private String first_name;
 	private String last_name;
 	private String email;
@@ -15,7 +13,7 @@ public class Employee {
 	public Employee(String first_name, String last_name, String email, String password, String avatarPath)
 			throws EmployeeException {
 		if (!stringValidate(avatarPath) || !stringValidate(last_name) || !stringValidate(first_name)
-				|| !isEmailValid(email) || !isPasswordStrong(password)) {
+				|| !stringValidate(email) || !stringValidate(password)) {
 			throw new EmployeeException("This account cannot be created");
 		}
 
@@ -28,28 +26,6 @@ public class Employee {
 
 	private boolean stringValidate(String string) {
 		return (string != null && string.trim().length() > 0);
-	}
-	
-	static boolean isEmailValid(String email) {
-		return email.matches(EMAIL_REGEX);
-	}
-
-	static boolean isPasswordStrong(String password) {
-		boolean hasSmallCase = false, hasUpperCase = false, hasDigit = false;
-		if (password != null && password.length() >= MIN_LENGTH_FOR_PASSWORD) {
-			for (int symbol = 0; symbol < password.length(); symbol++) {
-				if ((password.charAt(symbol) >= 'a') && (password.charAt(symbol) <= 'z')) {
-					hasSmallCase = true;
-				}
-				if ((password.charAt(symbol) >= 'A') && (password.charAt(symbol) <= 'Z')) {
-					hasUpperCase = true;
-				}
-				if ((password.charAt(symbol) >= '0') && (password.charAt(symbol) <= '9')) {
-					hasDigit = true;
-				}
-			}
-		}
-		return hasDigit && hasSmallCase && hasUpperCase;
 	}
 
 	public String getFirst_name() {

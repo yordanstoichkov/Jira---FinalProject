@@ -13,7 +13,7 @@ public class EmployeeTest {
 
 	@Test
 	public void test() throws EmployeeException {
-		Employee emp1 = new Employee("Yordan", "Petrov", "dakata12121@mail.bg", "Aq1234", "dakata");
+		Employee emp1 = new Employee("Yordan", "Petrov", "dakata@mail.bg", "Aq1234", "dakata");
 
 		int id1 = dao.registerUser(emp1);
 		emp1.setEmployeeID(id1);
