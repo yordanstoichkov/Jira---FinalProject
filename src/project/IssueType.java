@@ -1,5 +1,5 @@
 package project;
 
-public enum ISSUE_TYPE {
+public enum IssueType {
 	TASK, BUG;
 }
