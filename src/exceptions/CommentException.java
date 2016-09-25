@@ -1,4 +1,4 @@
-package comment;
+package exceptions;
 
 public class CommentException extends Exception {
 	private static final long serialVersionUID = 72281317040350262L;
