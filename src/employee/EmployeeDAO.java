@@ -11,7 +11,7 @@ import exceptions.EmployeeException;
 
 public class EmployeeDAO {
 	private static final String DELETE_USER = "DELETE from users where idUsers = ?;";
-	private static final String REGISTER_USER_TO_DB = "INSERT into users VALUES(NULL,?,?,?,?,md5(?))";
+	private static final String REGISTER_USER_TO_DB = "INSERT into users VALUES(NULL,?,?,null,?,md5(?))";
 	private static final String LOGIN_USER = "SELECT idUsers, password FROM users WHERE user_name = ?;";
 
 	public int registerUser(Employee emp) throws EmployeeException {
@@ -23,8 +23,8 @@ public class EmployeeDAO {
 			
 			ps.setString(1, emp.getFirst_name());
 			ps.setString(2, emp.getLast_name());
-			ps.setString(4, emp.getEmail());
-			ps.setString(5, emp.getPassword());
+			ps.setString(3, emp.getEmail());
+			ps.setString(4, emp.getPassword());
 			ps.executeUpdate();
 			ResultSet rs = ps.getGeneratedKeys();
 			rs.next();
@@ -38,7 +38,7 @@ public class EmployeeDAO {
 	}
 
 	public int loginUser(Employee emp) throws EmployeeException {
-		Connection connection = DBConnection.getInstance().getConnection();
+		Connection connection = DBConnection.getConnection();
 		int id = 0;
 		try {
 			PreparedStatement ps = connection.prepareStatement(LOGIN_USER);
