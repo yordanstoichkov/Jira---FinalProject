@@ -26,14 +26,11 @@ public class DBConnection {
 		}
 	}
 
-	public synchronized static DBConnection getInstance() {
+	public synchronized static Connection getConnection() {
 		if (theChosenOneDBConnection == null) {
 			theChosenOneDBConnection = new DBConnection();
 		}
-		return theChosenOneDBConnection;
+		return theChosenOneDBConnection.connection;
 	}
 
-	public static Connection getConnection() {
-		return connection;
-	}
 }
