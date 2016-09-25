@@ -20,7 +20,8 @@ public class DBConnection {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			this.connection = DriverManager.getConnection(
-					"jdbc:mysql://" + DB_HOSTNAME + ":" + DB_PORT + "/" + DATABASE, DB_USER, DB_PASSWORD);
+					"jdbc:mysql://" + DB_HOSTNAME + ":" + DB_PORT + "/" + DATABASE + "?autoReconnect=true&useSSL=false",
+					DB_USER, DB_PASSWORD);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
