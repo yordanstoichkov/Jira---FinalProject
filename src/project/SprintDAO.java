@@ -10,7 +10,7 @@ import controller.DBConnection;
 import exceptions.ProjectException;
 
 public class SprintDAO {
-	private static final String INSERT_SPRINT_SQL = "INSERT INTO sprints VALUES (null, null, null, ?, ?, ?);";
+	private static final String INSERT_SPRINT_SQL = "INSERT INTO sprints VALUES (null, null, null, ?, ?, ?, NULL);";
 	private static final String SELECT_SPRINT_STATUS_SQL = "SELECT status_id FROM statuses WHERE status = ?";
 
 	public int createSprint(Sprint sprint) throws ProjectException {

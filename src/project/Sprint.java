@@ -11,13 +11,13 @@ public class Sprint extends PartOfProject {
 	private List<Issue> issues = new ArrayList<>();
 	private LocalDate endDate;
 	private int sprintId;
-	private WorkFolw status;
+	private WorkFlow status;
 
 	public Sprint(String title, Project project) throws ProjectException {
 		super(title);
 		if (objectValidator(project)) {
 			this.project = project;
-			this.status=WorkFolw.TO_DO;
+			this.status=WorkFlow.TO_DO;
 		} else
 			throw new ProjectException("You entered invalid project. Please, try again!");
 
@@ -51,11 +51,11 @@ public class Sprint extends PartOfProject {
 		return project;
 	}
 
-	public WorkFolw getStatus() {
+	public WorkFlow getStatus() {
 		return status;
 	}
 
-	public void setStatus(WorkFolw status) {
+	public void setStatus(WorkFlow status) {
 		this.status = status;
 	}
 

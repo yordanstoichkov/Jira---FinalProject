@@ -50,15 +50,18 @@ public class IssueDAO {
 			ResultSet rs = ps.getGeneratedKeys();
 			rs.next();
 			id = rs.getInt(1);
-			
+
 			connection.commit();
 
 		} catch (SQLException e) {
-
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {
+				throw new ProjectException("This issue cannot be created right now", e);
+			}
 			throw new ProjectException("This issue cannot be created right now", e);
 		} finally {
 			try {
-				connection.rollback();
 				connection.setAutoCommit(true);
 			} catch (SQLException e) {
 				throw new ProjectException("This issue cannot be created right now", e);

@@ -9,8 +9,13 @@ public class Employee {
 	private String password;
 	private String avatarPath;
 	private int employeeID;
+	private Jobs job;
 
-	public Employee(String first_name, String last_name, String email, String password, String avatarPath)
+	public enum Jobs {
+		MANAGER, DEVELOPER, QA, REVIEWER;
+	}
+
+	public Employee(String first_name, String last_name, String email, String password, String avatarPath , Jobs job)
 			throws EmployeeException {
 		if (!stringValidate(avatarPath) || !stringValidate(last_name) || !stringValidate(first_name)
 				|| !stringValidate(email) || !stringValidate(password)) {
@@ -22,6 +27,7 @@ public class Employee {
 		this.last_name = last_name;
 		this.email = email;
 		this.password = password;
+		this.job=job;
 	}
 
 	private boolean stringValidate(String string) {

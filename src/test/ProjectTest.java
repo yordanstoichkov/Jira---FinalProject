@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import org.junit.Test;
 
 import employee.Employee;
+import employee.Employee.Jobs;
 import employee.EmployeeDAO;
 import exceptions.EmployeeException;
 import exceptions.ProjectException;
@@ -21,7 +22,7 @@ public class ProjectTest {
 	SprintDAO sdao= new SprintDAO();
 	@Test
 	public void test() throws EmployeeException, ProjectException {
-		Employee pesho = new Employee("Pesho", "Ivanov", "novo@abv.bg", "Pesho11!", "pesho");
+		Employee pesho = new Employee("Pesho", "Ivanov", "novo12@abv.bg", "Pesho11!", "pesho", Jobs.DEVELOPER);
 		int peshoId = daoE.registerUser(pesho);
 		pesho.setEmployeeID(peshoId);
 

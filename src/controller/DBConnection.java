@@ -11,15 +11,16 @@ public class DBConnection {
 	private static final String DB_PORT = "3306";
 	private static final String DB_USER = "root";
 	private static final String DATABASE = "jira";
-	private static final String DB_PASSWORD = "klavqtura";
+	// private static final String DB_PASSWORD = "klavqtura";
 
-//	private static final String DB_PASSWORD = "pecataetup";
+	private static final String DB_PASSWORD = "pecataetup";
 
 	private DBConnection() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			this.connection = DriverManager.getConnection(
-					"jdbc:mysql://" + DB_HOSTNAME + ":" + DB_PORT + "/" + DATABASE, DB_USER, DB_PASSWORD);
+					"jdbc:mysql://" + DB_HOSTNAME + ":" + DB_PORT + "/" + DATABASE + "?autoReconnect=true&useSSL=false",
+					DB_USER, DB_PASSWORD);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
