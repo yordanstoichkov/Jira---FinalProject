@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 
-import model.dbConnection.DBConnection;
+import model.controller.DBConnection;
 import model.employee.Employee;
 import model.exceptions.ProjectException;
 
@@ -28,7 +28,6 @@ public class ProjectDAO {
 			ResultSet rs = ps.getGeneratedKeys();
 			rs.next();
 			project.setProjectId(rs.getInt(1));
-
 			PreparedStatement ps2 = connection.prepareStatement(INSERT_PROJECT_OF_MANAGER_SQL);
 			ps2.setInt(1, employee.getEmployeeID());
 			ps2.setInt(2, project.getProjectId());
@@ -41,11 +40,13 @@ public class ProjectDAO {
 			} catch (SQLException e1) {
 				throw new ProjectException("You can not make your project right now! Please,try again later!", e1);
 			}
+			e.printStackTrace();
 			throw new ProjectException("You can not make your project right now! Please,try again later!", e);
 		} finally {
 			try {
 				connection.setAutoCommit(true);
 			} catch (SQLException e) {
+
 				throw new ProjectException("You can not make your project right now! Please,try again later!", e);
 			}
 		}
