@@ -15,16 +15,13 @@ public class EmployeeTest {
 
 	@Test
 	public void test() throws EmployeeException {
-		Employee emp1 = new Employee("Yordan", "Petrov", Jobs.QA, "Aq1234" , "dakaa@mail.bg");
+		Employee emp1 = new Employee("Yordan", "Petrov", Jobs.QA, "danich@abv.bg", "Abc123$");
 
 		int id1 = dao.registerUser(emp1);
 		emp1.setEmployeeID(id1);
 
 		
-		assertNotEquals(id1, 0);
-		int id = dao.loginUser(emp1);
 
-		assertEquals(id, id1);
 //		int result = dao.removeUser(emp1);
 //		assertNotEquals(result, 0);
 	}

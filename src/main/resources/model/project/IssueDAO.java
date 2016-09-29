@@ -10,6 +10,7 @@ import java.util.List;
 import model.dbConnection.DBConnection;
 import model.employee.Employee;
 import model.employee.EmployeeDAO;
+import model.exceptions.EmployeeException;
 import model.exceptions.IsssueExeption;
 import model.exceptions.ProjectException;
 
@@ -70,6 +71,9 @@ public class IssueDAO {
 				throw new ProjectException("This issue cannot be created right now", e);
 			}
 			throw new ProjectException("This issue cannot be created right now", e);
+		} catch (EmployeeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} finally {
 			try {
 				connection.setAutoCommit(true);

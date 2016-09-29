@@ -33,8 +33,8 @@ public class EmployeeDAO {
 			PreparedStatement ps = connection.prepareStatement(REGISTER_USER_TO_DB_SQL,
 					Statement.RETURN_GENERATED_KEYS);
 
-			ps.setString(1, emp.getFirst_name());
-			ps.setString(2, emp.getLast_name());
+			ps.setString(1, emp.getFirstName());
+			ps.setString(2, emp.getLastName());
 			ps.setInt(3, jobID);
 			ps.setString(4, emp.getEmail());
 			ps.setString(5, emp.getPassword());
@@ -96,7 +96,7 @@ public class EmployeeDAO {
 		}
 	}
 
-	public int getEmployeeID(Employee emp) {
+	public int getEmployeeID(Employee emp) throws EmployeeException {
 		Connection connection = DBConnection.getConnection();
 
 		int assigneeID = 0;
@@ -108,8 +108,7 @@ public class EmployeeDAO {
 			asigneeRS.next();
 			assigneeID = asigneeRS.getInt("employee_id");
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new EmployeeException("There is no such user");
 		}
 		return assigneeID;
 	}

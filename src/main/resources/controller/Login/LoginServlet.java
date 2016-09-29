@@ -16,32 +16,27 @@ import model.exceptions.EmployeeException;
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	
-	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
-		Employee login= null;
-		int loginID=0;
+		Employee login = null;
+		int loginID = 0;
 		try {
 			login = new Employee(email, password);
 			loginID = new EmployeeDAO().loginUser(login);
 		} catch (EmployeeException e) {
 
 		}
-		
-		login.setFirst_name("Georgi");
-		if(loginID>0){
+
+		if (loginID > 0) {
 			HttpSession session = request.getSession();
 			session.setMaxInactiveInterval(10);
-			session.setAttribute("username", login.getFirst_name());
-			
-			response.sendRedirect("./home.jsp");
+			session.setAttribute("username", login.getFirstName());
 
 		}
-		
-				
-		
+		response.sendRedirect("./index.jsp");
+
 	}
 
 }
