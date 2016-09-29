@@ -1,4 +1,5 @@
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@page errorPage="errorPage/error.jsp" %>
 <link href="templateCSS/vendor/bootstrap/css/bootstrap.min.css"
 	rel="stylesheet">
 <link href="templateCSS/vendor/metisMenu/metisMenu.min.css"
@@ -16,6 +17,11 @@
 						<h3 class="panel-title">Login</h3>
 					</div>
 					<div class="panel-body">
+						<c:set var="message" value='${requestScope.message}' />
+						<c:if test="${not empty message}">
+							<c:out value="${message}"></c:out>
+						</c:if>
+
 						<form role="form" method="post" action="./Login">
 							<fieldset>
 

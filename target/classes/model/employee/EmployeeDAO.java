@@ -18,6 +18,9 @@ public class EmployeeDAO {
 	private static final String SELECT_USERS_COUNT = "SELECT count(*) as 'employee_count' FROM employees";
 
 	public int registerUser(Employee emp) throws EmployeeException {
+		if (!isEmployeeValid(emp)) {
+			throw new EmployeeException("This user is not valid");
+		}
 		Connection connection = DBConnection.getConnection();
 
 		int id = 0;
@@ -63,6 +66,9 @@ public class EmployeeDAO {
 	}
 
 	public int loginUser(Employee emp) throws EmployeeException {
+		if (!isEmployeeValid(emp)) {
+			throw new EmployeeException("This user is not valid");
+		}
 		Connection connection = DBConnection.getConnection();
 		int id = 0;
 		try {
@@ -86,6 +92,9 @@ public class EmployeeDAO {
 	}
 
 	public int removeUser(Employee emp) throws EmployeeException {
+		if (!isEmployeeValid(emp)) {
+			throw new EmployeeException("This user is not valid");
+		}
 		Connection connection = DBConnection.getConnection();
 		try {
 			PreparedStatement ps = connection.prepareStatement(DELETE_USER_SQL);
@@ -98,6 +107,9 @@ public class EmployeeDAO {
 	}
 
 	public int getEmployeeID(Employee emp) throws EmployeeException {
+		if (!isEmployeeValid(emp)) {
+			throw new EmployeeException("This user is not valid");
+		}
 		Connection connection = DBConnection.getConnection();
 
 		int assigneeID = 0;
@@ -131,4 +143,7 @@ public class EmployeeDAO {
 
 	}
 
+	private boolean isEmployeeValid(Employee emp) {
+		return emp != null;
+	}
 }

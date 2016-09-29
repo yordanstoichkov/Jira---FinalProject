@@ -19,8 +19,8 @@ public class Employee {
 	public Employee(String firstName, String lastName, Jobs job, String email, String password)
 			throws EmployeeException {
 		this(email, password);
-		if (!stringValidate(lastName) || !stringValidate(firstName)) {
-			throw new EmployeeException("This account cannot be created");
+		if (!stringValidate(lastName) || !stringValidate(firstName) || job == null) {
+			throw new EmployeeException("You should give legal information");
 		}
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -29,7 +29,7 @@ public class Employee {
 
 	public Employee(String email, String password) throws EmployeeException {
 		if (!isEmailValid(email) || !stringValidate(password)) {
-			throw new EmployeeException("This account cannot be created");
+			throw new EmployeeException("Illegal email or password");
 		}
 		this.email = email;
 		this.password = password;
@@ -47,48 +47,72 @@ public class Employee {
 		return firstName;
 	}
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+	public void setFirstName(String firstName) throws EmployeeException {
+		if (stringValidate(firstName)) {
+			this.firstName = firstName;
+		} else {
+			throw new EmployeeException("Ilegal first name");
+		}
 	}
 
 	public String getLastName() {
 		return lastName;
 	}
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
+	public void setLastName(String lastName) throws EmployeeException {
+		if (stringValidate(lastName)) {
+			this.lastName = lastName;
+		} else {
+			throw new EmployeeException("Ilegal last name");
+		}
 	}
 
 	public String getEmail() {
 		return email;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setEmail(String email) throws EmployeeException {
+		if (stringValidate(email)) {
+			this.email = email;
+		} else {
+			throw new EmployeeException("Ilegal email");
+		}
 	}
 
 	public String getPassword() {
 		return password;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public void setPassword(String password) throws EmployeeException {
+		if (stringValidate(password)) {
+			this.password = password;
+		} else {
+			throw new EmployeeException("Ilegal password");
+		}
 	}
 
 	public String getAvatarPath() {
 		return avatarPath;
 	}
 
-	public void setAvatarPath(String avatarPath) {
-		this.avatarPath = avatarPath;
+	public void setAvatarPath(String avatarPath) throws EmployeeException {
+		if (stringValidate(avatarPath)) {
+			this.avatarPath = avatarPath;
+		} else {
+			throw new EmployeeException("Ilegal avatar path");
+		}
 	}
 
 	public int getEmployeeID() {
 		return employeeID;
 	}
 
-	public void setEmployeeID(int employeeID) {
+	public void setEmployeeID(int employeeID) throws EmployeeException {
+		if(employeeID>0){
 		this.employeeID = employeeID;
+		}else{
+			throw new EmployeeException("Ilegal id");
+		}
 	}
 
 	public Jobs getJob() {

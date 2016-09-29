@@ -29,12 +29,13 @@ public class RegisterServlet extends HttpServlet {
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 		String password2 = request.getParameter("passwordrepeat");
-		if(!password.equals(password2)){
+		if (!password.equals(password2)) {
 			try {
 				throw new EmployeeException("Passwords don't match");
 			} catch (EmployeeException e) {
 				request.setAttribute("message", e.getMessage());
 				request.getRequestDispatcher("./register.jsp").forward(request, response);
+				return;
 			}
 		}
 		String jobPar = request.getParameter("job");
@@ -57,12 +58,12 @@ public class RegisterServlet extends HttpServlet {
 		} catch (EmployeeException e) {
 			request.setAttribute("message", e.getMessage());
 			request.getRequestDispatcher("./register.jsp").forward(request, response);
+			return;
 		}
 
 		if (empID != 0) {
-			response.sendRedirect("./index.jsp");
-		} else {
-
+			request.setAttribute("message", "You are registered now login");
+			request.getRequestDispatcher("./index.jsp").forward(request, response);
 		}
 
 	}

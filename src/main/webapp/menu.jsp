@@ -36,7 +36,7 @@
 				<%
 					} else {
 				%>
-				<li style="float: right"><a class="active" href="./index">LogOut</a></li>
+					<li style="float: right"><a class="active" href="./logout">LogOut</a></li>
 				<li style="float: right"><a class="active" href="#">Hi,<%=request.getSession().getAttribute("username")%></a></li>
 				<%
 					}

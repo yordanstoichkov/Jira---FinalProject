@@ -1,5 +1,6 @@
 <%@include file="menu.jsp"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@page errorPage="errorPage/error.jsp" %>
 <link href="templateCSS/vendor/bootstrap/css/bootstrap.min.css"
 	rel="stylesheet">
 <link href="templateCSS/vendor/metisMenu/metisMenu.min.css"
@@ -58,9 +59,6 @@
 									</select>
 								</div>
 								<div class="checkbox">
-									<label> <input name="remember" type="checkbox"
-										value="Remember Me">Remember Me
-									</label>
 								</div>
 								<!-- Change this to a button or input when using this as a form -->
 								<button type="submit" class="btn btn-lg btn-success btn-block">Register</button>

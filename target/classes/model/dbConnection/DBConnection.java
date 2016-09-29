@@ -3,10 +3,6 @@ package model.dbConnection;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-import com.amazonaws.AmazonServiceException;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.Bucket;
 
 public class DBConnection {
 	private static Connection connection;
