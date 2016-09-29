@@ -28,10 +28,9 @@
 				<li><a href="#"><span class="iconic mail"></span> Contact</a></li>
 
 
-				<c:set var="programID" value="SomeValue" scope="session" />
-				<c:if test="${empty sessionScope}">
+
 					<li style="float: right"><a class="active" href="#">Register</a></li>
-				</c:if>
+
 			</ul>
 			<div class="clearfix"></div>
 		</nav>
