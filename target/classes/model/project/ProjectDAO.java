@@ -10,6 +10,7 @@ import java.time.LocalDate;
 
 import model.dbConnection.DBConnection;
 import model.employee.Employee;
+import model.exceptions.EmployeeException;
 import model.exceptions.ProjectException;
 
 public class ProjectDAO {
@@ -17,6 +18,7 @@ public class ProjectDAO {
 	private static final String INSERT_PROJECT_SQL = "INSERT INTO projects VALUES (null,null,null, ?);";
 	private static final String SET_RELEASE_DATE_SQL = "UPDATE projects SET release_date= ? WHERE project_id = ?";
 	private static final String SET_START_DATE_SQL = "UPDATE projects SET start_date= ? WHERE project_id = ?";
+	private static final String SELECT_PROJECT_COUNT = "SELECT count(*) as 'project_count' FROM projects";;
 
 	public int createProject(Project project, Employee employee) throws ProjectException {
 		Connection connection = DBConnection.getConnection();
@@ -78,5 +80,22 @@ public class ProjectDAO {
 		} catch (SQLException e) {
 			throw new ProjectException("You can not set start date to your project right now! Please,try again later!");
 		}
+	}
+
+	public int getProjectCount() throws ProjectException {
+		Connection connection = DBConnection.getConnection();
+
+		int projectCount = 0;
+		try {
+			PreparedStatement projectPS = connection.prepareStatement(SELECT_PROJECT_COUNT);
+			ResultSet result = projectPS.executeQuery();
+			result.next();
+			projectCount = result.getInt("project_count");
+
+		} catch (SQLException e) {
+			throw new ProjectException("there was a problem gatting the number");
+		}
+		return projectCount;
+
 	}
 }

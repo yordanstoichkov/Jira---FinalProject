@@ -16,9 +16,10 @@ public class ProjectTest {
 	private EmployeeDAO daoE = new EmployeeDAO();
 	ProjectDAO dao = new ProjectDAO();
 	SprintDAO sdao= new SprintDAO();
+	
 	@Test
 	public void test() throws EmployeeException, ProjectException {
-		Employee pesho = new Employee("Pesho", "Ivanov", "novoto12@abv.bg", "Pesho11!", Jobs.DEVELOPER);
+		Employee pesho = new Employee("Pesho", "Ivanov", Jobs.DEVELOPER, "Pesho11!", "novoto12@abv.bg");
 		int peshoId = daoE.registerUser(pesho);
 		pesho.setEmployeeID(peshoId);
 

@@ -14,6 +14,8 @@ public class EmployeeDAO {
 	private static final String REGISTER_USER_TO_DB_SQL = "INSERT into employees VALUES(NULL,?,?,?,?,md5(?));";
 	private static final String LOGIN_USER_SQL = "SELECT employee_id FROM employees WHERE email = ? AND password = md5(?);";
 	private static final String JOB_ID_SQL = "SELECT job_id FROM jobs WHERE job_title = ?";
+	private static final String GET_EMPLOYEE_ID_SQL = "SELECT employee_id FROM employees WHERE email = ? ";
+	private static final String SELECT_USERS_COUNT = "SELECT count(*) as 'employee_count' FROM employees";
 
 	public int registerUser(Employee emp) throws EmployeeException {
 		Connection connection = DBConnection.getConnection();
@@ -92,6 +94,41 @@ public class EmployeeDAO {
 		} catch (SQLException e) {
 			throw new EmployeeException("User cannot be deleted now, please try again later.", e);
 		}
+	}
+
+	public int getEmployeeID(Employee emp) {
+		Connection connection = DBConnection.getConnection();
+
+		int assigneeID = 0;
+		try {
+			PreparedStatement asigneePS = connection.prepareStatement(GET_EMPLOYEE_ID_SQL);
+			asigneePS.setString(1, emp.getEmail());
+			ResultSet asigneeRS = asigneePS.executeQuery();
+
+			asigneeRS.next();
+			assigneeID = asigneeRS.getInt("employee_id");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return assigneeID;
+	}
+	
+	public int getUserCount() throws EmployeeException{
+		Connection connection = DBConnection.getConnection();
+
+		int userCount = 0;
+			try {
+				PreparedStatement usersPS = connection.prepareStatement(SELECT_USERS_COUNT);
+				ResultSet users = usersPS.executeQuery();
+				users.next();
+				userCount = users.getInt("employee_count");
+				
+			} catch (SQLException e) {
+				throw new EmployeeException("Couldn't get the count" , e);
+			}
+			return userCount;
+		
 	}
 
 }

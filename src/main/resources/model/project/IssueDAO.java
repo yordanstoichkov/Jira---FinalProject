@@ -9,45 +9,31 @@ import java.util.List;
 
 import model.dbConnection.DBConnection;
 import model.employee.Employee;
+import model.employee.EmployeeDAO;
 import model.exceptions.IsssueExeption;
 import model.exceptions.ProjectException;
 
 public class IssueDAO {
 
 	private static final String CREATE_ISSUE_SQL = "INSERT INTO issues VALUES(NULL , NULL, NULL, ?, ? , ? , NULL, NULL, ?);";
-	private static final String SELECT_STATUS_ID = "SELECT status_id FROM statuses WHERE status = ?;";
-	private static final String SELECT_TYPE_ID = "SELECT type_id FROM issue_types WHERE type = ?;";
-	private static final String SELECT_PRIORITY_ID = "SELECT priority_id FROM priority_level WHERE priority = ?;";
-	private static final String GET_EMPLOYEE_ID_SQL = "SELECT employee_id FROM employees WHERE email = ? ";
 	private static final String INSERT_ISSUE_ASSIGNEE = "INSERT INTO issues_developers VALUES(?,?)";
 	private static final String UPDATE_ISSUE_DECRIPTION_SQL = "UPDATE issues SET description = ? WHERE issue_id=?";
 	private static final String GET_SPRINT_ID_SQL = "SELECT sprint_id FROM sprints WHERE sprin";
 	private static final String SET_SPRINT_TO_ISSUE_SQL = "UPDATE issues SET sprint_id = ? WHERE issue_id = ?";
+	private static final String GET_ISSUE_COUNT_SQL = "SELECT count(*) as 'issue_count' FROM issues";
 
-	public int createIssue(Issue issue) throws ProjectException {
+	public int createIssue(Issue issue) throws ProjectException, PartOfProjectException {
 		Connection connection = DBConnection.getConnection();
-
+		PartOfProjectDAO idDAO = new PartOfProjectDAO();
 		int issueID = 0;
 		try {
 			connection.setAutoCommit(false);
-			
-			PreparedStatement statusPS = connection.prepareStatement(SELECT_STATUS_ID);
-			statusPS.setString(1, issue.getStatus().toString());
-			ResultSet statusRS = statusPS.executeQuery();
-			statusRS.next();
-			int statusID = statusRS.getInt("status_id");
 
-			PreparedStatement typePS = connection.prepareStatement(SELECT_TYPE_ID);
-			typePS.setString(1, issue.getType().toString());
-			ResultSet typeRS = typePS.executeQuery();
-			typeRS.next();
-			int typeID = typeRS.getInt("type_id");
+			int statusID = idDAO.getStatusID(issue.getStatus());
 
-			PreparedStatement priorityPS = connection.prepareStatement(SELECT_PRIORITY_ID);
-			priorityPS.setString(1, issue.getPriority().toString());
-			ResultSet priorityRS = priorityPS.executeQuery();
-			priorityRS.next();
-			int priorityID = priorityRS.getInt("priority_id");
+			int typeID = idDAO.getTypeID(issue.getType());
+
+			int priorityID = idDAO.getPriorityID(issue.getPriority());
 
 			PreparedStatement ps = connection.prepareStatement(CREATE_ISSUE_SQL, Statement.RETURN_GENERATED_KEYS);
 			ps.setInt(1, statusID);
@@ -63,13 +49,8 @@ public class IssueDAO {
 			List<Employee> asignees = issue.getAsignees();
 
 			for (Employee employee : asignees) {
-				PreparedStatement asigneePS = connection.prepareStatement(GET_EMPLOYEE_ID_SQL);
-				asigneePS.setString(1, employee.getEmail());
-				ResultSet asigneeRS = asigneePS.executeQuery();
-				int assigneeID = 0;
-				while (asigneeRS.next()) {
-					assigneeID = asigneeRS.getInt("employee_id");
-				}
+
+				int assigneeID = new EmployeeDAO().getEmployeeID(employee);
 
 				if (assigneeID != 0) {
 					PreparedStatement insertAsignee = connection.prepareStatement(INSERT_ISSUE_ASSIGNEE);
@@ -137,5 +118,22 @@ public class IssueDAO {
 				throw new ProjectException("This issue cannot be created right now", e);
 			}
 		}
+	}
+
+	public int getIssueCount() throws IsssueExeption {
+		Connection connection = DBConnection.getConnection();
+
+		int issueCount = 0 ;
+		try {
+			PreparedStatement statusPS = connection.prepareStatement(GET_ISSUE_COUNT_SQL);
+			ResultSet result = statusPS.executeQuery();
+			result.next();
+			issueCount= result.getInt("issue_count");
+
+		} catch (SQLException e) {
+			throw new IsssueExeption("There was a problem getting the number",e);
+		}
+		return issueCount; 
+				
 	}
 }

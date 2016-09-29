@@ -15,17 +15,23 @@ public class Employee {
 		MANAGER, DEVELOPER, QA, REVIEWER;
 	}
 
-	public Employee(String firstName, String lastName, String email, String password, Jobs job)
+	public Employee(String firstName, String lastName, Jobs job, String email, String password)
 			throws EmployeeException {
-		if (!stringValidate(lastName) || !stringValidate(firstName) || !stringValidate(email)
-				|| !stringValidate(password)) {
+		this(email, password);
+		if (!stringValidate(lastName) || !stringValidate(firstName)) {
 			throw new EmployeeException("This account cannot be created");
 		}
 		this.firstName = firstName;
 		this.lastName = lastName;
+		this.setJob(job);
+	}
+
+	public Employee(String email, String password) throws EmployeeException {
+		if (!stringValidate(email) || !stringValidate(password)) {
+			throw new EmployeeException("This account cannot be created");
+		}
 		this.email = email;
 		this.password = password;
-		this.setJob(job);
 	}
 
 	private boolean stringValidate(String string) {

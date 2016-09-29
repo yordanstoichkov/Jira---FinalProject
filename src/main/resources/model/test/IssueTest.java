@@ -12,6 +12,7 @@ import model.exceptions.ProjectException;
 import model.project.Issue;
 import model.project.IssueDAO;
 import model.project.IssueType;
+import model.project.PartOfProjectException;
 import model.project.PriorityLevel;
 import model.project.Project;
 import model.project.Sprint;
@@ -20,9 +21,9 @@ public class IssueTest {
 	private IssueDAO dao = new IssueDAO();
 
 	@Test
-	public void test() throws ProjectException, EmployeeException, IsssueExeption {
-		Employee tempEmp = new Employee("Gosho", "Todorov", "golqmata@abv.bg", "gosheto", Jobs.DEVELOPER);
-		Employee tempEmp1 = new Employee("Gosho", "Todorov", "golqmatata@mail.bg", "gosheto", Jobs.DEVELOPER);
+	public void test() throws ProjectException, EmployeeException, IsssueExeption, PartOfProjectException {
+		Employee tempEmp = new Employee("Gosho", "Todorov", Jobs.DEVELOPER, "gosheto", "golqmata@abv.bg");
+		Employee tempEmp1 = new Employee("Gosho", "Todorov", Jobs.DEVELOPER, "gosheto", "golqmatata@mail.bg");
 
 		Issue testIssue = new Issue("Opalq", PriorityLevel.MEDIUM, IssueType.TASK, Arrays.asList(tempEmp, tempEmp1));
 

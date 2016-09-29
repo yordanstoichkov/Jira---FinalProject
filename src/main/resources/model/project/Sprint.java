@@ -9,16 +9,15 @@ import model.exceptions.ProjectException;
 public class Sprint extends PartOfProject {
 	private Project project;
 	private List<Issue> issues = new ArrayList<Issue>();
-	private LocalDate startDate;
 	private LocalDate endDate;
-    private int sprintId;
+	private int sprintId;
 	private WorkFlow status;
 
 	public Sprint(String title, Project project) throws ProjectException {
 		super(title);
 		if (objectValidator(project)) {
 			this.project = project;
-			this.status=WorkFlow.TO_DO;
+			this.status = WorkFlow.TO_DO;
 		} else
 			throw new ProjectException("You entered invalid project. Please, try again!");
 
@@ -28,13 +27,6 @@ public class Sprint extends PartOfProject {
 		return endDate;
 	}
 
-	public void setStartDate(LocalDate startDate) throws ProjectException {
-		if (objectValidator(startDate)) {
-			this.startDate = startDate;
-		} else
-			throw new ProjectException("You entered invalid start date. Please, try again!");
-
-	}
 	public void setEndDate(LocalDate endDate) throws ProjectException {
 		if (objectValidator(endDate)) {
 			this.endDate = endDate;
