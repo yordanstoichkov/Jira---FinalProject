@@ -28,39 +28,41 @@ public class RegisterServlet extends HttpServlet {
 		String lastName = request.getParameter("lastname");
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
+		String password2 = request.getParameter("passwordrepeat");
+		if(!password.equals(password2)){
+			try {
+				throw new EmployeeException("Passwords don't match");
+			} catch (EmployeeException e) {
+				request.setAttribute("message", e.getMessage());
+				request.getRequestDispatcher("./register.jsp").forward(request, response);
+			}
+		}
 		String jobPar = request.getParameter("job");
 		Jobs job = null;
-		switch (jobPar) {
-		case "manager":
-			job = Jobs.MANAGER;
-			break;
-		case "qa":
-			job = Jobs.QA;
-			break;
-		case "developer":
+		if (jobPar.equals(Jobs.DEVELOPER.toString())) {
 			job = Jobs.DEVELOPER;
-			break;
-		case "reviewer":
-			job = Jobs.REVIEWER;
-			break;
-		default:
-			break;
+		}
+		if (jobPar.equals(Jobs.MANAGER.toString())) {
+			job = Jobs.MANAGER;
+		}
+		if (jobPar.equals(Jobs.QA.toString())) {
+			job = Jobs.QA;
 		}
 
 		Employee regUser;
 		int empID = 0;
 		try {
-			regUser = new Employee(firstName, lastName, job, password, email);
+			regUser = new Employee(firstName, lastName, job, email, password);
 			empID = new EmployeeDAO().registerUser(regUser);
 		} catch (EmployeeException e) {
 			request.setAttribute("message", e.getMessage());
-			request.getRequestDispatcher("view/home.jsp").forward(request, response);
+			request.getRequestDispatcher("./register.jsp").forward(request, response);
 		}
 
 		if (empID != 0) {
-			response.sendRedirect("/Login.html");
+			response.sendRedirect("./index.jsp");
 		} else {
-			
+
 		}
 
 	}

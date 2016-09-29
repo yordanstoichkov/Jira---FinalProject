@@ -1,4 +1,4 @@
-package controller.Login;
+package controller.login;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -31,7 +31,7 @@ public class LoginServlet extends HttpServlet {
 
 		if (loginID > 0) {
 			HttpSession session = request.getSession();
-			session.setMaxInactiveInterval(10);
+			session.setMaxInactiveInterval(1000);
 			session.setAttribute("username", login.getFirstName());
 
 		}

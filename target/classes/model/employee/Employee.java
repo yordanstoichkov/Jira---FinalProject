@@ -3,6 +3,7 @@ package model.employee;
 import model.exceptions.EmployeeException;
 
 public class Employee {
+	private static final String EMAIL_REGEX = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
 	private String firstName;
 	private String lastName;
 	private String email;
@@ -27,30 +28,34 @@ public class Employee {
 	}
 
 	public Employee(String email, String password) throws EmployeeException {
-		if (!stringValidate(email) || !stringValidate(password)) {
+		if (!isEmailValid(email) || !stringValidate(password)) {
 			throw new EmployeeException("This account cannot be created");
 		}
 		this.email = email;
 		this.password = password;
 	}
 
+	static boolean isEmailValid(String email) {
+		return email.matches(EMAIL_REGEX);
+	}
+
 	private boolean stringValidate(String string) {
 		return (string != null && string.trim().length() > 0);
 	}
 
-	public String getFirst_name() {
+	public String getFirstName() {
 		return firstName;
 	}
 
-	public void setFirst_name(String firstName) {
+	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
 
-	public String getLast_name() {
+	public String getLastName() {
 		return lastName;
 	}
 
-	public void setLast_name(String lastName) {
+	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
 

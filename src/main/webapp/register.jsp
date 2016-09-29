@@ -14,9 +14,19 @@
 			<div class="col-md-4 col-md-offset-4">
 				<div class="login-panel panel panel-default">
 					<div class="panel-heading">
-						<h3 class="panel-title" >Register</h3>
+						<h3 class="panel-title">Register</h3>
 					</div>
 					<div class="panel-body">
+
+						<%
+							if (request.getAttribute("message") != null) {
+						%>
+						<p>
+							<%=request.getAttribute("message")%>
+						</p>
+						<%
+							}
+						%>
 						<form role="form" method="post" action="./Register">
 							<fieldset>
 								<div class="form-group">
@@ -37,7 +47,7 @@
 								</div>
 								<div class="form-group">
 									<input class="form-control" placeholder="Password"
-										name="password" type="password" value="">
+										name="passwordrepeat" type="password" value="">
 								</div>
 								<div class="form-group">
 									<label for="username">Choose your job: </label> <select

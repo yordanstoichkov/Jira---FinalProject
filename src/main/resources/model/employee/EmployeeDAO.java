@@ -12,7 +12,7 @@ import model.exceptions.EmployeeException;
 public class EmployeeDAO {
 	private static final String DELETE_USER_SQL = "DELETE from employees where employee_id = ?;";
 	private static final String REGISTER_USER_TO_DB_SQL = "INSERT into employees VALUES(NULL,?,?,?,?,md5(?));";
-	private static final String LOGIN_USER_SQL = "SELECT employee_id FROM employees WHERE email = ? AND password = md5(?);";
+	private static final String LOGIN_USER_SQL = "SELECT employee_id , first_name FROM employees WHERE email = ? AND password = md5(?);";
 	private static final String JOB_ID_SQL = "SELECT job_id FROM jobs WHERE job_title = ?";
 	private static final String GET_EMPLOYEE_ID_SQL = "SELECT employee_id FROM employees WHERE email = ? ";
 	private static final String SELECT_USERS_COUNT = "SELECT count(*) as 'employee_count' FROM employees";
@@ -72,7 +72,8 @@ public class EmployeeDAO {
 			ResultSet rs = ps.executeQuery();
 			rs.next();
 			id = rs.getInt("employee_id");
-
+			String firstName = rs.getString("first_name");
+			emp.setFirstName(firstName);
 			if (id == 0) {
 				throw new EmployeeException("Wrong password or username");
 			}
@@ -112,22 +113,22 @@ public class EmployeeDAO {
 		}
 		return assigneeID;
 	}
-	
-	public int getUserCount() throws EmployeeException{
+
+	public int getUserCount() throws EmployeeException {
 		Connection connection = DBConnection.getConnection();
 
 		int userCount = 0;
-			try {
-				PreparedStatement usersPS = connection.prepareStatement(SELECT_USERS_COUNT);
-				ResultSet users = usersPS.executeQuery();
-				users.next();
-				userCount = users.getInt("employee_count");
-				
-			} catch (SQLException e) {
-				throw new EmployeeException("Couldn't get the count" , e);
-			}
-			return userCount;
-		
+		try {
+			PreparedStatement usersPS = connection.prepareStatement(SELECT_USERS_COUNT);
+			ResultSet users = usersPS.executeQuery();
+			users.next();
+			userCount = users.getInt("employee_count");
+
+		} catch (SQLException e) {
+			throw new EmployeeException("Couldn't get the count", e);
+		}
+		return userCount;
+
 	}
 
 }

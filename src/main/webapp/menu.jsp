@@ -8,7 +8,7 @@
 	rel='stylesheet' type='text/css'>
 <%@page session="false"%>
 <meta charset="utf-8">
-<title>Pure CSS3 Menu</title>
+<title>JiraSoftware</title>
 <link href="menuCSS/style.css" media="screen" rel="stylesheet"
 	type="text/css" />
 <link href="menuCSS/iconic.css" media="screen" rel="stylesheet"
@@ -21,15 +21,26 @@
 
 		<nav>
 			<ul class="menu">
-				<li><a href="#"><span class="iconic home"></span> LOGO</a></li>
-				<li><a href="#"><span class="iconic home"></span> Home</a></li>
+				<li><a href="./"><span class="iconic home"></span> LOGO</a></li>
+				<li><a href="./"><span class="iconic home"></span> Home</a></li>
 				<li><a href="#"><span class="iconic document"></span> Your
 						page</a></li>
 				<li><a href="#"><span class="iconic mail"></span> Contact</a></li>
 
 
-
-					<li style="float: right"><a class="active" href="#">Register</a></li>
+				<%
+					if (request.getSession(false) == null) {
+				%>
+				<li style="float: right"><a class="active"
+					href="./register.jsp">Register</a></li>
+				<%
+					} else {
+				%>
+				<li style="float: right"><a class="active" href="./index">LogOut</a></li>
+				<li style="float: right"><a class="active" href="#">Hi,<%=request.getSession().getAttribute("username")%></a></li>
+				<%
+					}
+				%>
 
 			</ul>
 			<div class="clearfix"></div>

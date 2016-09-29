@@ -28,6 +28,15 @@ public class RegisterServlet extends HttpServlet {
 		String lastName = request.getParameter("lastname");
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
+		String password2 = request.getParameter("passwordrepeat");
+		if(!password.equals(password2)){
+			try {
+				throw new EmployeeException("Passwords don't match");
+			} catch (EmployeeException e) {
+				request.setAttribute("message", e.getMessage());
+				request.getRequestDispatcher("./register.jsp").forward(request, response);
+			}
+		}
 		String jobPar = request.getParameter("job");
 		Jobs job = null;
 		if (jobPar.equals(Jobs.DEVELOPER.toString())) {
@@ -43,7 +52,7 @@ public class RegisterServlet extends HttpServlet {
 		Employee regUser;
 		int empID = 0;
 		try {
-			regUser = new Employee(firstName, lastName, job, password, email);
+			regUser = new Employee(firstName, lastName, job, email, password);
 			empID = new EmployeeDAO().registerUser(regUser);
 		} catch (EmployeeException e) {
 			request.setAttribute("message", e.getMessage());
@@ -53,7 +62,6 @@ public class RegisterServlet extends HttpServlet {
 		if (empID != 0) {
 			response.sendRedirect("./index.jsp");
 		} else {
-			request.getRequestDispatcher("./menu.jsp").forward(request, response);
 
 		}
 

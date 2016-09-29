@@ -1,5 +1,10 @@
 <%@include file="menu.jsp"%>
-
-<%@include file="login.jsp"  %>
+<%
+	if (request.getSession(false) == null) {
+%>
+<%@include file="login.jsp"%>
+<%
+	}
+%>
 </body>
 </html>

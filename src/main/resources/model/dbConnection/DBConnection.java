@@ -1,10 +1,12 @@
 package model.dbConnection;
 
 import java.sql.Connection;
-
 import java.sql.DriverManager;
 
-
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.Bucket;
 
 public class DBConnection {
 	private static Connection connection;
@@ -15,9 +17,9 @@ public class DBConnection {
 	private static final String DB_USER = "root";
 	private static final String DATABASE = "jira";
 	private static final String ADDITION_SETTINGS = "?autoReconnect=true&useSSL=false";
-	 private static final String DB_PASSWORD = "klavqtura";
+	// private static final String DB_PASSWORD = "klavqtura";
 
-//	private static final String DB_PASSWORD = "pecataetup";
+	private static final String DB_PASSWORD = "pecataetup";
 
 	private DBConnection() {
 		try {
