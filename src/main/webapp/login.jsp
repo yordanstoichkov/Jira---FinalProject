@@ -17,9 +17,7 @@
 						<h3 class="panel-title">Login</h3>
 					</div>
 					<div class="panel-body">
-						<c:if test="${not empty pageContext.request.attributeNames.message}">
-							<c:out value="${pageContext.request.message}"></c:out>
-						</c:if>
+					
 
 						<form role="form" method="post" action="./Login">
 							<fieldset>
