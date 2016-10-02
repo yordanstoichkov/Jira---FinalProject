@@ -16,6 +16,7 @@ public class EmployeeDAO {
 	private static final String JOB_ID_SQL = "SELECT job_id FROM jobs WHERE job_title = ?";
 	private static final String GET_EMPLOYEE_ID_SQL = "SELECT employee_id FROM employees WHERE email = ? ";
 	private static final String SELECT_USERS_COUNT = "SELECT count(*) as 'employee_count' FROM employees";
+	private static final String SELECT_NUMBER_WITH_THIS_EMAIL_SQL = "SELECT count(*) as 'employee' FROM employees WHERE email = ? ";
 
 	public int registerUser(Employee emp) throws EmployeeException {
 		if (!isEmployeeValid(emp)) {
@@ -145,5 +146,19 @@ public class EmployeeDAO {
 
 	private boolean isEmployeeValid(Employee emp) {
 		return emp != null;
+	}
+
+	public int validEmail(String email) throws EmployeeException {
+		Connection connection = DBConnection.getConnection();
+		try {
+			PreparedStatement ps = connection.prepareStatement(SELECT_NUMBER_WITH_THIS_EMAIL_SQL);
+			ps.setString(1, email);
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			return rs.getInt("employee");
+		} catch (SQLException e) {
+			throw new EmployeeException("Can not check for this email right now! ", e);
+
+		}
 	}
 }

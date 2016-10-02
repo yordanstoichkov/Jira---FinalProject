@@ -5,13 +5,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<link href='http://fonts.googleapis.com/css?family=Droid+Sans'
-	rel='stylesheet' type='text/css'>
+<link href="<c:url value = "font.css"/>" rel="stylesheet"
+	type="text/css">
 <meta charset="utf-8">
 <title>JiraSoftware</title>
 <link href="style.css" media="screen" rel="stylesheet" type="text/css" />
-<link href="iconic.css" media="screen" rel="stylesheet" type="text/css" />
-<script src="prefix-free.js"></script>
+<link href="<c:url value="iconic.css"/>" media="screen" rel="stylesheet"
+	type="text/css" />
 </head>
 
 <body>

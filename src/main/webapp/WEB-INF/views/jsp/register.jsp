@@ -6,10 +6,29 @@
 <%@page errorPage="errorPage/error.jsp"%>
 <link href="bootstrap.min.css" rel="stylesheet">
 <link href="metisMenu.min.css" rel="stylesheet">
+
 <link href="sb-admin-2.css" rel="stylesheet">
 <link href="font-awesome.min.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="jquery-3.1.1.min.js"></script>
 </head>
 <body>
+	<script>
+		function checkEmail() {
+			var email = $("#email").val();
+			$.get(
+					"http://localhost:8080/JiraProject/checkemail?email="
+							+ email, function(data) {
+						$("#answer").empty();
+						var obj = data;
+						var img = document.createElement("img");
+						img.src = obj.photo;
+						img.width = 20;
+						img.height = 20;
+						img.id = "em";
+						$("#answer").append(img)
+					});
+		}
+	</script>
 	<div class="container">
 		<div class="row">
 			<div class="col-md-4 col-md-offset-4">
@@ -34,10 +53,14 @@
 									<input class="form-control" placeholder="Last name"
 										name="lastname" type="text" autofocus>
 								</div>
+								<div id="answer"></div>
 								<div class="form-group">
-									<input class="form-control" placeholder="E-mail" name="email"
-										type="email" autofocus>
+
+									<input class="form-control" id="email" placeholder="E-mail"
+										name="email" type="email" autofocus onblur="checkEmail()">
+
 								</div>
+
 								<div class="form-group">
 									<input class="form-control" placeholder="Password"
 										name="password" type="password" value="">
