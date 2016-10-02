@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import model.dbConnection.DBConnection;
 import model.employee.Employee;
 import model.employee.EmployeeDAO;
@@ -14,6 +16,7 @@ import model.exceptions.EmployeeException;
 import model.exceptions.IsssueExeption;
 import model.exceptions.ProjectException;
 
+@Component
 public class IssueDAO {
 
 	private static final String CREATE_ISSUE_SQL = "INSERT INTO issues VALUES(NULL , NULL, NULL, ?, ? , ? , NULL, NULL, ?);";
@@ -22,6 +25,7 @@ public class IssueDAO {
 	private static final String GET_SPRINT_ID_SQL = "SELECT sprint_id FROM sprints WHERE sprin";
 	private static final String SET_SPRINT_TO_ISSUE_SQL = "UPDATE issues SET sprint_id = ? WHERE issue_id = ?";
 	private static final String GET_ISSUE_COUNT_SQL = "SELECT count(*) as 'issue_count' FROM issues";
+	private static final String GET_ISSUE_SQL = "SELECT * FROM issues WHERE issue_id = ?";
 
 	public int createIssue(Issue issue) throws ProjectException, PartOfProjectException {
 		Connection connection = DBConnection.getConnection();
@@ -127,17 +131,40 @@ public class IssueDAO {
 	public int getIssueCount() throws IsssueExeption {
 		Connection connection = DBConnection.getConnection();
 
-		int issueCount = 0 ;
+		int issueCount = 0;
 		try {
 			PreparedStatement statusPS = connection.prepareStatement(GET_ISSUE_COUNT_SQL);
 			ResultSet result = statusPS.executeQuery();
 			result.next();
-			issueCount= result.getInt("issue_count");
+			issueCount = result.getInt("issue_count");
 
 		} catch (SQLException e) {
-			throw new IsssueExeption("There was a problem getting the number",e);
+			throw new IsssueExeption("There was a problem getting the number", e);
 		}
-		return issueCount; 
-				
+		return issueCount;
+
+	}
+
+	public Issue getIssue(int issueID) throws IsssueExeption {
+		Connection connection = DBConnection.getConnection();
+		Issue result = null;
+		try {
+			PreparedStatement issuePS = connection.prepareStatement(GET_ISSUE_SQL);
+			issuePS.setInt(1, issueID);
+			ResultSet issueRS = issuePS.executeQuery();
+			issueRS.next();
+			String title = issueRS.getString("title");
+			int statusID = issueRS.getInt("status_id");
+			WorkFlow status = new PartOfProjectDAO().getStatusID(statusID);
+			result = new Issue(title, status);
+
+		} catch (SQLException e) {
+			throw new IsssueExeption("Unfortunately your issue couln't be found", e);
+		} catch (ProjectException e) {
+			throw new IsssueExeption("Unfortunately your issue couln't be found", e);
+		} catch (PartOfProjectException e) {
+			throw new IsssueExeption("Unfortunately your issue couln't be found", e);
+		}
+		return result;
 	}
 }

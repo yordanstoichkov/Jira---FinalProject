@@ -3,6 +3,7 @@ package model.dbConnection;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
+import org.springframework.stereotype.Component;
 
 public class DBConnection {
 	private static Connection connection;
@@ -13,9 +14,9 @@ public class DBConnection {
 	private static final String DB_USER = "root";
 	private static final String DATABASE = "jira";
 	private static final String ADDITION_SETTINGS = "?autoReconnect=true&useSSL=false";
-	 private static final String DB_PASSWORD = "klavqtura";
+	// private static final String DB_PASSWORD = "klavqtura";
 
-//	private static final String DB_PASSWORD = "pecataetup";
+	private static final String DB_PASSWORD = "pecataetup";
 
 	private DBConnection() {
 		try {
@@ -26,7 +27,7 @@ public class DBConnection {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	
+
 	}
 
 	public synchronized static Connection getConnection() {

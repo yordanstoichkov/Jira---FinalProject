@@ -35,7 +35,7 @@ public class Employee {
 		this.password = password;
 	}
 
-	static boolean isEmailValid(String email) {
+	public static boolean isEmailValid(String email) {
 		return email.matches(EMAIL_REGEX);
 	}
 

@@ -1,17 +1,25 @@
 package model.test;
 
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import configuration.SpringConfig;
 import model.employee.Employee;
 import model.employee.Employee.Jobs;
-import model.employee.EmployeeDAO;
+import model.employee.IEmployeeDAO;
 import model.exceptions.EmployeeException;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = SpringConfig.class)
 public class EmployeeTest {
-	private EmployeeDAO dao = new EmployeeDAO();
+	@Autowired
+	private IEmployeeDAO dao;
 
 	@Test
 	public void test() throws EmployeeException {

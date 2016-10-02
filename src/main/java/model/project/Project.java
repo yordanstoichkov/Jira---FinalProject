@@ -38,4 +38,8 @@ public class Project extends PartOfProject {
 
 	}
 
+	public void addSprint(Sprint sprint) {
+		this.sprints.add(sprint);
+	}
+
 }

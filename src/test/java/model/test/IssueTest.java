@@ -31,7 +31,8 @@ public class IssueTest {
 		testIssue.setDescription("AKO ZARABOTI EKSTRA");
 		dao.addDescriptionToIssue(testIssue);
 
-		Sprint testSprint = new Sprint("eha", new Project("eha2"));
+		Sprint testSprint = new Sprint("eha");
+		testSprint.setProject(new Project("eha2"));
 		testSprint.setSprintId(2);
 
 		dao.addIssueToSprint(testIssue, testSprint);

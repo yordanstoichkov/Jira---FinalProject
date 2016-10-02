@@ -10,11 +10,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import model.dbConnection.DBConnection;
 import model.employee.Employee;
-import model.exceptions.EmployeeException;
 import model.exceptions.ProjectException;
+import model.exceptions.SprintException;
 
+@Component
 public class ProjectDAO {
 	private static final String INSERT_PROJECT_OF_MANAGER_SQL = "INSERT INTO project_managers VALUES (?, ?);";
 	private static final String INSERT_PROJECT_SQL = "INSERT INTO projects VALUES (null,null,null, ?);";
@@ -23,6 +26,9 @@ public class ProjectDAO {
 	private static final String SELECT_PROJECT_COUNT = "SELECT count(*) as 'project_count' FROM projects";
 	private static final String SELECT_PROJECTS_ID_SQL = "SELECT project_id FROM project_managers where manager_id= ? ";
 	private static final String SELECT_PROJECTS_NAME_SQL = "SELECT title FROM projects where project_id = ? ";
+	private static final String SELECT_PROJECT_SQL = "SELECT * FROM projects WHERE project_id = ?";
+	private static final String SELECT_SPRINTS_SQL = "SELECT s.sprint_id " + "FROM sprints s "
+			+ "JOIN projects p ON (p.project_id=s.project_id) " + "WHERE p.project_id=?;";
 
 	public int createProject(Project project, Employee employee) throws ProjectException {
 		Connection connection = DBConnection.getConnection();
@@ -146,6 +152,31 @@ public class ProjectDAO {
 			}
 		}
 
+	}
+
+	public Project getProject(int projectid) throws ProjectException {
+		Connection connection = DBConnection.getConnection();
+		Project result = null;
+		try {
+			PreparedStatement projectPS = connection.prepareStatement(SELECT_PROJECT_SQL);
+			projectPS.setInt(1, projectid);
+			ResultSet projectRS = projectPS.executeQuery();
+			projectRS.next();
+			result = new Project(projectRS.getString("title"));
+
+			PreparedStatement sprintsPS = connection.prepareStatement(SELECT_SPRINTS_SQL);
+			sprintsPS.setInt(1, projectid);
+			ResultSet sprintsRS = sprintsPS.executeQuery();
+			while (sprintsRS.next()) {
+				int sprintID = sprintsRS.getInt(1);
+				result.addSprint(new SprintDAO().getSprint(sprintID));
+			}
+		} catch (SQLException e) {
+			throw new ProjectException("Something went wrong can't get your project", e);
+		} catch (SprintException e) {
+			throw new ProjectException("Something went wrong can't get your project", e);
+		}
+		return result;
 	}
 
 }

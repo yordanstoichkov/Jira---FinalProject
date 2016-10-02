@@ -8,18 +8,18 @@ import model.exceptions.ProjectException;
 
 public class Sprint extends PartOfProject {
 	private Project project;
+	public void setProject(Project project) {
+		this.project = project;
+	}
+
 	private List<Issue> issues = new ArrayList<Issue>();
 	private LocalDate endDate;
 	private int sprintId;
 	private WorkFlow status;
 
-	public Sprint(String title, Project project) throws ProjectException {
+	public Sprint(String title) throws ProjectException {
 		super(title);
-		if (objectValidator(project)) {
-			this.project = project;
-			this.status = WorkFlow.TO_DO;
-		} else
-			throw new ProjectException("You entered invalid project. Please, try again!");
+		this.status = WorkFlow.TO_DO;
 
 	}
 
@@ -57,6 +57,10 @@ public class Sprint extends PartOfProject {
 
 	public void setStatus(WorkFlow status) {
 		this.status = status;
+	}
+
+	public void addIssue(Issue issue) {
+		this.issues.add(issue);
 	}
 
 }

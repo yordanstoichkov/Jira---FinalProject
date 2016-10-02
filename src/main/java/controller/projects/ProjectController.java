@@ -1,7 +1,5 @@
 package controller.projects;
 
-import static org.mockito.Matchers.anyBoolean;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,9 +8,13 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import model.employee.Employee;
+import model.exceptions.EmployeeException;
 import model.exceptions.ProjectException;
 import model.project.ProjectDAO;
 
@@ -21,6 +23,9 @@ public class ProjectController {
 
 	@RequestMapping(value = "/projects", method = RequestMethod.GET)
 	public String getProject(Model model, HttpServletRequest request) {
+		if (request.getSession(false) == null) {
+			return "index";
+		}
 		HttpSession session = request.getSession();
 		int userId = (int) session.getAttribute("userId");
 		List<String> names = new ArrayList<String>();
@@ -35,5 +40,7 @@ public class ProjectController {
 		return "projects";
 
 	}
+
+	
 
 }

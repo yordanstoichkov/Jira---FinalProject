@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import model.employee.Employee;
@@ -47,6 +48,7 @@ public class UserController {
 			session.setMaxInactiveInterval(1000);
 			session.setAttribute("username", login.getFirstName());
 			session.setAttribute("userId", loginID);
+			session.setAttribute("user", login);
 			if (rememberMe != null && rememberMe.equals("Remember Me")) {
 				Cookie remMe = new Cookie("email", email);
 				Cookie remMe2 = new Cookie("password", password);

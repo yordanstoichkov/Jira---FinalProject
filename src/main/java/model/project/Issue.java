@@ -33,6 +33,11 @@ public class Issue extends PartOfProject {
 		}
 	}
 
+	public Issue(String title, WorkFlow status2) throws ProjectException {
+		super(title);
+		this.status = status;
+	}
+
 	public Sprint getSprint() {
 		return sprint;
 	}
