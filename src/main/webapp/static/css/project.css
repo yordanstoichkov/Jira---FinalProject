@@ -29,7 +29,7 @@ body {
 .timeline-body {
 	text-align:left;
 	margin-left: 55px;
-	margin-top: -20px;
+	margin-top: 500px;
 	font-weight: 700;
 	color: #4d88ff;
 }
@@ -39,14 +39,14 @@ body {
 }
 
 #projectName {
-	margin-left: 20px;
+	margin-left: 30px;
 	margin-top: -20px;
 	font-weight: 700;
 }
 
 #track {
 	margin-left: 20px;
-	margin-top: 10px;
+	margin-top: 30px;
 	width: 180px;
 	height: 45px;
 	font-size: 14px;
@@ -54,11 +54,11 @@ body {
 }
 
 #absolute {
-	position: absolute;
-	margin-top: 70px;
+	position: center;
+	margin-top: 20px;
 	top: 20px;
 	left: 0%;
-	margin-left: 20px;
+	margin-left: -80px;
 	width: 1300px;
 }
 
@@ -331,6 +331,7 @@ table.dataTable thead .sorting:after {
 .panel-body {
 	background-color: #e6f2ff;
 	height: 150px;
+	
 }
 
 .huge {

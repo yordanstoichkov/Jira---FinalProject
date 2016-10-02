@@ -3,9 +3,12 @@
 <%@page import="java.util.ArrayList"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <link href="bootstrap.min.css" rel="stylesheet">
+<link href="iconic.css" rel="stylesheet">
 <link href="metisMenu.min.css" rel="stylesheet">
 <link href="project.css" rel="stylesheet">
-<link href="font-awesome.min.css" rel="stylesheet" type="text/css">
+<link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+
 </head>
 <body>
 	<%
@@ -78,7 +81,7 @@
 											</div>
 											<div id="status">
 												<h3>
-													<b>Progress</b>
+													<b>In Progress</b>
 												</h3>
 											</div>
 										</div>
@@ -127,8 +130,6 @@
 
 		</div>
 	</div>
-
-
 	<%
 		}
 	%>

@@ -12,6 +12,9 @@
 <link href="style.css" media="screen" rel="stylesheet" type="text/css" />
 <link href="<c:url value="iconic.css"/>" media="screen" rel="stylesheet"
 	type="text/css" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+
 </head>
 
 <body>
@@ -19,11 +22,11 @@
 
 		<nav>
 			<ul class="menu">
-				<li><a href="./"><span class="iconic home"></span> LOGO</a></li>
-				<li><a href="./"><span class="iconic home"></span> Home</a></li>
-				<li><a href="./projects"><span class="iconic document"></span>
-						Your page</a></li>
-				<li><a href="#"><span class="iconic mail"></span> Contact</a></li>
+				<li><a href="./"><i class="fa fa-home" style="font-size: 2.0em;"></i>LOGO</a></li>
+				<li><a href="./"><i class="fa fa-home" style="font-size: 2.0em;"></i> Home</a></li>
+				<li><a href="./projects"><i class="fa fa-paste" style="font-size: 2.0em;"></i>
+						Projects</a></li>
+				<li><a href="#"><i class="fa fa-phone" style="font-size: 2.0em;"></i> Contact</a></li>
 				<%
 					if (request.getSession(false) == null) {
 				%>
