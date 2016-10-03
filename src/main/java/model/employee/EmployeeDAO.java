@@ -6,7 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,6 +16,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import model.dbConnection.DBConnection;
+import model.employee.Employee.Jobs;
 import model.exceptions.EmployeeException;
 import model.exceptions.ProjectException;
 import model.project.Project;
@@ -23,7 +26,7 @@ import model.project.ProjectDAO;
 public class EmployeeDAO implements IEmployeeDAO {
 	private static final String DELETE_USER_SQL = "DELETE from employees where employee_id = ?;";
 	private static final String REGISTER_USER_TO_DB_SQL = "INSERT into employees VALUES(NULL,?,?,?,?,md5(?));";
-	private static final String LOGIN_USER_SQL = "SELECT employee_id , first_name FROM employees WHERE email = ? AND password = md5(?);";
+	private static final String LOGIN_USER_SQL = "SELECT * FROM employees WHERE email = ? AND password = md5(?);";
 	private static final String JOB_ID_SQL = "SELECT job_id FROM jobs WHERE job_title = ?";
 	private static final String GET_EMPLOYEE_ID_SQL = "SELECT employee_id FROM employees WHERE email = ? ";
 	private static final String SELECT_USERS_COUNT = "SELECT count(*) as 'employee_count' FROM employees";
@@ -31,6 +34,8 @@ public class EmployeeDAO implements IEmployeeDAO {
 	private static final String SELECT_ALL_USER_PROJECTS = "SELECT DISTINCT(p.project_id) " + "FROM projects p "
 			+ "JOIN sprints s ON (s.project_id=p.project_id) " + "JOIN issues i ON (i.sprint_id = s.sprint_id) "
 			+ "JOIN issues_developers id ON (id.issue_id=i.issue_id) " + "WHERE id.developer_id=?;";
+	private static final String SELECT_ALL_MANAGER_PROJECTS = "SELECT project_id FROM project_managers where manager_id= ? ";
+	private static final String JOB_BY_ID_SQL = "SELECT job_title FROM jobs WHERE job_id = ?";
 
 	/*
 	 * (non-Javadoc)
@@ -106,7 +111,20 @@ public class EmployeeDAO implements IEmployeeDAO {
 			rs.next();
 			id = rs.getInt("employee_id");
 			String firstName = rs.getString("first_name");
+			String lastName = rs.getString("last_name");
+			int jobID = rs.getInt("job_id");
+			emp.setLastName(lastName);
 			emp.setFirstName(firstName);
+			emp.setEmployeeID(id);
+
+			PreparedStatement jobPS = connection.prepareStatement(JOB_BY_ID_SQL);
+			jobPS.setInt(1, jobID);
+
+			ResultSet jobRS = jobPS.executeQuery();
+			jobRS.next();
+			String jobStr = jobRS.getString("job_title");
+			Jobs job = Jobs.getJob(jobStr);
+			emp.setJob(job);
 			if (id == 0) {
 				throw new EmployeeException("Wrong password or username");
 			}
@@ -216,19 +234,32 @@ public class EmployeeDAO implements IEmployeeDAO {
 	public List<Project> giveMyProjects(Employee emp) throws EmployeeException {
 		Connection connection = DBConnection.getConnection();
 		List<Project> result = new ArrayList<Project>();
+		Set<Integer> projectsID = new HashSet<Integer>();
 		try {
 			PreparedStatement projectsPS = connection.prepareStatement(SELECT_ALL_USER_PROJECTS);
 			projectsPS.setInt(1, emp.getEmployeeID());
 			ResultSet projectRS = projectsPS.executeQuery();
 			while (projectRS.next()) {
 				int projectid = projectRS.getInt(1);
-				result.add(new ProjectDAO().getProject(projectid));
+				projectsID.add(projectid);
+			}
+			if (emp.getJob() == Jobs.MANAGER) {
+				PreparedStatement projectManPS = connection.prepareStatement(SELECT_ALL_MANAGER_PROJECTS);
+				projectManPS.setInt(1, emp.getEmployeeID());
+				ResultSet projectManRS = projectManPS.executeQuery();
+				while (projectManRS.next()) {
+					int projectid = projectManRS.getInt(1);
+					projectsID.add(projectid);
+				}
+			}
+			for (Integer projectID : projectsID) {
+				result.add(new ProjectDAO().getProject(projectID));
 			}
 
 		} catch (SQLException e) {
-			throw new EmployeeException("We have problems and can't get your projects");
+			throw new EmployeeException("We have problems and can't get your projects",e);
 		} catch (ProjectException e) {
-			throw new EmployeeException("We have problems and can't get your projects");
+			throw new EmployeeException("We have problems and can't get your projects",e);
 		}
 		return result;
 	}

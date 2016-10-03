@@ -58,7 +58,6 @@ public class UserController {
 
 		} else {
 			request.setAttribute("message", "Wrong username or password");
-			return "index";
 		}
 		return "index";
 	}

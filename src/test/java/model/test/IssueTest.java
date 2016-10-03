@@ -22,10 +22,8 @@ public class IssueTest {
 
 	@Test
 	public void test() throws ProjectException, EmployeeException, IsssueExeption, PartOfProjectException {
-		Employee tempEmp = new Employee("Gosho", "Todorov", Jobs.DEVELOPER, "gosheto", "golqmata@abv.bg");
-		Employee tempEmp1 = new Employee("Gosho", "Todorov", Jobs.DEVELOPER, "gosheto", "golqmatata@mail.bg");
-
-		Issue testIssue = new Issue("Opalq", PriorityLevel.MEDIUM, IssueType.TASK, Arrays.asList(tempEmp, tempEmp1));
+	
+		Issue testIssue = new Issue("Opalq", PriorityLevel.MEDIUM, IssueType.TASK, Arrays.asList(76));
 
 		testIssue.setIssueId(dao.createIssue(testIssue));
 		testIssue.setDescription("AKO ZARABOTI EKSTRA");

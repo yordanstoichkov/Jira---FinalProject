@@ -18,9 +18,9 @@ public class Issue extends PartOfProject {
 	private LocalDate lastUpdate;
 	private PriorityLevel priority;
 	private String description;
-	private List<Employee> asignees = new ArrayList<Employee>();
+	private List<Integer> asignees = new ArrayList<Integer>();
 
-	public Issue(String title, PriorityLevel priority, IssueType type, List<Employee> asignees)
+	public Issue(String title, PriorityLevel priority, IssueType type, List<Integer> asignees)
 			throws ProjectException, EmployeeException {
 		super(title);
 		this.status = WorkFlow.TO_DO;
@@ -33,7 +33,12 @@ public class Issue extends PartOfProject {
 		}
 	}
 
-	public Issue(String title, WorkFlow status2) throws ProjectException {
+	private void setAsignees(List<Integer> asignees) {
+		this.asignees.addAll(asignees);
+
+	}
+
+	public Issue(String title, WorkFlow status) throws ProjectException {
 		super(title);
 		this.status = status;
 	}
@@ -90,7 +95,7 @@ public class Issue extends PartOfProject {
 		this.lastUpdate = lastUpdate;
 	}
 
-	public List<Employee> getAsignees() {
+	public List<Integer> getAsignees() {
 		return Collections.unmodifiableList(asignees);
 	}
 
@@ -102,8 +107,17 @@ public class Issue extends PartOfProject {
 		this.description = description;
 	}
 
-	public void setAsignees(List<Employee> asignees) {
-		this.asignees = asignees;
+	public void setAsignee(int asignee) {
+		this.asignees.add(asignee);
+	}
+
+	public boolean isAsigneed(int employeeID) {
+		for (Integer id : asignees) {
+			if (employeeID == id) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

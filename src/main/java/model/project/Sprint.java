@@ -2,6 +2,8 @@ package model.project;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import model.exceptions.ProjectException;
@@ -63,4 +65,8 @@ public class Sprint extends PartOfProject {
 		this.issues.add(issue);
 	}
 
+	public List<Issue> getIssues() {
+		return Collections.unmodifiableList(issues);
+	}
+	
 }

@@ -1,5 +1,10 @@
 package model.employee;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import model.employee.Employee.Jobs;
 import model.exceptions.EmployeeException;
 
 public class Employee {
@@ -14,6 +19,21 @@ public class Employee {
 
 	public enum Jobs {
 		MANAGER, DEVELOPER, QA, REVIEWER;
+
+		static Jobs getJob(String job) {
+			Jobs result = null;
+			if (job.equals(Jobs.DEVELOPER.toString())) {
+				result = Jobs.DEVELOPER;
+			}
+			if (job.equals(Jobs.MANAGER.toString())) {
+				result = Jobs.MANAGER;
+			}
+			if (job.equals(Jobs.QA.toString())) {
+				result = Jobs.QA;
+			}
+			return result;
+
+		}
 	}
 
 	public Employee(String firstName, String lastName, Jobs job, String email, String password)
@@ -108,9 +128,9 @@ public class Employee {
 	}
 
 	public void setEmployeeID(int employeeID) throws EmployeeException {
-		if(employeeID>0){
-		this.employeeID = employeeID;
-		}else{
+		if (employeeID > 0) {
+			this.employeeID = employeeID;
+		} else {
 			throw new EmployeeException("Ilegal id");
 		}
 	}

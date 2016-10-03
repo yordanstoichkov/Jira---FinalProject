@@ -66,7 +66,7 @@ public class SprintDAO {
 			sprintRS.next();
 			String title = sprintRS.getString("title");
 			int statusID = sprintRS.getInt("status_id");
-			WorkFlow status = new PartOfProjectDAO().getStatusID(statusID);
+			WorkFlow status = new PartOfProjectDAO().getStatus(statusID);
 			result = new Sprint(title);
 			result.setSprintId(sprintID);
 			result.setStatus(status);

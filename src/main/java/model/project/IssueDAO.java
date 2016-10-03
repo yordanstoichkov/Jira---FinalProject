@@ -1,10 +1,14 @@
 package model.project;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -26,6 +30,7 @@ public class IssueDAO {
 	private static final String SET_SPRINT_TO_ISSUE_SQL = "UPDATE issues SET sprint_id = ? WHERE issue_id = ?";
 	private static final String GET_ISSUE_COUNT_SQL = "SELECT count(*) as 'issue_count' FROM issues";
 	private static final String GET_ISSUE_SQL = "SELECT * FROM issues WHERE issue_id = ?";
+	private static final String SELECT_DEVELOPERS_OF_ISSUE_SQL = "SELECT developer_id FROM issues_developers WHERE issue_id = ?";
 
 	public int createIssue(Issue issue) throws ProjectException, PartOfProjectException {
 		Connection connection = DBConnection.getConnection();
@@ -51,11 +56,9 @@ public class IssueDAO {
 			rs.next();
 			issueID = rs.getInt(1);
 
-			List<Employee> asignees = issue.getAsignees();
+			List<Integer> asignees = issue.getAsignees();
 
-			for (Employee employee : asignees) {
-
-				int assigneeID = new EmployeeDAO().getEmployeeID(employee);
+			for (Integer assigneeID : asignees) {
 
 				if (assigneeID != 0) {
 					PreparedStatement insertAsignee = connection.prepareStatement(INSERT_ISSUE_ASSIGNEE);
@@ -75,9 +78,9 @@ public class IssueDAO {
 				throw new ProjectException("This issue cannot be created right now", e);
 			}
 			throw new ProjectException("This issue cannot be created right now", e);
-		} catch (EmployeeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new ProjectException("This issue cannot be created right now", e);
+
 		} finally {
 			try {
 				connection.setAutoCommit(true);
@@ -155,9 +158,24 @@ public class IssueDAO {
 			issueRS.next();
 			String title = issueRS.getString("title");
 			int statusID = issueRS.getInt("status_id");
-			WorkFlow status = new PartOfProjectDAO().getStatusID(statusID);
+			String description = issueRS.getString("description");
+			Date startDate = issueRS.getDate("start_date");
+			int typeID = issueRS.getInt("type_id");
+			Date lastUpdate = issueRS.getDate("last_update");
+			int priorityID = issueRS.getInt("priority_id");
+			PriorityLevel priority = new PartOfProjectDAO().getPriority(priorityID);
+			IssueType type = new PartOfProjectDAO().getType(typeID);
+			WorkFlow status = new PartOfProjectDAO().getStatus(statusID);
 			result = new Issue(title, status);
-
+			result.setDescription(description);
+			result.setType(type);
+			result.setPriority(priority);
+			PreparedStatement asigneesPS = connection.prepareStatement(SELECT_DEVELOPERS_OF_ISSUE_SQL);
+			asigneesPS.setInt(1, issueID);
+			ResultSet asigneesRS = asigneesPS.executeQuery();
+			while (asigneesRS.next()) {
+				result.setAsignee(asigneesRS.getInt("developer_id"));
+			}
 		} catch (SQLException e) {
 			throw new IsssueExeption("Unfortunately your issue couln't be found", e);
 		} catch (ProjectException e) {
