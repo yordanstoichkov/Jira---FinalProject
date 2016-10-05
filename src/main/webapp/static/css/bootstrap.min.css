@@ -11,9 +11,12 @@ html {
 }
 
 body {
-	margin: 0px;
+	background: url("back.jpg") no-repeat center center fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
 }
-
 
 article, aside, details, figcaption, figure, footer, header, hgroup,
 	main, menu, nav, section, summary {
@@ -26,24 +29,38 @@ audio, canvas, progress, video {
 }
 
 audio
+
+
 :not
+
  
+
 (
 [
 controls
 ]
+
  
+
 ){
 display
-:
- 
-none
-;
 
-	
-height
+
 :
+
  
+
+none
+
+
+;
+height
+
+
+:
+
+ 
+
 0
 }
 [hidden], template {
@@ -104,16 +121,28 @@ img {
 }
 
 svg
+
+
 :not
+
  
+
 (
 :root
+
  
+
 ){
 overflow
+
+
 :
+
  
+
 hidden
+
+
 
 
 }
@@ -4004,28 +4033,46 @@ tbody.collapse.in {
 .btn-group
 >
 .btn
+
+
 :not
+
  
+
 (
 :first-child
+
  
+
 )
 :not
+
  
+
 (
 :last-child
+
  
+
 )
 :not
+
  
+
 (
 .dropdown-toggle
 
+
 	
+
 ){
 border-radius
+
+
 :
+
  
+
 0
 }
 .btn-group>.btn:first-child {
@@ -4035,55 +4082,97 @@ border-radius
 .btn-group
 >
 .btn
+
+
 :first-child
+
+
 :not
+
  
+
 (
 :last-child
+
  
+
 )
 :not
+
  
+
 (
 .dropdown-toggle
+
  
+
 ){
 border-top-right-radius
+
+
 :
+
  
+
 0;
 border-bottom-right-radius
+
+
 :
+
  
+
 0
 }
 .btn-group
 >
 .btn
+
+
 :last-child
+
+
 :not
+
  
+
 (
 :first-child
+
  
+
 ),
 .btn-group
 >
 .dropdown-toggle
+
+
 :not
 
+
 	
+
 (
 :first-child
+
  
+
 ){
 border-top-left-radius
+
+
 :
+
  
+
 0;
 border-bottom-left-radius
+
+
 :
+
  
+
 0
 }
 .btn-group>.btn-group {
@@ -4164,89 +4253,153 @@ border-bottom-left-radius
 .btn-group-vertical
 >
 .btn
+
+
 :not
+
  
+
 (
 :first-child
+
  
+
 )
 :not
+
  
+
 (
 :last-child
+
  
+
 ){
 border-radius
+
+
 :
+
  
+
 0
 }
 .btn-group-vertical
 >
 .btn
+
+
 :first-child
+
+
 :not
+
  
+
 (
 :last-child
+
  
+
 ){
 border-top-left-radius
+
+
 :
+
  
+
 4
 px
-;
 
-	
+
+;
 border-top-right-radius
+
+
 :
+
  
+
 4
 px
-;
 
-	
+
+;
 border-bottom-right-radius
+
+
 :
+
  
+
 0;
 border-bottom-left-radius
+
+
 :
+
  
+
 0
 }
 .btn-group-vertical
 >
 .btn
+
+
 :last-child
+
+
 :not
+
  
+
 (
 :first-child
+
  
+
 ){
 border-top-left-radius
+
+
 :
+
  
+
 0;
 border-top-right-radius
+
+
 :
+
  
+
 0;
 border-bottom-right-radius
-:
- 
-4
-px
-;
 
-	
-border-bottom-left-radius
+
 :
+
  
+
 4
 px
+
+
+;
+border-bottom-left-radius
+
+
+:
+
+ 
+
+4
+px
+
+
 
 
 }
@@ -4370,49 +4523,85 @@ select[multiple].input-group-sm>.form-control, select[multiple].input-group-sm>.
 }
 
 .input-group
+
  
+
 .form-control
+
+
 :not
+
  
+
 (
 :first-child
+
  
+
 )
 :not
+
  
+
 (
 :last-child
+
  
+
 ),
 .input-group-addon
+
+
 :not
+
  
+
 (
 :first-child
+
  
+
 )
 :not
+
  
+
 (
 :last-child
+
  
+
 ),
 .input-group-btn
+
+
 :not
+
  
+
 (
 :first-child
+
  
+
 )
 :not
+
  
+
 (
 :last-child
+
  
+
 ){
 border-radius
+
+
 :
+
  
+
 0
 }
 .input-group-addon, .input-group-btn {
@@ -4451,19 +4640,29 @@ border-radius
 }
 
 .input-group
+
  
+
 .form-control
+
+
 :first-child
 ,
 .input-group-addon
+
+
 :first-child
 ,
 .input-group-btn
+
+
 :first-child
 >
 .btn
 ,
 .input-group-btn
+
+
 :first-child
 >
 .btn-group
@@ -4471,47 +4670,77 @@ border-radius
 .btn
 ,
 .input-group-btn
+
+
 :first-child
 >
 .dropdown-toggle
 ,
 .input-group-btn
+
+
 :last-child
 >
 .btn-group
+
+
 :not
 
+
 	
+
 (
 :last-child
+
  
+
 )>
 .btn
 ,
 .input-group-btn
+
+
 :last-child
 >
 .btn
+
+
 :not
+
  
+
 (
 :last-child
 
+
 	
+
 )
 :not
+
  
+
 (
 .dropdown-toggle
+
  
+
 ){
 border-top-right-radius
+
+
 :
+
  
+
 0;
 border-bottom-right-radius
+
+
 :
+
  
+
 0
 }
 .input-group-addon:first-child {
