@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import model.employee.Employee;
 import model.employee.EmployeeDAO;
+import model.employee.IEmployeeDAO;
 import model.employee.Employee.Jobs;
 import model.exceptions.EmployeeException;
 
@@ -51,8 +53,6 @@ public class UserController {
 			session.setAttribute("user", login);
 			if (rememberMe != null && rememberMe.equals("Remember Me")) {
 				Cookie remMe = new Cookie("email", email);
-				Cookie remMe2 = new Cookie("password", password);
-				response.addCookie(remMe2);
 				response.addCookie(remMe);
 			}
 
@@ -101,7 +101,7 @@ public class UserController {
 
 		if (empID != 0) {
 			request.setAttribute("message", "You are registered now login");
-			return "index";
+			return "redirect:index";
 		}
 		return "register";
 	}

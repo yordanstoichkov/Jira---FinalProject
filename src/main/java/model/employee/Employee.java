@@ -6,8 +6,10 @@ import java.util.Map;
 
 import model.employee.Employee.Jobs;
 import model.exceptions.EmployeeException;
+import model.project.WorkFlow;
 
 public class Employee {
+	private static final String NAME_REGEX = "/^[a-z ,.'-]+$/i";
 	private static final String EMAIL_REGEX = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
 	private String firstName;
 	private String lastName;
@@ -16,6 +18,22 @@ public class Employee {
 	private String avatarPath;
 	private int employeeID;
 	private Jobs job;
+	private Map<Integer, Map<Integer, Integer>> projectsIssues = new HashMap<Integer, Map<Integer, Integer>>();
+	private int toDo;
+	private int inProgres;
+	private int done;
+
+	public int getToDo(int projectId) {
+		return projectsIssues.get(projectId).get(1);
+	}
+
+	public int getInProgres() {
+		return inProgres;
+	}
+
+	public int getDone() {
+		return done;
+	}
 
 	public enum Jobs {
 		MANAGER, DEVELOPER, QA, REVIEWER;
@@ -39,8 +57,8 @@ public class Employee {
 	public Employee(String firstName, String lastName, Jobs job, String email, String password)
 			throws EmployeeException {
 		this(email, password);
-		if (!stringValidate(lastName) || !stringValidate(firstName) || job == null) {
-			throw new EmployeeException("You should give legal information");
+		if (!isNameValid(lastName) || !isNameValid(firstName) || job == null) {
+			throw new EmployeeException("You should give legal personal information");
 		}
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -55,11 +73,18 @@ public class Employee {
 		this.password = password;
 	}
 
+	public static boolean isNameValid(String name) {
+		if (name != null && name.trim().length() > 0 && !name.matches(NAME_REGEX)) {
+			return true;
+		}
+		return false;
+	}
+
 	public static boolean isEmailValid(String email) {
 		return email.matches(EMAIL_REGEX);
 	}
 
-	private boolean stringValidate(String string) {
+	private static boolean stringValidate(String string) {
 		return (string != null && string.trim().length() > 0);
 	}
 
@@ -141,6 +166,48 @@ public class Employee {
 
 	public void setJob(Jobs job) {
 		this.job = job;
+	}
+
+	public int getToDoTasks(int projectId) {
+		return projectsIssues.get(projectId).get(WorkFlow.TO_DO);
+	}
+
+	public int getDoneTasks(int projectId) {
+		return projectsIssues.get(projectId).get(WorkFlow.DONE);
+	}
+
+	public int getInProgressTasks(int projectId) {
+		return projectsIssues.get(projectId).get(WorkFlow.IN_PROGRESS);
+	}
+
+	public int getCodeReviewTasks(int projectId) {
+		return projectsIssues.get(projectId).get(WorkFlow.CODE_REVIEW);
+	}
+
+	public void setProjectsIssues(int projectID, WorkFlow issueStatus, int numTasks) throws EmployeeException {
+		if (projectID <= 0 || numTasks < 0) {
+			throw new EmployeeException("This is not a vlid number of tasks");
+		}
+		if (!projectsIssues.containsKey(projectID)) {
+			this.projectsIssues.put(projectID, new HashMap<Integer, Integer>());
+		}
+		Map<Integer, Integer> issues = projectsIssues.get(projectID);
+		int status = 0;
+		switch (issueStatus) {
+		case TO_DO:
+			status = 1;
+			break;
+		case CODE_REVIEW:
+			status = 2;
+			break;
+		case IN_PROGRESS:
+			status = 3;
+			break;
+		case DONE:
+			status = 4;
+			break;
+		}
+		issues.put(status, numTasks);
 	}
 
 }

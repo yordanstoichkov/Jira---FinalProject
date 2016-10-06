@@ -1,6 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%@page errorPage="errorPage/error.jsp"%>
+<%@page errorPage="./error.jsp"%>
 <link href="bootstrap.min.css" rel="stylesheet">
 <link href="metisMenu.min.css" rel="stylesheet">
 <link href="sb-admin-2.css" rel="stylesheet">
@@ -15,12 +15,13 @@
 			<div class="col-md-4 col-md-offset-4">
 				<div class="forma">
 					<div class="panel-heading">
-						<h1 class="panel-title" style="color:white;  font-size:250%;" >Login</h1>
+						<h1 class="panel-title" style="color: white; font-size: 250%;">Login</h1>
 					</div>
 					<div class="panel-body">
 						<c:if test="${not empty message }">
 							<p>
-								<span style="color:#ff3333; font-size:140%"><c:out value="${message}"></c:out></span>
+								<span style="color: #ff3333; font-size: 140%"><c:out
+										value="${message}"></c:out></span>
 							</p>
 						</c:if>
 
@@ -38,7 +39,8 @@
 
 								<div class="checkbox">
 									<label> <input name="remember" type="checkbox"
-										value="Remember Me"><span style="color:white;">Remember Me</span>
+										value="Remember Me"><span style="color: white;">Remember
+											Me</span>
 									</label>
 								</div>
 								<!-- Change this to a button or input when using this as a form -->

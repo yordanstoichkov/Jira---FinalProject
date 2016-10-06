@@ -32,7 +32,10 @@ public class IssueDAO {
 	private static final String GET_ISSUE_SQL = "SELECT * FROM issues WHERE issue_id = ?";
 	private static final String SELECT_DEVELOPERS_OF_ISSUE_SQL = "SELECT developer_id FROM issues_developers WHERE issue_id = ?";
 
-	public int createIssue(Issue issue) throws ProjectException, PartOfProjectException {
+	public int createIssue(Issue issue) throws IsssueExeption {
+		if (issue == null) {
+			throw new IsssueExeption("Invalid issue given");
+		}
 		Connection connection = DBConnection.getConnection();
 		PartOfProjectDAO idDAO = new PartOfProjectDAO();
 		int issueID = 0;
@@ -75,23 +78,26 @@ public class IssueDAO {
 			try {
 				connection.rollback();
 			} catch (SQLException e1) {
-				throw new ProjectException("This issue cannot be created right now", e);
+				throw new IsssueExeption("This issue cannot be created right now", e);
 			}
-			throw new ProjectException("This issue cannot be created right now", e);
+			throw new IsssueExeption("This issue cannot be created right now", e);
 		} catch (Exception e) {
-			throw new ProjectException("This issue cannot be created right now", e);
+			throw new IsssueExeption("This issue cannot be created right now", e);
 
 		} finally {
 			try {
 				connection.setAutoCommit(true);
 			} catch (SQLException e) {
-				throw new ProjectException("This issue cannot be created right now", e);
+				throw new IsssueExeption("This issue cannot be created right now", e);
 			}
 		}
 		return issueID;
 	}
 
 	public void addDescriptionToIssue(Issue issue) throws IsssueExeption {
+		if (issue == null) {
+			throw new IsssueExeption("Invalid issue given");
+		}
 		Connection connection = DBConnection.getConnection();
 
 		try {
@@ -105,7 +111,10 @@ public class IssueDAO {
 
 	}
 
-	public void addIssueToSprint(Issue issue, Sprint sprint) throws ProjectException {
+	public void addIssueToSprint(Issue issue, Sprint sprint) throws IsssueExeption {
+		if (issue == null) {
+			throw new IsssueExeption("Invalid issue given");
+		}
 		Connection connection = DBConnection.getConnection();
 
 		try {
@@ -119,14 +128,14 @@ public class IssueDAO {
 			try {
 				connection.rollback();
 			} catch (SQLException e1) {
-				throw new ProjectException("This issue cannot be created right now", e);
+				throw new IsssueExeption("This issue cannot be created right now", e);
 			}
-			throw new ProjectException("This issue cannot be created right now", e);
+			throw new IsssueExeption("This issue cannot be created right now", e);
 		} finally {
 			try {
 				connection.setAutoCommit(true);
 			} catch (SQLException e) {
-				throw new ProjectException("This issue cannot be created right now", e);
+				throw new IsssueExeption("This issue cannot be created right now", e);
 			}
 		}
 	}
@@ -149,6 +158,9 @@ public class IssueDAO {
 	}
 
 	public Issue getIssue(int issueID) throws IsssueExeption {
+		if (issueID <= 0) {
+			throw new IsssueExeption("Invalid issue given");
+		}
 		Connection connection = DBConnection.getConnection();
 		Issue result = null;
 		try {

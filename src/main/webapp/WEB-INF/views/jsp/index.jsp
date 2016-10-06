@@ -1,5 +1,6 @@
-<%@page errorPage="errorPage/error.jsp"%>
+<%@page errorPage="./error.jsp"%>
 <%@include file="menu.jsp"%>
+<%@page session="false"%>
 
 <%
 	if (request.getSession(false) == null) {

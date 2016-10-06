@@ -3,7 +3,6 @@
 <%@include file="menu.jsp"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%@page errorPage="errorPage/error.jsp"%>
 <link href="bootstrap.min.css" rel="stylesheet">
 <link href="metisMenu.min.css" rel="stylesheet">
 
@@ -21,7 +20,7 @@
 						$("#answer").empty();
 						var obj = data;
 						var img = document.createElement("img");
-						img.src = obj.photo;
+						img.src = obj;
 						img.width = 20;
 						img.height = 20;
 						img.id = "em";

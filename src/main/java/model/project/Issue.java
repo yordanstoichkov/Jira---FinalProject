@@ -8,6 +8,7 @@ import java.util.List;
 
 import model.employee.Employee;
 import model.exceptions.EmployeeException;
+import model.exceptions.IsssueExeption;
 import model.exceptions.ProjectException;
 
 public class Issue extends PartOfProject {
@@ -21,7 +22,7 @@ public class Issue extends PartOfProject {
 	private List<Integer> asignees = new ArrayList<Integer>();
 
 	public Issue(String title, PriorityLevel priority, IssueType type, List<Integer> asignees)
-			throws ProjectException, EmployeeException {
+			throws ProjectException, EmployeeException, IsssueExeption {
 		super(title);
 		this.status = WorkFlow.TO_DO;
 		this.priority = priority;
@@ -33,9 +34,12 @@ public class Issue extends PartOfProject {
 		}
 	}
 
-	private void setAsignees(List<Integer> asignees) {
-		this.asignees.addAll(asignees);
-
+	private void setAsignees(List<Integer> asignees) throws IsssueExeption {
+		if (asignees != null) {
+			this.asignees.addAll(asignees);
+		} else {
+			throw new IsssueExeption("Please enter exsisting employee for this issue");
+		}
 	}
 
 	public Issue(String title, WorkFlow status) throws ProjectException {
@@ -47,8 +51,12 @@ public class Issue extends PartOfProject {
 		return sprint;
 	}
 
-	public void setSprint(Sprint sprint) {
-		this.sprint = sprint;
+	public void setSprint(Sprint sprint) throws IsssueExeption {
+		if (sprint != null) {
+			this.sprint = sprint;
+		} else {
+			throw new IsssueExeption("Please enter exsisting sprint for this issue");
+		}
 	}
 
 	public IssueType getType() {
@@ -103,12 +111,21 @@ public class Issue extends PartOfProject {
 		return description;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setDescription(String description) throws ProjectException {
+		if (description != null && !description.trim().equals("")) {
+			this.description = description;
+		} else {
+			throw new ProjectException("You entered invalid description!");
+
+		}
 	}
 
-	public void setAsignee(int asignee) {
-		this.asignees.add(asignee);
+	public void setAsignee(int asigneeID) throws ProjectException {
+		if (asigneeID > 0) {
+			this.asignees.add(asigneeID);
+		} else {
+			throw new ProjectException("You entered invalid employee id. ");
+		}
 	}
 
 	public boolean isAsigneed(int employeeID) {

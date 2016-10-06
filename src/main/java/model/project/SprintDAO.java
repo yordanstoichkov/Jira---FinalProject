@@ -20,7 +20,10 @@ public class SprintDAO {
 	private static final String SELECT_SPRINT_SQL = "SELECT * FROM sprints WHERE sprint_id = ?";
 	private static final String SELECT_ISSUES_SQL = "SELECT issue_id " + "FROM issues " + "WHERE sprint_id=?";
 
-	public int createSprint(Sprint sprint) throws ProjectException {
+	public int createSprint(Sprint sprint) throws SprintException {
+		if (sprint == null) {
+			throw new SprintException("Invalid sprint entered");
+		}
 		Connection connection = DBConnection.getConnection();
 		try {
 			connection.setAutoCommit(false);
@@ -43,20 +46,23 @@ public class SprintDAO {
 			try {
 				connection.rollback();
 			} catch (SQLException e1) {
-				throw new ProjectException("You can not make your sprint right now! Please,try again later!", e1);
+				throw new SprintException("You can not make your sprint right now! Please,try again later!", e1);
 
 			}
-			throw new ProjectException("You can not make your sprint right now! Please,try again later!", e);
+			throw new SprintException("You can not make your sprint right now! Please,try again later!", e);
 		} finally {
 			try {
 				connection.setAutoCommit(true);
 			} catch (SQLException e) {
-				throw new ProjectException("You can not make your sprint right now! Please,try again later!", e);
+				throw new SprintException("You can not make your sprint right now! Please,try again later!", e);
 			}
 		}
 	}
 
 	public Sprint getSprint(int sprintID) throws SprintException {
+		if (sprintID <= 0) {
+			throw new SprintException("Invalid sprint id entered");
+		}
 		Connection connection = DBConnection.getConnection();
 		Sprint result = null;
 		try {

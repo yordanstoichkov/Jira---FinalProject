@@ -31,6 +31,9 @@ public class ProjectDAO {
 			+ "JOIN projects p ON (p.project_id=s.project_id) " + "WHERE p.project_id=?;";
 
 	public int createProject(Project project, Employee employee) throws ProjectException {
+		if (project == null || employee == null) {
+			throw new ProjectException("You entered invalid parameters");
+		}
 		Connection connection = DBConnection.getConnection();
 		try {
 			connection.setAutoCommit(false);
@@ -64,6 +67,9 @@ public class ProjectDAO {
 	}
 
 	public void setReleaseDate(Project project, LocalDate releaseDate) throws ProjectException {
+		if (project == null) {
+			throw new ProjectException("This is illegal project");
+		}
 		Connection connection = DBConnection.getConnection();
 		try {
 			PreparedStatement ps = connection.prepareStatement(SET_RELEASE_DATE_SQL);
@@ -79,6 +85,9 @@ public class ProjectDAO {
 	}
 
 	public void setStartDate(Project project, LocalDate startDate) throws ProjectException {
+		if (project == null) {
+			throw new ProjectException("This is illegal project");
+		}
 		Connection connection = DBConnection.getConnection();
 		try {
 			Date date = Date.valueOf(startDate);
@@ -109,52 +118,10 @@ public class ProjectDAO {
 
 	}
 
-	public List<String> openYourPage(Integer userId) throws ProjectException {
-		List<Integer> allProjectsIdOfUser = new ArrayList<Integer>();
-		List<String> allProjectsNameOfUser = new ArrayList<String>();
-		Connection connection = DBConnection.getConnection();
-
-		try {
-			connection.setAutoCommit(false);
-			PreparedStatement ps = connection.prepareStatement(SELECT_PROJECTS_ID_SQL);
-			ps.setInt(1, userId);
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				allProjectsIdOfUser.add(rs.getInt(1));
-			}
-
-			if (!allProjectsIdOfUser.isEmpty()) {
-				for (int project = 0; project < allProjectsIdOfUser.size(); project++) {
-					PreparedStatement ps2 = connection.prepareStatement(SELECT_PROJECTS_NAME_SQL);
-					ps2.setInt(1, allProjectsIdOfUser.get(project));
-					ResultSet rs2 = ps2.executeQuery();
-					rs2.next();
-					allProjectsNameOfUser.add(rs2.getString("title"));
-
-				}
-			}
-			connection.commit();
-			return allProjectsNameOfUser;
-		} catch (SQLException e) {
-			try {
-				connection.rollback();
-			} catch (SQLException e1) {
-				throw new ProjectException("You can not open your page right now! Please,try again later!", e1);
-
-			}
-			throw new ProjectException("You can not open your page right now! Please,try again later!", e);
-
-		} finally {
-			try {
-				connection.setAutoCommit(true);
-			} catch (SQLException e) {
-				throw new ProjectException("You can not open your page right now! Please,try again later!", e);
-			}
-		}
-
-	}
-
 	public Project getProject(int projectid) throws ProjectException {
+		if (projectid <= 0) {
+			throw new ProjectException("This is illegal project");
+		}
 		Connection connection = DBConnection.getConnection();
 		Project result = null;
 		try {
@@ -163,7 +130,7 @@ public class ProjectDAO {
 			ResultSet projectRS = projectPS.executeQuery();
 			projectRS.next();
 			result = new Project(projectRS.getString("title"));
-
+			result.setProjectId(projectid);
 			PreparedStatement sprintsPS = connection.prepareStatement(SELECT_SPRINTS_SQL);
 			sprintsPS.setInt(1, projectid);
 			ResultSet sprintsRS = sprintsPS.executeQuery();

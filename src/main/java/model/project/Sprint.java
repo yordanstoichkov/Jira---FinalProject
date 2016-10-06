@@ -7,13 +7,10 @@ import java.util.Collections;
 import java.util.List;
 
 import model.exceptions.ProjectException;
+import model.exceptions.SprintException;
 
 public class Sprint extends PartOfProject {
 	private Project project;
-	public void setProject(Project project) {
-		this.project = project;
-	}
-
 	private List<Issue> issues = new ArrayList<Issue>();
 	private LocalDate endDate;
 	private int sprintId;
@@ -29,11 +26,11 @@ public class Sprint extends PartOfProject {
 		return endDate;
 	}
 
-	public void setEndDate(LocalDate endDate) throws ProjectException {
+	public void setEndDate(LocalDate endDate) throws SprintException {
 		if (objectValidator(endDate)) {
 			this.endDate = endDate;
 		} else
-			throw new ProjectException("You entered invalid end date. Please, try again!");
+			throw new SprintException("You entered invalid end date. Please, try again!");
 
 	}
 
@@ -41,12 +38,20 @@ public class Sprint extends PartOfProject {
 		return sprintId;
 	}
 
-	public void setSprintId(int sprintId) throws ProjectException {
+	public void setSprintId(int sprintId) throws SprintException {
 		if (sprintId > 0) {
 			this.sprintId = sprintId;
 		} else
-			throw new ProjectException("You entered invalid sprint id. Please, try again!");
+			throw new SprintException("You entered invalid sprint id. Please, try again!");
 
+	}
+
+	public void setProject(Project project) throws SprintException {
+		if (project != null) {
+			this.project = project;
+		} else {
+			throw new SprintException("This is illigal project");
+		}
 	}
 
 	public Project getProject() {
@@ -61,12 +66,16 @@ public class Sprint extends PartOfProject {
 		this.status = status;
 	}
 
-	public void addIssue(Issue issue) {
-		this.issues.add(issue);
+	public void addIssue(Issue issue) throws SprintException {
+		if (issue != null) {
+			this.issues.add(issue);
+		} else {
+			throw new SprintException("This is illigal issue");
+		}
 	}
 
 	public List<Issue> getIssues() {
 		return Collections.unmodifiableList(issues);
 	}
-	
+
 }

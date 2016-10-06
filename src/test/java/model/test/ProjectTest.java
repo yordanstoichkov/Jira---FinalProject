@@ -37,9 +37,7 @@ public class ProjectTest {
 		// dao.createProject(project, pesho);
 		// Sprint sprint= new Sprint("narisuvai dyga", project);
 		// sdao.createSprint(sprint);
-		List<String> allProjectsNameOfUser = new ArrayList<String>();
 
-		allProjectsNameOfUser = dao.openYourPage(23);
 		Employee geri = new Employee("geri@mail.com", "Geri11");
 		geri.setEmployeeID(daoE.loginUser(geri));
 
@@ -62,7 +60,6 @@ public class ProjectTest {
 		// }
 
 		List<Project> projects = new EmployeeDAO().giveMyProjects(geri);
-		
 
 	}
 
