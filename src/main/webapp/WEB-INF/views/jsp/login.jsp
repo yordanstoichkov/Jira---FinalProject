@@ -7,6 +7,8 @@
 <link href="font-awesome.min.css" rel="stylesheet" type="text/css">
 <link href="<c:url value="background.css"></c:url>" rel="stylesheet"
 	type="text/css">
+<link href="iconic.css" rel="stylesheet">
+
 
 </head>
 <body>

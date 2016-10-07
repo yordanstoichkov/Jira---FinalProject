@@ -20,9 +20,26 @@
     border-left: 1px solid #e7e7e7;
   }
 }
+.counts{
+	color: white;
+	text-align:left;
+	padding-top: 90px;
+	padding-left: 20px;
+	padding-right:20px;
+}
+.user{
+	text-align:left;
+}
+.project{
+	text-align:center;
+}
+.issue{
+	text-align:right;
+}
 .navbar-top-links {
   margin-right: 0;
 }
+
 .navbar-top-links li {
   display: inline-block;
 }
@@ -275,7 +292,7 @@ table.dataTable thead .sorting:after {
   background-color: #f0ad4e;
 }
 .forma{
-	padding-top:120px;
+	padding-top:100px;
 }
 .panel-yellow > a {
   color: #f0ad4e;

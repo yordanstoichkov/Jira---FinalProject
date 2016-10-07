@@ -1,6 +1,8 @@
 package model.employee;
 
 import java.sql.Connection;
+import org.springframework.stereotype.Component;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,7 +24,7 @@ import model.exceptions.ProjectException;
 import model.project.Project;
 import model.project.ProjectDAO;
 
-@Component
+//@Component
 public class EmployeeDAO implements IEmployeeDAO {
 	private static final String DELETE_USER_SQL = "DELETE from employees where employee_id = ?;";
 	private static final String REGISTER_USER_TO_DB_SQL = "INSERT into employees VALUES(NULL,?,?,?,?,md5(?));";
@@ -42,6 +44,9 @@ public class EmployeeDAO implements IEmployeeDAO {
 	 * 
 	 * @see model.employee.IEmployeeDAO#registerUser(model.employee.Employee)
 	 */
+//	@Autowired
+//	public  EmployeeDAO() {
+//	}
 	@Override
 	public int registerUser(Employee emp) throws EmployeeException {
 		if (!isEmployeeValid(emp)) {

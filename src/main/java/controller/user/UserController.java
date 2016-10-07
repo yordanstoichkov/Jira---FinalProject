@@ -1,28 +1,35 @@
 package controller.user;
 
 import javax.servlet.http.Cookie;
+import org.springframework.stereotype.Component;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import configuration.SpringWebConfig;
 import model.employee.Employee;
 import model.employee.EmployeeDAO;
 import model.employee.IEmployeeDAO;
 import model.employee.Employee.Jobs;
 import model.exceptions.EmployeeException;
-
+//@ContextConfiguration(classes = SpringWebConfig.class)
+//@Component
 @Controller
-@SessionAttributes("product")
 public class UserController {
-
+//	@Autowired
+//	private EmployeeDAO empDao;
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	public String logout(Model model, HttpServletRequest request) {
 		request.getSession().invalidate();

@@ -17,6 +17,8 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
+import model.employee.EmployeeDAO;
+
 @Configuration
 @EnableWebMvc
 @ComponentScan("controller")
@@ -62,5 +64,9 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
 		changeInterceptor.setParamName("language");
 		registry.addInterceptor(changeInterceptor);
 	}
+//	@Bean
+//	public EmployeeDAO empDao() {
+//		return new EmployeeDAO();
+//	}
 
 }
