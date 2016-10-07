@@ -9,10 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import model.employee.Employee;
-import model.employee.Employee.Jobs;
-import model.employee.IEmployeeDAO;
-import model.exceptions.EmployeeException;
+import com.jira.model.employee.Employee;
+import com.jira.model.employee.IEmployeeDAO;
+import com.jira.model.employee.Employee.Jobs;
+import com.jira.model.exceptions.EmployeeException;
 
 public class EmployeeTest {
 	@Autowired

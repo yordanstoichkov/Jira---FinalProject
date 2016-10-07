@@ -1,135 +1,57 @@
 <%@include file="navigation.jsp"%>
-<link href="<c:url value ="issues.css"/>" rel="stylesheet">
+<link href="issues.css" rel="stylesheet">
+<script type="text/javascript" src="jquery-3.1.1.min.js"></script>
 </head>
 <body>
-	<script src="issues.js"></script>
+
 	<h1 style="padding-left: 280px; padding-top: 35px; font-size: 250%">
 		<c:out value="${project.title}"></c:out>
 	</h1>
+	<div class="panel-heading">
+		<h3 class="panel-title">Developers</h3>
+		<div class="pull-right">
+			<span class="clickable filter" data-toggle="tooltip"
+				title="Toggle table filter" data-container="body"> <i
+				class="glyphicon glyphicon-filter"></i>
+			</span>
+		</div>
+	</div>
+	<div class="panel-body">
+		<input type="text" class="form-control" id="dev-table-filter"
+			data-action="filter" data-filters="#dev-table"
+			placeholder="Filter Developers" />
+	</div>
 	<div class="wrapper">
 
 		<div class="table">
 
-			<div class="row header">
-				<div class="cell">Name</div>
-				<div class="cell">Age</div>
-				<div class="cell">Occupation</div>
-				<div class="cell">Location</div>
-			</div>
 
-			<div class="row">
-				<div class="cell">Luke Peters</div>
-				<div class="cell">25</div>
-				<div class="cell">Freelance Web Developer</div>
-				<div class="cell">Brookline, MA</div>
-			</div>
+			<table class="table table-hover" id="dev-table">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Issue name</th>
+						<th>Last Name</th>
+						<th>Priority</th>
+						<th>Type</th>
+					</tr>
+				</thead>
+				<tbody>
 
-			<div class="row">
-				<div class="cell">Joseph Smith</div>
-				<div class="cell">27</div>
-				<div class="cell">Project Manager</div>
-				<div class="cell">Somerville, MA</div>
-			</div>
-
-			<div class="row">
-				<div class="cell">Maxwell Johnson</div>
-				<div class="cell">26</div>
-				<div class="cell">UX Architect & Designer</div>
-				<div class="cell">Arlington, MA</div>
-			</div>
-
-			<div class="row">
-				<div class="cell">Harry Harrison</div>
-				<div class="cell">25</div>
-				<div class="cell">Front-End Developer</div>
-				<div class="cell">Boston, MA</div>
-			</div>
-
+					<c:forEach items="${project.sprints}" var="sprint">
+						<c:forEach items="${sprint.issues}" var="issue">
+							<tr>
+								<td>${issue.title}</td>
+								<td>Kilgore</td>
+								<td>${issue.priority}</td>
+								<td>${issue.type}</td>
+							</tr>
+						</c:forEach>
+					</c:forEach>
+				</tbody>
+			</table>
 		</div>
-
-		<div class="table">
-
-			<div class="row header green">
-				<div class="cell">Product</div>
-				<div class="cell">Unit Price</div>
-				<div class="cell">Quantity</div>
-				<div class="cell">Date Sold</div>
-				<div class="cell">Status</div>
-			</div>
-
-			<div class="row">
-				<div class="cell">Solid oak work table</div>
-				<div class="cell">$800</div>
-				<div class="cell">10</div>
-				<div class="cell">03/15/2014</div>
-				<div class="cell">Waiting for Pickup</div>
-			</div>
-
-			<div class="row">
-				<div class="cell">Leather iPhone wallet</div>
-				<div class="cell">$45</div>
-				<div class="cell">120</div>
-				<div class="cell">02/28/2014</div>
-				<div class="cell">In Transit</div>
-			</div>
-
-			<div class="row">
-				<div class="cell">27" Apple Thunderbolt displays</div>
-				<div class="cell">$1000</div>
-				<div class="cell">25</div>
-				<div class="cell">02/10/2014</div>
-				<div class="cell">Delivered</div>
-			</div>
-
-			<div class="row">
-				<div class="cell">Bose studio headphones</div>
-				<div class="cell">$60</div>
-				<div class="cell">90</div>
-				<div class="cell">01/14/2014</div>
-				<div class="cell">Delivered</div>
-			</div>
-
-		</div>
-
-		<div class="table">
-
-			<div class="row header blue">
-				<div class="cell">Username</div>
-				<div class="cell">Email</div>
-				<div class="cell">Password</div>
-				<div class="cell">Active</div>
-			</div>
-
-			<div class="row">
-				<div class="cell">ninjalug</div>
-				<div class="cell">misterninja@hotmail.com</div>
-				<div class="cell">************</div>
-				<div class="cell">Yes</div>
-			</div>
-
-			<div class="row">
-				<div class="cell">jsmith41</div>
-				<div class="cell">joseph.smith@gmail.com</div>
-				<div class="cell">************</div>
-				<div class="cell">No</div>
-			</div>
-
-			<div class="row">
-				<div class="cell">1337hax0r15</div>
-				<div class="cell">hackerdude1000@aol.com</div>
-				<div class="cell">************</div>
-				<div class="cell">Yes</div>
-			</div>
-
-			<div class="row">
-				<div class="cell">hairyharry19</div>
-				<div class="cell">harryharry@gmail.com</div>
-				<div class="cell">************</div>
-				<div class="cell">Yes</div>
-			</div>
-
-		</div>
-
 	</div>
+	<script src="issues.js"></script>
 </body>
 </html>

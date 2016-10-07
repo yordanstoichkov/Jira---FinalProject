@@ -1,3 +1,15 @@
+/**
+ * I don't recommend using this plugin on large tables, I just wrote it to make
+ * the demo useable. It will work fine for smaller tables but will likely
+ * encounter performance issues on larger tables.
+ * 
+ * <input type="text" class="form-control" id="dev-table-filter"
+ * data-action="filter" data-filters="#dev-table" placeholder="Filter
+ * Developers" /> $(input-element).filterTable()
+ * 
+ * The important attributes are 'data-action="filter"' and
+ * 'data-filters="#table-selector"'
+ */
 (function() {
 	'use strict';
 	var $ = jQuery;
@@ -17,6 +29,7 @@
 															.toLowerCase(), target = $this
 															.attr('data-filters'), $target = $(target), $rows = $target
 															.find('tbody tr');
+
 													if (search == '') {
 														$rows.show();
 													} else {

@@ -1,4 +1,3 @@
-<%@page import="model.project.WorkFlow"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="ISO-8859-1"%>
 <%@include file="menu.jsp"%>
@@ -37,9 +36,13 @@
 		<!-- Modal content -->
 		<div class="modal-content">
 			<span class="close">×</span>
-			<form:form commandName="emptyproject">
+			<form:form name="form" commandName="emptyproject"
+				onsubmit="return validateForm()">
 				<label>Enter title*</label>
-				<form:input type="text" path="title" />
+				<form:input type="text" name="title" path="title"
+					cssErrorClass="error" />
+				<p id="demo"></p>
+				<form:errors path="title" cssClass="error"></form:errors>
 				<br />
 				<input type="submit" value="Create project" />
 			</form:form>
@@ -178,6 +181,21 @@
 			if (event.target == modal) {
 				modal.style.display = "none";
 			}
+		}
+
+		function validateForm() {
+			$("#demo").empty();
+			var text;
+			var x = trim(document.forms["form"]["title"].value);
+			if (x == null || x == "") {
+				text = "Name must be filled out";
+				$("#demo").append(text);
+				return false;
+			}
+
+		}
+		function trim(value) {
+			return value.replace(/^\s+|\s+$/g, "");
 		}
 	</script>
 

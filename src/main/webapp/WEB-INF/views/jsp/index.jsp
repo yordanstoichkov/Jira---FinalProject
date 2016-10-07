@@ -11,6 +11,9 @@
 %>
 <head>
 <link href="bootstrap.min.css" rel="stylesheet">
+<link href="sb-admin-2.css" rel="stylesheet">
+
+
 </head>
 <body>
 	<%

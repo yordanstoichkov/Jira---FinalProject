@@ -4,22 +4,23 @@ import java.util.Arrays;
 
 import org.junit.Test;
 
-import model.employee.Employee;
-import model.employee.Employee.Jobs;
-import model.exceptions.EmployeeException;
-import model.exceptions.IsssueExeption;
-import model.exceptions.ProjectException;
-import model.exceptions.SprintException;
-import model.project.Issue;
-import model.project.IssueDAO;
-import model.project.IssueType;
-import model.project.PartOfProjectException;
-import model.project.PriorityLevel;
-import model.project.Project;
-import model.project.Sprint;
+import com.jira.model.employee.Employee;
+import com.jira.model.employee.Employee.Jobs;
+import com.jira.model.exceptions.EmployeeException;
+import com.jira.model.exceptions.IsssueExeption;
+import com.jira.model.exceptions.ProjectException;
+import com.jira.model.exceptions.SprintException;
+import com.jira.model.project.IIssueDAO;
+import com.jira.model.project.Issue;
+import com.jira.model.project.IssueDAO;
+import com.jira.model.project.IssueType;
+import com.jira.model.project.PartOfProjectException;
+import com.jira.model.project.PriorityLevel;
+import com.jira.model.project.Project;
+import com.jira.model.project.Sprint;
 
 public class IssueTest {
-	private IssueDAO dao = new IssueDAO();
+	private IIssueDAO dao = new IssueDAO();
 
 	@Test
 	public void test() throws ProjectException, EmployeeException, IsssueExeption, PartOfProjectException, SprintException {

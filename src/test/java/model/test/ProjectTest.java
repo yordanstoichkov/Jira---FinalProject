@@ -8,21 +8,23 @@ import java.util.List;
 
 import org.junit.Test;
 
-import model.employee.Employee;
-import model.employee.Employee.Jobs;
-import model.employee.EmployeeDAO;
-import model.employee.IEmployeeDAO;
-import model.exceptions.EmployeeException;
-import model.exceptions.ProjectException;
-import model.project.Project;
-import model.project.ProjectDAO;
-import model.project.Sprint;
-import model.project.SprintDAO;
+import com.jira.model.employee.Employee;
+import com.jira.model.employee.EmployeeDAO;
+import com.jira.model.employee.IEmployeeDAO;
+import com.jira.model.employee.Employee.Jobs;
+import com.jira.model.exceptions.EmployeeException;
+import com.jira.model.exceptions.ProjectException;
+import com.jira.model.project.IProjectDAO;
+import com.jira.model.project.ISprintDAO;
+import com.jira.model.project.Project;
+import com.jira.model.project.ProjectDAO;
+import com.jira.model.project.Sprint;
+import com.jira.model.project.SprintDAO;
 
 public class ProjectTest {
 	private IEmployeeDAO daoE = new EmployeeDAO();
-	ProjectDAO dao = new ProjectDAO();
-	SprintDAO sdao = new SprintDAO();
+	IProjectDAO dao = new ProjectDAO();
+	ISprintDAO sdao = new SprintDAO();
 
 	@Test
 	public void test() throws EmployeeException, ProjectException {

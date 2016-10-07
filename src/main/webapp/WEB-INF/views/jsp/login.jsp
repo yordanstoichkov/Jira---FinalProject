@@ -55,10 +55,10 @@
 
 		</div>
 	</div>
-	<script src="../vendor/jquery/jquery.min.js"></script>
-	<script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
-	<script src="../vendor/metisMenu/metisMenu.min.js"></script>
-	<script src="../dist/js/sb-admin-2.js"></script>
+	<script src="jquery.min.js"></script>
+	<script src="bootstrap.min.js"></script>
+	<script src="metisMenu.min.js"></script>
+	<script src="sb-admin-2.js"></script>
 
 </body>
 
