@@ -3,6 +3,10 @@
 	padding: 20px 10px;
 }
 
+table {
+	padding-left: 100px
+}
+
 .clickable {
 	cursor: pointer;
 }
@@ -13,13 +17,13 @@
 }
 
 .panel-heading div span {
-	margin-left: 5px;
+	margin-left: 55px;
 }
 
 .panel-body {
 	display: none;
 }
 
-.wrapper{
-	padding-right:50px
+.wrapper {
+	padding-left: 100px
 }
