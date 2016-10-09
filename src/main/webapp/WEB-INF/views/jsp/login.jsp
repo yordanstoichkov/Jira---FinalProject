@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%@page errorPage="./error.jsp"%>
+<%@page errorPage="error.jsp"%>
+<%@page session="false"%>
 <link href="bootstrap.min.css" rel="stylesheet">
 <link href="metisMenu.min.css" rel="stylesheet">
 <link href="sb-admin-2.css" rel="stylesheet">

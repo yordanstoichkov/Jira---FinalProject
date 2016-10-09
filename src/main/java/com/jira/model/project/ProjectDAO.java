@@ -20,9 +20,7 @@ import com.jira.model.exceptions.SprintException;
 
 @Component
 public class ProjectDAO implements IProjectDAO {
-	private static final String DELETE_PROJECT_IN_PROJECT_MANAGERS_SQL = "DELETE FROM project_managers WHERE project_id=?";
-	private static final String DELETE_PROJECT_IN_ISSUES_DEVELOPERS_SQL = "DELETE FROM issues_developers WHERE project_id=?";
-	private static final String DELETE_PROJECT_IN_ISSUES_REVIEWER_SQL = "DELETE FROM issue_reviewers WHERE project_id=?";
+	private static final String DELETE_PROJECT_SQL = "DELETE FROM projects WHERE project_id=?";
 
 	private static final String INSERT_PROJECT_OF_MANAGER_SQL = "INSERT INTO project_managers VALUES (?, ?);";
 	private static final String INSERT_PROJECT_SQL = "INSERT INTO projects VALUES (null,null,null, ?);";
@@ -186,6 +184,28 @@ public class ProjectDAO implements IProjectDAO {
 		} catch (SprintException e) {
 			throw new ProjectException("Something went wrong can't get your project", e);
 		}
+		return result;
+	}
+
+	@Override
+	public int deleteProject(Project project) throws ProjectException {
+		if (project == null) {
+			throw new ProjectException("This is illegal project");
+		}
+		Connection connection = DBConnection.getConnection();
+		int result = 0;
+		try {
+			PreparedStatement projectPS = connection.prepareStatement(DELETE_PROJECT_SQL,
+					Statement.RETURN_GENERATED_KEYS);
+			projectPS.setInt(1, project.getProjectId());
+			projectPS.executeUpdate();
+			ResultSet projectRS = projectPS.getGeneratedKeys();
+			projectRS.next();
+			result = projectRS.getInt(1);
+		} catch (SQLException e) {
+			throw new ProjectException("Something went wrong this project cannot be deleted");
+		}
+
 		return result;
 	}
 

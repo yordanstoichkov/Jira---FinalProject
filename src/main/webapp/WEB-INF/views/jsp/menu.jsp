@@ -2,7 +2,7 @@
 	pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@page session="false"%>
-<%@page errorPage="./error.jsp"%>
+<%@page errorPage="error.jsp"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,7 +42,7 @@
 						style="font-size: 2.0em;"></i> Home</a></li>
 				<li><a href="./projects"><i class="fa fa-paste"
 						style="font-size: 2.0em;"></i>Projects</a></li>
-				<li><a href="./home"><i class="fa fa-phone"
+				<li><a href="./error"><i class="fa fa-phone"
 						style="font-size: 2.0em;"></i> Contact</a></li>
 
 
@@ -52,10 +52,9 @@
 				<li style="float: right"><a class="active" href="./reg">Register</a></li>
 				<%
 					} else {
-				%><c:if test="${user.job ne 'MANAGER'}">
-					<li><a href="#"><i class="fa fa-pencil"
-							style="font-size: 2.0em;"></i>Your issues</a></li>
-				</c:if>
+				%>
+				<li><a href="#"><i class="fa fa-pencil"
+						style="font-size: 2.0em;"></i>Your issues</a></li>
 				<li style="float: right"><a class="active" href="./logout">LogOut</a></li>
 				<li style="float: right"><a class="active" href="#">Hi, <%=request.getSession().getAttribute("username")%>
 				</a></li>

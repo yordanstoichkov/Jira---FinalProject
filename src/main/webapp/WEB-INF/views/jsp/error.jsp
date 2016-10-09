@@ -3,13 +3,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="error.css" >
+<link rel="stylesheet" type="text/css" href="errorcss.css">
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>OOPS</title>
 </head>
 <body>
-	<h1>Sorry we have a problem</h1>
-
-	<a class="active" href="./logout" >Return home!</a>
+	<div class="return">
+		<a class="active" href="./logout">Return home!</a>
+	</div>
 </body>
-</html>	
+</html>

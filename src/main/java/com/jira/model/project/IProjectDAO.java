@@ -17,4 +17,5 @@ public interface IProjectDAO {
 
 	Project getProject(int projectid) throws ProjectException;
 
+	int deleteProject(Project project) throws ProjectException;
 }

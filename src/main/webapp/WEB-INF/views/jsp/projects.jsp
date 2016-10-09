@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="ISO-8859-1"%>
 <%@include file="menu.jsp"%>
-<%@page errorPage="./error.jsp"%>
+<%@page errorPage="error.jsp"%>
 <%@ page import="java.util.List"%>
 <%@page import="java.util.ArrayList"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
@@ -67,16 +67,18 @@
 								</div>
 							</div>
 							<div class="col-lg-3 col-md-2">
-								<form action="./projectmain" >
+								<form action="./projectmain">
 									<button type="submit" id="track" name="projectId"
 										value="${project.projectId}"
-										class="btn btn-outline btn-primary btn-lg" ><img src="eye.png" width=17px;
-															height=17px; ></button>
+										class="btn btn-outline btn-primary btn-lg">
+										<img src="eye.png" width=17px; height=17px;>
+									</button>
 								</form>
-								<form action="./deleteProject">
+								<form action="./deleteProject" method="post">
 									<button type="submit" class="btn btn-outline btn-danger"
-										id="delete" name="deleteProject"><img src="bin.png" width=17px;
-															height=17px; ></button>
+										value="${project.projectId}" id="delete" name="projectId">
+										<img src="bin.png" width=17px; height=17px;>
+									</button>
 
 								</form>
 

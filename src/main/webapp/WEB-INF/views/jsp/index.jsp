@@ -1,4 +1,4 @@
-<%@page errorPage="./error.jsp"%>
+<%@page errorPage="error.jsp"%>
 <%@include file="menu.jsp"%>
 <%@page session="false"%>
 
