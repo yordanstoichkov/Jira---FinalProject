@@ -21,6 +21,7 @@ public class Issue {
 	private String description;
 	private List<Integer> asignees = new ArrayList<Integer>();
 	private String title;
+	private LocalDate startDate;
 
 	public String getTitle() {
 		return title;
@@ -52,7 +53,7 @@ public class Issue {
 	}
 
 	public Issue(String title, WorkFlow status) throws ProjectException {
-		this.title=title;
+		this.title = title;
 		this.status = status;
 	}
 
@@ -144,6 +145,14 @@ public class Issue {
 			}
 		}
 		return false;
+	}
+
+	public LocalDate getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(LocalDate startDate) {
+		this.startDate = startDate;
 	}
 
 }

@@ -20,6 +20,7 @@ public class Project {
 	private int toDo;
 	private int inProgress;
 	private int done;
+	private LocalDate startDate;
 
 	public Project() {
 	}
@@ -95,6 +96,14 @@ public class Project {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public LocalDate getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(LocalDate startDate) {
+		this.startDate = startDate;
 	}
 
 }

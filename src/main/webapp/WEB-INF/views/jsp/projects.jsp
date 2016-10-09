@@ -70,9 +70,15 @@
 								<form action="./projectmain">
 									<button type="submit" id="track" name="projectId"
 										value="${project.projectId}"
-										class="btn btn-outline btn-primary btn-lg">Track
+										class="btn btn-outline btn-primary btn-lg">Open
 										project</button>
 								</form>
+								<form action="./deleteProject">
+									<button type="submit" class="btn btn-outline btn-danger"
+										id="delete" name="deleteProject">Delete project</button>
+
+								</form>
+
 							</div>
 
 

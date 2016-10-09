@@ -20,6 +20,10 @@ import com.jira.model.exceptions.SprintException;
 
 @Component
 public class ProjectDAO implements IProjectDAO {
+	private static final String DELETE_PROJECT_IN_PROJECT_MANAGERS_SQL = "DELETE FROM project_managers WHERE project_id=?";
+	private static final String DELETE_PROJECT_IN_ISSUES_DEVELOPERS_SQL = "DELETE FROM issues_developers WHERE project_id=?";
+	private static final String DELETE_PROJECT_IN_ISSUES_REVIEWER_SQL = "DELETE FROM issue_reviewers WHERE project_id=?";
+
 	private static final String INSERT_PROJECT_OF_MANAGER_SQL = "INSERT INTO project_managers VALUES (?, ?);";
 	private static final String INSERT_PROJECT_SQL = "INSERT INTO projects VALUES (null,null,null, ?);";
 	private static final String SET_RELEASE_DATE_SQL = "UPDATE projects SET release_date= ? WHERE project_id = ?";

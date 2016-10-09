@@ -32,6 +32,7 @@ public class IssueDAO implements IIssueDAO {
 	private static final String GET_ISSUE_COUNT_SQL = "SELECT count(*) as 'issue_count' FROM issues";
 	private static final String GET_ISSUE_SQL = "SELECT * FROM issues WHERE issue_id = ?";
 	private static final String SELECT_DEVELOPERS_OF_ISSUE_SQL = "SELECT developer_id FROM issues_developers WHERE issue_id = ?";
+	private static final String UPDATE_STATUS_ID = "UPDATE issues SET status_id= ? WHERE issue_id = ?;";
 
 	@Autowired
 	private IPartOfProjectDAO partDAO;
@@ -128,6 +129,38 @@ public class IssueDAO implements IIssueDAO {
 		}
 
 	}
+	public void updateIssueInProgress(int issueId) throws IsssueExeption {
+		if (issueId < 0) {
+			throw new IsssueExeption("Invalid issue given");
+		}
+		Connection connection = DBConnection.getConnection();
+
+		try {
+			PreparedStatement updateIssue = connection.prepareStatement(UPDATE_STATUS_ID);
+			updateIssue.setInt(1, 2);
+			updateIssue.setInt(2, issueId);
+			updateIssue.executeUpdate();
+		} catch (SQLException e) {
+			throw new IsssueExeption("This issue description couldn't be added");
+		}
+
+	}
+	public void updateIssueDone(int issueId) throws IsssueExeption {
+		if (issueId < 0) {
+			throw new IsssueExeption("Invalid issue given");
+		}
+		Connection connection = DBConnection.getConnection();
+
+		try {
+			PreparedStatement updateIssue = connection.prepareStatement(UPDATE_STATUS_ID);
+			updateIssue.setInt(1, 4);
+			updateIssue.setInt(2, issueId);
+			updateIssue.executeUpdate();
+		} catch (SQLException e) {
+			throw new IsssueExeption("This issue description couldn't be added");
+		}
+
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -217,6 +250,7 @@ public class IssueDAO implements IIssueDAO {
 			IssueType type = partDAO.getType(typeID);
 			WorkFlow status = partDAO.getStatus(statusID);
 			result = new Issue(title, status);
+			result.setIssueId(issueID);
 			result.setDescription(description);
 			result.setType(type);
 			result.setPriority(priority);

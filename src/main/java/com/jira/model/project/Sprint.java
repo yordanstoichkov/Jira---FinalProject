@@ -9,15 +9,17 @@ import java.util.List;
 import com.jira.model.exceptions.ProjectException;
 import com.jira.model.exceptions.SprintException;
 
-public class Sprint extends PartOfProject {
+public class Sprint {
 	private Project project;
 	private List<Issue> issues = new ArrayList<Issue>();
 	private LocalDate endDate;
 	private int sprintId;
 	private WorkFlow status;
+	private LocalDate startDate;
+	private String title;
 
 	public Sprint(String title) throws ProjectException {
-		super(title);
+		this.setTitle(title);
 		this.status = WorkFlow.TO_DO;
 
 	}
@@ -27,10 +29,7 @@ public class Sprint extends PartOfProject {
 	}
 
 	public void setEndDate(LocalDate endDate) throws SprintException {
-		if (objectValidator(endDate)) {
-			this.endDate = endDate;
-		} else
-			throw new SprintException("You entered invalid end date. Please, try again!");
+		this.endDate = endDate;
 
 	}
 
@@ -76,6 +75,22 @@ public class Sprint extends PartOfProject {
 
 	public List<Issue> getIssues() {
 		return Collections.unmodifiableList(issues);
+	}
+
+	public LocalDate getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(LocalDate startDate) {
+		this.startDate = startDate;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 }

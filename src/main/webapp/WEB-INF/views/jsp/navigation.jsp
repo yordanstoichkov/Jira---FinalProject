@@ -22,9 +22,11 @@
 		<!-- Sidebar -->
 		<div id="sidebar-wrapper">
 			<ul class="sidebar-nav">
-				<li class="sidebar-brand"><a href="./"> Jira Software </a></li>
-				<li><a href="#">Dashboard</a></li>
-				<li><a href="#">Active Sprints</a></li>
+				<li><h1 style="font-size: 125%; color: green">${project.title}</h1>
+				<li>
+				<li><a href="./" >Project Plan</a></li>
+				<li><a href="./active">Active Sprints</a></li>
+				<li><a href="#">Done Sprints</a></li>
 				<li><a href="#">Project Overview</a></li>
 			</ul>
 		</div>

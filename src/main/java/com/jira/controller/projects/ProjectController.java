@@ -1,6 +1,7 @@
 package com.jira.controller.projects;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +20,9 @@ import com.jira.model.employee.Employee;
 import com.jira.model.employee.EmployeeDAO;
 import com.jira.model.employee.IEmployeeDAO;
 import com.jira.model.exceptions.EmployeeException;
+import com.jira.model.exceptions.IsssueExeption;
 import com.jira.model.exceptions.ProjectException;
+import com.jira.model.project.IIssueDAO;
 import com.jira.model.project.IProjectDAO;
 import com.jira.model.project.Issue;
 import com.jira.model.project.Project;
@@ -32,6 +35,8 @@ import com.jira.model.project.WorkFlow;
 public class ProjectController {
 	@Autowired
 	private IEmployeeDAO empDAO;
+	@Autowired
+	private IIssueDAO issueDAO;
 	@Autowired
 	private IProjectDAO projectDAO;
 
@@ -94,4 +99,61 @@ public class ProjectController {
 		return "yourProject";
 	}
 
+	@RequestMapping(value = "/active", method = RequestMethod.GET)
+	public String getActiveSprintOfProject(Model model, HttpSession session) {
+		Project project = (Project) session.getAttribute("project");
+		model.addAttribute("project", project);
+		return "active";
+	}
+
+	@RequestMapping(value = "/activy", method = RequestMethod.GET)
+	public String issueInProgress(@RequestParam("issueId") int issueId, Model model, HttpSession session) {
+		Project project = (Project) session.getAttribute("project");
+		model.addAttribute("project", project);
+		for (Sprint sprint : project.getSprints()) {
+			if (sprint.getStatus() == WorkFlow.IN_PROGRESS) {
+				for (Issue issue : sprint.getIssues()) {
+					if (issue.getIssueId() == issueId) {
+						issue.setStatus(WorkFlow.IN_PROGRESS);
+						try {
+							issueDAO.updateIssueInProgress(issueId);
+						} catch (IsssueExeption e) {
+
+						}
+					}
+				}
+			}
+
+		}
+
+		return "redirect:active";
+	}
+
+	@RequestMapping(value = "/actives", method = RequestMethod.GET)
+	public String issueDone(@RequestParam("issueId") int issueId, Model model, HttpSession session) {
+		Project project = (Project) session.getAttribute("project");
+		if (project != null) {
+			model.addAttribute("project", project);
+			if (project.getSprints() != null) {
+				for (Sprint sprint : project.getSprints()) {
+					if (sprint.getStatus() == WorkFlow.IN_PROGRESS) {
+						if (sprint.getIssues() != null) {
+							for (Issue issue : sprint.getIssues()) {
+								if (issue.getIssueId() == issueId) {
+									issue.setStatus(WorkFlow.DONE);
+									try {
+										issueDAO.updateIssueInProgress(issueId);
+									} catch (IsssueExeption e) {
+
+									}
+								}
+							}
+						}
+					}
+				}
+
+			}
+		}
+		return "redirect:active";
+	}
 }
