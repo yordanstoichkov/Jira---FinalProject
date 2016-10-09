@@ -48,7 +48,7 @@ public class UserController {
 
 		if (loginID > 0) {
 			HttpSession session = request.getSession();
-			session.setMaxInactiveInterval(1000);
+			session.setMaxInactiveInterval(100000);
 			session.setAttribute("username", login.getFirstName());
 			session.setAttribute("userId", loginID);
 			session.setAttribute("user", login);

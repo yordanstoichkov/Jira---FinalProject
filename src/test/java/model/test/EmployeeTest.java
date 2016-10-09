@@ -12,16 +12,17 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.jira.model.employee.Employee;
 import com.jira.model.employee.IEmployeeDAO;
 import com.jira.model.employee.Employee.Jobs;
+import com.jira.model.employee.EmployeeDAO;
 import com.jira.model.exceptions.EmployeeException;
+import com.jira.model.project.WorkFlow;
 
 public class EmployeeTest {
-	@Autowired
-	private IEmployeeDAO dao;
+	private IEmployeeDAO dao = new EmployeeDAO();
 
 	@Test
 	public void test() throws EmployeeException {
 		Employee emp1 = new Employee("Yordan", "Petrov", Jobs.QA, "dakaatad@mail.bg", "Aq1234");
-
+		System.out.println(WorkFlow.TO_DO);
 		int id1 = dao.registerUser(emp1);
 		emp1.setEmployeeID(id1);
 

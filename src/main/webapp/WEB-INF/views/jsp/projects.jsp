@@ -67,15 +67,16 @@
 								</div>
 							</div>
 							<div class="col-lg-3 col-md-2">
-								<form action="./projectmain">
+								<form action="./projectmain" >
 									<button type="submit" id="track" name="projectId"
 										value="${project.projectId}"
-										class="btn btn-outline btn-primary btn-lg">Open
-										project</button>
+										class="btn btn-outline btn-primary btn-lg" ><img src="eye.png" width=17px;
+															height=17px; ></button>
 								</form>
 								<form action="./deleteProject">
 									<button type="submit" class="btn btn-outline btn-danger"
-										id="delete" name="deleteProject">Delete project</button>
+										id="delete" name="deleteProject"><img src="bin.png" width=17px;
+															height=17px; ></button>
 
 								</form>
 

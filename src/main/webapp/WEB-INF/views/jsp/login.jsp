@@ -15,6 +15,7 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-md-4 col-md-offset-4">
+			
 				<div class="forma">
 					<div class="panel-heading">
 						<h1 class="panel-title" style="color: white; font-size: 250%;">Login</h1>

@@ -16,7 +16,9 @@ body {
 	-o-background-size: cover;
 	background-size: cover;
 }
-
+form {
+    display: inline;
+}
 #wrapper {
 	width: 100%;
 }
@@ -57,7 +59,7 @@ body {
 #track {
 	margin-left: 20px;
 	margin-top: 10px;
-	width: 180px;
+	width: 90px;
 	height: 45px;
 	font-size: 14px;
 	font-weight: 700;
@@ -65,7 +67,7 @@ body {
 #delete {
 	margin-left: 20px;
 	margin-top: 10px;
-	width: 180px;
+	width: 90px;
 	height: 45px;
 	font-size: 14px;
 	font-weight: 700;

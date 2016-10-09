@@ -1,57 +1,128 @@
 <%@include file="navigation.jsp"%>
-<link href="issues.css" rel="stylesheet">
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ page session="false"%>
+<head>
 <script type="text/javascript" src="jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="plan.js"></script>
+<link rel="stylesheet" href="addtypes.css">
+<link href="plan.css" rel="stylesheet">
+<link href="iconic.css" rel="stylesheet">
+
 </head>
 <body>
-
-	<h1 style="padding-left: 280px; padding-top: 35px; font-size: 250%">
-		<c:out value="${project.title}"></c:out>
-	</h1>
-	<div class="panel-heading">
-		<h3 class="panel-title">Developers</h3>
-		<div class="pull-right">
-			<span class="clickable filter" data-toggle="tooltip"
-				title="Toggle table filter" data-container="body"> <i
-				class="glyphicon glyphicon-filter"></i>
-			</span>
+	<c:if test="${user.job=='MANAGER'}">
+		<div class="createSP">
+			<button type="button" class="sprintButton" id="sprintBtn">Create
+				Sprint</button>
 		</div>
-	</div>
-	<div class="panel-body">
-		<input type="text" class="form-control" id="dev-table-filter"
-			data-action="filter" data-filters="#dev-table"
-			placeholder="Filter Developers" />
-	</div>
-	<div class="wrapper">
+	</c:if>
+	<c:forEach items="${project.sprints}" var="sprint">
+		<c:if test="${sprint.status == 'TO_DO'}">
+			<div class="sprintTable">
+				<table>
+					<thead>
+						<tr>
+							<th colspan="5">Sprint: ${sprint.title}</th>
 
-		<div class="table">
-
-
-			<table class="table table-hover" id="dev-table">
-				<thead>
-					<tr>
-						<th>#</th>
-						<th>Issue name</th>
-						<th>Last Name</th>
-						<th>Priority</th>
-						<th>Type</th>
-					</tr>
-				</thead>
-				<tbody>
-
-					<c:forEach items="${project.sprints}" var="sprint">
+						</tr>
+						<tr>
+							<th>#</th>
+							<th colspan="4">Issues</th>
+						</tr>
+					</thead>
+					<tbody>
 						<c:forEach items="${sprint.issues}" var="issue">
 							<tr>
-								<td>${issue.title}</td>
-								<td>Kilgore</td>
-								<td>${issue.priority}</td>
-								<td>${issue.type}</td>
+								<td>${issue.issueId}</td>
+								<td><c:if test="${issue.type == 'TASK'}">
+										<img src="task.png" height="20" width="20">
+									</c:if> <c:if test="${issue.type == 'BUG'}">
+										<img src="bug.png" height="20" width="20">
+									</c:if> ${issue.title}</td>
+								<td></td>
+								<c:if test="${issue.priority == 'MEDIUM'}">
+									<td><img src="medium.png" height="20" width="20"></td>
+								</c:if>
+								<c:if test="${issue.priority == 'HIGH'}">
+									<td><img src="high.png" height="20" width="20"></td>
+								</c:if>
+								<c:if test="${issue.priority == 'LOW'}">
+									<td><img src="low.png" height="20" width="20"></td>
+								</c:if>
+								<td><button style="paddling-right: 3px; font-size: 20px;"
+										class="fa fa-pencil"></button>
+									<button style="font-size: 20px;" class="fa fa-trash-o"></button></td>
 							</tr>
 						</c:forEach>
-					</c:forEach>
-				</tbody>
-			</table>
+						<tr>
+							<td style="text-align: left" colspan="5"><button
+									type="button" class="myButton" id="myBtn">
+									<i class="fa fa-plus-circle"></i> Add issue
+								</button></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+
+		</c:if>
+
+	</c:forEach>
+
+	<!-- The Modal -->
+	<div id="sprintModal" class="modal">
+
+		<!-- Modal content -->
+		<div class="sprintModal-content">
+			<span class="close1">x</span>
+			<h1 style="padding-left: 50px; font-size: 150%">Create Sprint</h1>
+			<form:form name="form" commandName="emptysprint"
+				onsubmit="return validateForm()">
+				<fieldset class="contact-inner">
+					<p class="contact-input">
+						<form:input type="text" path="title" placeholder="Title" />
+					</p>
+					<p id="demo"></p>
+					<p class="contact-submit">
+						<input type="submit" value="Create Sprint">
+					</p>
+				</fieldset>
+			</form:form>
 		</div>
+
 	</div>
-	<script src="issues.js"></script>
+
+	<script>
+		var modal1 = document.getElementById('sprintModal');
+		var btn1 = document.getElementById("sprintBtn");
+		var span1 = document.getElementsByClassName("close1")[0];
+		btn1.onclick = function() {
+			modal1.style.display = "block";
+		}
+		span1.onclick = function() {
+			modal1.style.display = "none";
+		}
+		window.onclick = function(event) {
+			if (event.target == modal1) {
+				modal1.style.display = "none";
+			}
+		}
+		function validateForm() {
+			$("#demo").empty();
+			var text;
+			var x = trim(document.forms["form"]["title"].value);
+			if (x == null || x == "") {
+				text = "Name must be filled out";
+				$("#demo").append(text);
+				return false;
+			}
+
+		}
+		function trim(value) {
+			return value.replace(/^\s+|\s+$/g, "");
+		}
+	</script>
+
 </body>
 </html>

@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.amazonaws.services.simpleworkflow.flow.annotations.Workflow;
 import com.jira.model.employee.Employee;
 import com.jira.model.employee.EmployeeDAO;
 import com.jira.model.employee.IEmployeeDAO;
@@ -20,6 +21,7 @@ import com.jira.model.project.Project;
 import com.jira.model.project.ProjectDAO;
 import com.jira.model.project.Sprint;
 import com.jira.model.project.SprintDAO;
+import com.jira.model.project.WorkFlow;
 
 public class ProjectTest {
 	private IEmployeeDAO daoE = new EmployeeDAO();
@@ -28,6 +30,7 @@ public class ProjectTest {
 
 	@Test
 	public void test() throws EmployeeException, ProjectException {
+		System.out.println(WorkFlow.TO_DO);
 		// Employee pesho = new Employee("Pesho", "Ivanov", Jobs.DEVELOPER,
 		// "Pesho11!", "novoto12@abv.bg");
 		// int peshoId = daoE.registerUser(pesho);
@@ -67,6 +70,7 @@ public class ProjectTest {
 
 	@Test
 	public void testGetProjects() throws EmployeeException {
+		
 		Employee tempEmp = new Employee("Gosho", "Todorov", Jobs.DEVELOPER, "golqmata@abv.bg", "gosheto");
 
 		tempEmp.setEmployeeID(daoE.loginUser(tempEmp));

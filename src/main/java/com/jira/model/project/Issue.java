@@ -57,6 +57,10 @@ public class Issue {
 		this.status = status;
 	}
 
+	public Issue() {
+		this.status = WorkFlow.TO_DO;
+	}
+
 	public Sprint getSprint() {
 		return sprint;
 	}

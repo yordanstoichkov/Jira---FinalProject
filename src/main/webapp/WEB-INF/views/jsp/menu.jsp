@@ -44,13 +44,18 @@
 						style="font-size: 2.0em;"></i>Projects</a></li>
 				<li><a href="./home"><i class="fa fa-phone"
 						style="font-size: 2.0em;"></i> Contact</a></li>
+
+
 				<%
 					if (request.getSession(false) == null) {
 				%>
 				<li style="float: right"><a class="active" href="./reg">Register</a></li>
 				<%
 					} else {
-				%>
+				%><c:if test="${user.job ne 'MANAGER'}">
+					<li><a href="#"><i class="fa fa-pencil"
+							style="font-size: 2.0em;"></i>Your issues</a></li>
+				</c:if>
 				<li style="float: right"><a class="active" href="./logout">LogOut</a></li>
 				<li style="float: right"><a class="active" href="#">Hi, <%=request.getSession().getAttribute("username")%>
 				</a></li>

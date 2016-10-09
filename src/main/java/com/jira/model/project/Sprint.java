@@ -24,6 +24,10 @@ public class Sprint {
 
 	}
 
+	public Sprint() {
+		this.status = WorkFlow.TO_DO;
+	}
+
 	public LocalDate getEndDate() {
 		return endDate;
 	}
