@@ -161,7 +161,7 @@ public class ProjectController {
 	public String getActiveSprintOfProject(Model model, HttpSession session) {
 		Project project = (Project) session.getAttribute("project");
 		model.addAttribute("project", project);
-		int userId=(int) session.getAttribute("userId");
+		int userId = (int) session.getAttribute("userId");
 		model.addAttribute("userId", userId);
 		return "active";
 	}
@@ -179,11 +179,8 @@ public class ProjectController {
 							WorkFlow status = partDAO.getStatus(newIssueId);
 							issue.setStatus(status);
 						} catch (IsssueExeption e) {
-							throw new IsssueExeption(
-									"You can not change the status of issue right now! Try again later!");
+
 						} catch (PartOfProjectException e) {
-							throw new IsssueExeption(
-									"You can not change the status of issue right now! Try again later!");
 
 						}
 					}
