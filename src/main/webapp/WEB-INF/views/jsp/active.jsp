@@ -26,7 +26,7 @@
 			<div class="row">
 				<div class="col-lg-6">
 					<div class="panel panel-default">
-				
+
 						<!-- /.panel-heading -->
 						<div class="table-responsive">
 							<table class="table table-striped table-bordered table-hover">
@@ -64,10 +64,15 @@
 
 													<form action="./activy">
 														<c:out value="${issue.title}"></c:out>
-														<input type="image" src="red_arrow.png" width=17px;
-															height=17px; align="right" ; name="issueId"
-															class="btTxt submit" id="issueId"
-															value="${issue.issueId}" />
+														<c:forEach items="${issue.asignees}" var="asignee">
+															<c:if test="${asignee==userId}">
+																<input type="image" src="red_arrow.png" width=17px;
+																	height=17px; align="right" ; name="issueId"
+																	class="btTxt submit" id="issueId"
+																	value="${issue.issueId}" />
+															</c:if>
+														</c:forEach>
+
 													</form></td>
 												<td></td>
 												<td></td>
@@ -83,12 +88,16 @@
 															value="${issue.issueId}" />
 													</form>
 
-													<form action="./actives">
+													<form action="./activy">
 														<c:out value="${issue.title}"></c:out>
-														<input type="image" src="orange_arrow.png" width=20px;
-															height=20px; align="right" ; name="issueId"
-															class="btTxt submit" id="saveForm"
-															value="${issue.issueId}" />
+														<c:forEach items="${issue.asignees}" var="asignee">
+															<c:if test="${asignee==userId}">
+																<input type="image" src="orange_arrow.png" width=20px;
+																	height=20px; align="right" ; name="issueId"
+																	class="btTxt submit" id="saveForm"
+																	value="${issue.issueId}" />
+															</c:if>
+														</c:forEach>
 													</form></td>
 
 												<td></td>
@@ -103,7 +112,16 @@
 															height=17px; align="left" ; name="issueId"
 															class="btTxt submit" id="issueId"
 															value="${issue.issueId}" />
-													</form> <c:out value="${issue.title}"></c:out></td>
+													</form>
+														<c:out value="${issue.title}"></c:out>
+														<c:forEach items="${issue.asignees}" var="asignee">
+															<c:if test="${asignee==userId}">
+																<input type="image" src="done.png" width=20px;
+																	height=20px; align="right" ; name="issueId"
+																	class="btTxt submit" id="saveForm" />
+															</c:if>
+														</c:forEach>
+													</td>
 											</tr>
 										</c:if>
 									</c:forEach>

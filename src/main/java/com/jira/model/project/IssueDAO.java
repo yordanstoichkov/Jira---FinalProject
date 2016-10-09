@@ -24,6 +24,9 @@ import com.jira.model.exceptions.ProjectException;
 @Component
 public class IssueDAO implements IIssueDAO {
 
+	private static final int STATUS_ID_OF_DONE = 4;
+	private static final int STATUS_ID_OF_IN_PROGRESS = 2;
+	private static final int STATUS_ID_OF_TO_DO = 1;
 	private static final String CREATE_ISSUE_SQL = "INSERT INTO issues VALUES(NULL , NULL, NULL, ?, ? , ? , NULL, NULL, ?);";
 	private static final String INSERT_ISSUE_ASSIGNEE = "INSERT INTO issues_developers VALUES(?,?)";
 	private static final String UPDATE_ISSUE_DECRIPTION_SQL = "UPDATE issues SET description = ? WHERE issue_id=?";
@@ -129,22 +132,54 @@ public class IssueDAO implements IIssueDAO {
 		}
 
 	}
-	public void updateIssueInProgress(int issueId) throws IsssueExeption {
-		if (issueId < 0) {
+
+	public int updateIssueStatus(int issueId) throws IsssueExeption {
+		if (issueId <= 0) {
 			throw new IsssueExeption("Invalid issue given");
 		}
-		Connection connection = DBConnection.getConnection();
+		int newStatusId = 1;
 
+		Connection connection = DBConnection.getConnection();
 		try {
+			connection.setAutoCommit(false);
+			PreparedStatement ps = connection.prepareStatement(GET_ISSUE_SQL);
+			ps.setInt(1, issueId);
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			int statusId = rs.getInt("status_id");
 			PreparedStatement updateIssue = connection.prepareStatement(UPDATE_STATUS_ID);
-			updateIssue.setInt(1, 2);
+			if (statusId == STATUS_ID_OF_TO_DO) {
+				updateIssue.setInt(1, STATUS_ID_OF_IN_PROGRESS);
+				newStatusId = STATUS_ID_OF_IN_PROGRESS;
+			}
+			if (statusId == STATUS_ID_OF_IN_PROGRESS) {
+				updateIssue.setInt(1, STATUS_ID_OF_DONE);
+				newStatusId = STATUS_ID_OF_DONE;
+			}
+
 			updateIssue.setInt(2, issueId);
 			updateIssue.executeUpdate();
+
+			connection.commit();
 		} catch (SQLException e) {
-			throw new IsssueExeption("This issue description couldn't be added");
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {
+				throw new IsssueExeption("You can not change the status of issue right now! Try again later!");
+			}
+			throw new IsssueExeption("You can not change the status of issue right now! Try again later!");
+		} finally {
+			try {
+				connection.setAutoCommit(true);
+			} catch (SQLException e) {
+				throw new IsssueExeption("You can not change the status of issue right now! Try again later!");
+
+			}
 		}
+		return newStatusId;
 
 	}
+
 	public void updateIssueDone(int issueId) throws IsssueExeption {
 		if (issueId < 0) {
 			throw new IsssueExeption("Invalid issue given");

@@ -24,9 +24,11 @@ import com.jira.model.exceptions.IsssueExeption;
 import com.jira.model.exceptions.ProjectException;
 import com.jira.model.exceptions.SprintException;
 import com.jira.model.project.IIssueDAO;
+import com.jira.model.project.IPartOfProjectDAO;
 import com.jira.model.project.IProjectDAO;
 import com.jira.model.project.ISprintDAO;
 import com.jira.model.project.Issue;
+import com.jira.model.project.PartOfProjectException;
 import com.jira.model.project.Project;
 import com.jira.model.project.ProjectDAO;
 import com.jira.model.project.Sprint;
@@ -41,11 +43,12 @@ public class ProjectController {
 	@Autowired
 	private IIssueDAO issueDAO;
 
-
 	@Autowired
 	private IProjectDAO projectDAO;
 	@Autowired
 	private ISprintDAO sprintDAO;
+	@Autowired
+	private IPartOfProjectDAO partDAO;
 
 	@RequestMapping(value = "/projects", method = RequestMethod.GET)
 	public String getProjects(Model model, HttpServletRequest request) {
@@ -131,25 +134,34 @@ public class ProjectController {
 		return "redirect:/projectmain?projectId=" + project.getProjectId();
 	}
 
-@RequestMapping(value = "/active", method = RequestMethod.GET)
+	@RequestMapping(value = "/active", method = RequestMethod.GET)
 	public String getActiveSprintOfProject(Model model, HttpSession session) {
 		Project project = (Project) session.getAttribute("project");
 		model.addAttribute("project", project);
+		int userId=(int) session.getAttribute("userId");
+		model.addAttribute("userId", userId);
 		return "active";
 	}
 
 	@RequestMapping(value = "/activy", method = RequestMethod.GET)
-	public String issueInProgress(@RequestParam("issueId") int issueId, Model model, HttpSession session) {
+	public String issueInProgress(@RequestParam("issueId") int issueId, Model model, HttpSession session)
+			throws IsssueExeption {
 		Project project = (Project) session.getAttribute("project");
 		model.addAttribute("project", project);
 		for (Sprint sprint : project.getSprints()) {
 			if (sprint.getStatus() == WorkFlow.IN_PROGRESS) {
 				for (Issue issue : sprint.getIssues()) {
 					if (issue.getIssueId() == issueId) {
-						issue.setStatus(WorkFlow.IN_PROGRESS);
 						try {
-							issueDAO.updateIssueInProgress(issueId);
+							int newIssueId = issueDAO.updateIssueStatus(issueId);
+							WorkFlow status = partDAO.getStatus(newIssueId);
+							issue.setStatus(status);
 						} catch (IsssueExeption e) {
+							throw new IsssueExeption(
+									"You can not change the status of issue right now! Try again later!");
+						} catch (PartOfProjectException e) {
+							throw new IsssueExeption(
+									"You can not change the status of issue right now! Try again later!");
 
 						}
 					}
@@ -161,31 +173,4 @@ public class ProjectController {
 		return "redirect:active";
 	}
 
-	@RequestMapping(value = "/actives", method = RequestMethod.GET)
-	public String issueDone(@RequestParam("issueId") int issueId, Model model, HttpSession session) {
-		Project project = (Project) session.getAttribute("project");
-		if (project != null) {
-			model.addAttribute("project", project);
-			if (project.getSprints() != null) {
-				for (Sprint sprint : project.getSprints()) {
-					if (sprint.getStatus() == WorkFlow.IN_PROGRESS) {
-						if (sprint.getIssues() != null) {
-							for (Issue issue : sprint.getIssues()) {
-								if (issue.getIssueId() == issueId) {
-									issue.setStatus(WorkFlow.DONE);
-									try {
-										issueDAO.updateIssueInProgress(issueId);
-									} catch (IsssueExeption e) {
-
-									}
-								}
-							}
-						}
-					}
-				}
-
-			}
-		}
-		return "redirect:active";
-	}
 }

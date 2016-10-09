@@ -13,7 +13,7 @@ public interface IIssueDAO {
 	int getIssueCount() throws IsssueExeption;
 
 	Issue getIssue(int issueID) throws IsssueExeption;
-	public void updateIssueInProgress(int issueId) throws IsssueExeption;
 
+	public int updateIssueStatus(int issueId) throws IsssueExeption;
 
 }

@@ -1,0 +1,29 @@
+.row {
+	margin-top: 40px;
+	padding: 20px 10px;
+}
+
+table {
+	padding-left: 100px
+}
+
+.clickable {
+	cursor: pointer;
+}
+
+.panel-heading div {
+	margin-top: -18px;
+	font-size: 15px;
+}
+
+.panel-heading div span {
+	margin-left: 55px;
+}
+
+.panel-body {
+	display: none;
+}
+
+.wrapper {
+	padding-left: 100px
+}
