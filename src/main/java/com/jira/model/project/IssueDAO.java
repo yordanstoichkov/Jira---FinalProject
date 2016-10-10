@@ -133,6 +133,7 @@ public class IssueDAO implements IIssueDAO {
 
 	}
 
+	
 	public int updateIssueStatus(int issueId) throws IsssueExeption {
 		if (issueId <= 0) {
 			throw new IsssueExeption("Invalid issue given");

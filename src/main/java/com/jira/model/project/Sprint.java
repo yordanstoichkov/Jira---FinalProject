@@ -17,6 +17,7 @@ public class Sprint {
 	private WorkFlow status;
 	private LocalDate startDate;
 	private String title;
+	private String sprintGoal;
 
 	public Sprint(String title) throws ProjectException {
 		this.setTitle(title);
@@ -95,6 +96,14 @@ public class Sprint {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public String getSprintGoal() {
+		return sprintGoal;
+	}
+
+	public void setSprintGoal(String sprintGoal) {
+		this.sprintGoal = sprintGoal;
 	}
 
 }

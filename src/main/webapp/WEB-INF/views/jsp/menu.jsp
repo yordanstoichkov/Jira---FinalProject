@@ -19,22 +19,17 @@
 </head>
 
 <body>
+
 	<script>
-		var menu = document.querySelector('.menu')
-		var menuPosition = menu.getBoundingClientRect().top;
-		window.addEventListener('scroll', function() {
-			if (window.pageYOffset >= menuPosition) {
-				menu.style.position = 'fixed';
-				menu.style.top = '0px';
-			} else {
-				menu.style.position = 'static';
-				menu.style.top = '';
-			}
+		$(document).ready(function() {
+			$("#sticker").sticky({
+				topSpacing : 0
+			});
 		});
 	</script>
-	<div class="wrap">
-
+	<div clas="sticky" id="sticker">
 		<nav>
+
 			<ul class="menu">
 				<li><a href="./"><i class="fa fa-home"
 						style="font-size: 2.0em;"></i>LOGO</a></li>

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.jira.model.employee.Employee;
+import com.jira.model.employee.EmployeeDAO;
 import com.jira.model.employee.IEmployeeDAO;
 import com.jira.model.exceptions.EmployeeException;
 import com.jira.model.exceptions.IsssueExeption;
@@ -29,6 +30,7 @@ import com.jira.model.project.ISprintDAO;
 import com.jira.model.project.Issue;
 import com.jira.model.project.PartOfProjectException;
 import com.jira.model.project.Project;
+import com.jira.model.project.ProjectDAO;
 import com.jira.model.project.Sprint;
 import com.jira.model.project.WorkFlow;
 
@@ -132,6 +134,12 @@ public class ProjectController {
 		for (Project project : projects) {
 			if (project.getProjectId() == projectId) {
 				result = project;
+			}
+			
+		}
+		for(Sprint sprint : result.getSprints()){
+			if(sprint.getStatus().equals(WorkFlow.IN_PROGRESS)){
+				model.addAttribute("activeSprint", sprint);
 			}
 		}
 		session.setAttribute("project", result);

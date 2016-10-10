@@ -8,23 +8,51 @@
 <link rel="stylesheet" href="addtypes.css">
 <link href="plan.css" rel="stylesheet">
 <link href="iconic.css" rel="stylesheet">
-
 </head>
 <body>
+	<script>
+		$(document).ready(function() {
+			$('[data-toggle="tooltip"]').tooltip();
+		});
+	</script>
+
+
 	<c:if test="${user.job=='MANAGER'}">
 		<div class="createSP">
 			<button type="button" class="sprintButton" id="sprintBtn">Create
 				Sprint</button>
 		</div>
 	</c:if>
+	<div class="col-lg-12" style="padding-left: 300px">
+		<hr style="width: 90%;">
+	</div>
 	<c:forEach items="${project.sprints}" var="sprint">
 		<c:if test="${sprint.status == 'TO_DO'}">
 			<div class="sprintTable">
 				<table>
 					<thead>
 						<tr>
-							<th colspan="5">Sprint: ${sprint.title}</th>
+							<th colspan="4"><h1 style="font-size: 130%">Sprint:
+									${sprint.title}</h1></th>
+							<c:if test="${not empty activeSprint}">
+								<th><form action="./startsprint" method="post">
+										<span style="padding-right: 8px; padding-top: 3px;">
 
+											<button style="float: right;" data-toggle="tooltip"
+												title="There is active sprint" class="btn btn-warning"
+												disabled>Start sprint</button>
+										</span>
+									</form></th>
+							</c:if>
+							<c:if test="${empty activeSprint}">
+								<th><form action="./startsprint" method="post">
+										<span style="padding-right: 8px; padding-top: 3px;">
+											<button style="float: right" name="sprintId"
+												value="${sprint.sprintId}" type="submit"
+												class="btn btn-warning">Start sprint</button>
+										</span>
+									</form></th>
+							</c:if>
 						</tr>
 						<tr>
 							<th>#</th>
@@ -50,16 +78,21 @@
 								<c:if test="${issue.priority == 'LOW'}">
 									<td><img src="low.png" height="20" width="20"></td>
 								</c:if>
-								<td><button style="paddling-right: 3px; font-size: 20px;"
-										class="fa fa-pencil"></button>
+								<td><form action="./changeIssue" method="post">
+										<button style="paddling-right: 3px; font-size: 20px;"
+											class="fa fa-pencil" name="issueId" value="${issue.issueId}"></button>
+									</form>
 									<button style="font-size: 20px;" class="fa fa-trash-o"></button></td>
 							</tr>
 						</c:forEach>
 						<tr>
-							<td style="text-align: left" colspan="5"><button
-									type="button" class="myButton" id="myBtn">
-									<i class="fa fa-plus-circle"></i> Add issue
-								</button></td>
+							<td style="text-align: left" colspan="5"><form
+									action="./changeIssue" method="post">
+									<button type="submit" class="myButton" id="myBtn"
+										name="issueId" value="0">
+										<i class="fa fa-plus-circle"></i> Add issue
+									</button>
+								</form></td>
 						</tr>
 					</tbody>
 				</table>
@@ -76,7 +109,9 @@
 		<!-- Modal content -->
 		<div class="sprintModal-content">
 			<span class="close1">x</span>
-			<h1 style="padding-left: 50px; font-size: 150%">Create Sprint</h1>
+			<h1
+				style="padding-left: 200px; padding-bottom: 30px; padding-top: 15px; font-size: 150%">Create
+				Sprint</h1>
 			<form:form name="form" commandName="emptysprint"
 				onsubmit="return validateForm()">
 				<fieldset class="contact-inner">
