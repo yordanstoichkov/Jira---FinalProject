@@ -180,23 +180,6 @@ public class IssueDAO implements IIssueDAO {
 
 	}
 
-	public void updateIssueDone(int issueId) throws IsssueExeption {
-		if (issueId < 0) {
-			throw new IsssueExeption("Invalid issue given");
-		}
-		Connection connection = DBConnection.getConnection();
-
-		try {
-			PreparedStatement updateIssue = connection.prepareStatement(UPDATE_STATUS_ID);
-			updateIssue.setInt(1, 4);
-			updateIssue.setInt(2, issueId);
-			updateIssue.executeUpdate();
-		} catch (SQLException e) {
-			throw new IsssueExeption("This issue description couldn't be added");
-		}
-
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 

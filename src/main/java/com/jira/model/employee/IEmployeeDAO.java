@@ -21,7 +21,15 @@ public interface IEmployeeDAO {
 	int getUserCount() throws EmployeeException;
 
 	int validEmail(String email) throws EmployeeException;
-	
+
 	List<Project> giveMyProjects(Employee emp) throws EmployeeException;
+
+	List<Integer> getReviewers(int issueId) throws EmployeeException;
+
+	List<Integer> getDevelopers(int issueId) throws EmployeeException;
+
+	List<Integer> getManagers(int projectId) throws EmployeeException;
+	
+	Employee getEmployeeById(int employeeId);
 
 }

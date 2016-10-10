@@ -1,5 +1,6 @@
 package com.jira.model.employee;
 
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -30,13 +31,17 @@ public class EmployeeDAO implements IEmployeeDAO {
 	private static final String LOGIN_USER_SQL = "SELECT * FROM employees WHERE email = ? AND password = md5(?);";
 	private static final String JOB_ID_SQL = "SELECT job_id FROM jobs WHERE job_title = ?";
 	private static final String GET_EMPLOYEE_ID_SQL = "SELECT employee_id FROM employees WHERE email = ? ";
+	private static final String GET_EMPLOYEE_SQL = "SELECT * FROM employees WHERE employee_id = ? ";
 	private static final String SELECT_USERS_COUNT = "SELECT count(*) as 'employee_count' FROM employees";
 	private static final String SELECT_NUMBER_WITH_THIS_EMAIL_SQL = "SELECT count(*) as 'employee' FROM employees WHERE email = ? ";
 	private static final String SELECT_ALL_USER_PROJECTS = "SELECT DISTINCT(p.project_id) " + "FROM projects p "
 			+ "JOIN sprints s ON (s.project_id=p.project_id) " + "JOIN issues i ON (i.sprint_id = s.sprint_id) "
 			+ "JOIN issues_developers id ON (id.issue_id=i.issue_id) " + "WHERE id.developer_id=?;";
+	private static final String SELECT_ALL_PROJECT_MANAGERS = "SELECT manager_id FROM project_managers where project_id= ? ";
 	private static final String SELECT_ALL_MANAGER_PROJECTS = "SELECT project_id FROM project_managers where manager_id= ? ";
 	private static final String JOB_BY_ID_SQL = "SELECT job_title FROM jobs WHERE job_id = ?";
+	private static final String SELECT_DEVELOPERS_OF_ISSUE_SQL = "SELECT developer_id FROM issues_developers WHERE issue_id = ?";
+	private static final String SELECT_REVIEWERS_OF_ISSUE_SQL = "SELECT reviewer_id FROM issue_reviewers WHERE issue_id = ?";
 
 	@Autowired
 	private IProjectDAO projectDAO;
@@ -267,4 +272,90 @@ public class EmployeeDAO implements IEmployeeDAO {
 		}
 		return result;
 	}
+
+	public List<Integer> getDevelopers(int issueId) throws EmployeeException {
+		List<Integer> developersId = new ArrayList<>();
+		Connection connection = DBConnection.getConnection();
+		PreparedStatement ps;
+		try {
+			ps = connection.prepareStatement(SELECT_DEVELOPERS_OF_ISSUE_SQL);
+			ps.setInt(1, issueId);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				developersId.add(rs.getInt(1));
+			}
+
+		} catch (SQLException e1) {
+			throw new EmployeeException("We have problems and can't get developers now!", e1);
+
+		}
+		return developersId;
+
+	}
+
+	public List<Integer> getReviewers(int issueId) throws EmployeeException {
+		List<Integer> reviewersId = new ArrayList<>();
+		Connection connection = DBConnection.getConnection();
+		PreparedStatement ps;
+		try {
+			ps = connection.prepareStatement(SELECT_REVIEWERS_OF_ISSUE_SQL);
+			ps.setInt(1, issueId);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				reviewersId.add(rs.getInt(1));
+			}
+
+		} catch (SQLException e1) {
+			throw new EmployeeException("We have problems and can't get reviewers now!", e1);
+
+		}
+		return reviewersId;
+
+	}
+
+	public List<Integer> getManagers(int projectId) throws EmployeeException {
+		List<Integer> managersId = new ArrayList<>();
+		Connection connection = DBConnection.getConnection();
+		PreparedStatement ps;
+		try {
+			ps = connection.prepareStatement(SELECT_ALL_PROJECT_MANAGERS);
+			ps.setInt(1, projectId);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				managersId.add(rs.getInt(1));
+			}
+
+		} catch (SQLException e1) {
+			throw new EmployeeException("We have problems and can't get managers now!", e1);
+
+		}
+		return managersId;
+
+	}
+
+	public Employee getEmployeeById(int employeeId) {
+		Connection connection = DBConnection.getConnection();
+		Employee employee = null;
+		try {
+			PreparedStatement ps = connection.prepareStatement(GET_EMPLOYEE_SQL);
+			ps.setInt(1, employeeId);
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			String firstName=rs.getString("first_name");
+			String lastName=rs.getString("last_name");
+			String email=rs.getString("email");
+			String password=rs.getString("password");
+			
+			employee = new Employee(firstName,lastName,email,password);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (EmployeeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return employee;
+
+	}
+
 }

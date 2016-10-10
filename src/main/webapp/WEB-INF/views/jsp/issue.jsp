@@ -1,0 +1,160 @@
+<%@include file="navigation.jsp"%>
+<%@page session="false"%>
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<link href="iconic.css" rel="stylesheet">
+<link href="sprint.css" rel="stylesheet">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+<script type="text/javascript" src="jquery-3.1.1.min.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+</head>
+<body>
+	<div class="row">
+		<div class="zaglavie">
+			<h1 class="page-header" style="color: #1b5c9e;">
+				<c:out value="${sprint.title}"></c:out>
+			</h1>
+		</div>
+	</div>
+	<div class="row">
+		<div class="zaglavie1">
+
+			<h3 class="page-header" style="color: #1b5c9e">
+				<c:if test="${issue.type=='TASK'}">
+					<img src="task.png" width=25px; height=25px;
+						style="color: #1b5c9e; display: inline" />
+
+				</c:if>
+				<c:if test="${issue.type=='BUG'}">
+					<img src="bug.png" width=25px; height=25px;
+						style="color: #1b5c9e; display: inline" />
+
+				</c:if>
+				<c:out value="${issue.title}"></c:out>
+				<div class="podravni">
+					<c:if test="${ issue.status=='TO_DO'}">
+						<span style="color: #1b5c9e; display: inline; font-size: 80%">Workflow:
+						</span>
+						<i class="fa fa-times"
+							style="font-size: 1.0em; color: red; display: inline"></i>
+						<span style="font-size: 70%"> To Do</span>
+					</c:if>
+
+					<c:if test="${ issue.status=='IN_PROGRESS'}">
+						<span style="color: #1b5c9e; display: inline; font-size: 80%">Workflow:
+						</span>
+
+						<i class="fa fa-cog" style="font-size: 1.0em; color: orange"></i>
+						<span style="font-size: 70%"> In Progress</span>
+
+					</c:if>
+					<c:if test="${ issue.status=='DONE'}">
+						<span style="color: #1b5c9e; display: inline; font-size: 80%">Workflow:
+						</span>
+
+						<i class="fa fa-check" style="font-size: 1.0em; color: green">
+							<span style="font-size: 70%"> Done</span>
+
+						</i>
+					</c:if>
+				</div>
+				<c:if test="${ issue.priority=='LOW'}">
+					<span style="color: #1b5c9e; display: inline; font-size: 80%">
+						&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
+						&nbsp; &nbsp;Priority: </span>
+					<img src="low.png" width=25px; height=25px;
+						style="color: #1b5c9e; display: inline" />
+					<span style="font-size: 70%"> Low</span>
+				</c:if>
+
+				<c:if test="${ issue.priority=='MEDIUM'}">
+					<span style="color: #1b5c9e; display: inline; font-size: 80%">
+						&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
+						&nbsp; &nbsp;Priority: </span>
+
+					<img src="medium.png" width=25px; height=25px;
+						style="color: #1b5c9e; display: inline" />
+					<span style="font-size: 70%"> Medium</span>
+
+				</c:if>
+				<c:if test="${ issue.priority=='HIGH'}">
+					<span style="color: #1b5c9e; display: inline; font-size: 80%">
+						&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
+						&nbsp; &nbsp;Priority: </span>
+
+					<img src="high.png" width=25px; height=25px;
+						style="color: #1b5c9e; display: inline" />
+					<span style="font-size: 70%"> High</span>
+
+
+				</c:if>
+			</h3>
+
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="description">
+			<div class="col-lg-4">
+				<div class="panel panel-info">
+					<div class="panel-heading">
+						<b>Description</b>
+					</div>
+					<div class="panel-body">
+						<c:out value="${issue.description}"></c:out>
+
+					</div>
+					<div class="panel-footer"></div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<div class="row">
+		<div class="col-lg-6">
+			<div class="panel panel-defaultt">
+				<div class="panel-heading">Team</div>
+				<!-- /.panel-heading -->
+				<div class="panel-body">
+					<div class="alert alert-info">
+						<img src="manager.png" width=30px; height=30px;
+							style="color: #1b5c9e; display: inline" /><span>&nbsp;Manager:
+							<c:forEach items="${namesOfManagers}" var="name">
+								<c:out value="${name}"></c:out>,
+
+							</c:forEach>
+						</span>
+					</div>
+					<div class="alert alert-info">
+						<img src="team.png" width=35px; height=35px;
+							style="color: #1b5c9e; display: inline" /><span>&nbsp;Developers:
+							<c:forEach items="${namesOfDevelopers}" var="name">
+								<c:out value="${name}"></c:out>
+
+							</c:forEach>
+
+						</span>
+					</div>
+					<div class="alert alert-info">
+						<img src="reviewer.png" width=35px; height=35px;
+							style="color: #1b5c9e; display: inline" /><span>&nbsp;Reviewers:
+							<c:forEach items="${namesOfReviewers}" var="name">
+								<c:out value="${name}"></c:out>
+
+							</c:forEach>
+						</span>
+					</div>
+				</div>
+				<!-- .panel-body -->
+			</div>
+			<!-- /.panel -->
+		</div>
+</body>
+</html>

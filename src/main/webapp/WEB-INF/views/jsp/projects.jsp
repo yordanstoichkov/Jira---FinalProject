@@ -68,17 +68,22 @@
 							</div>
 							<div class="col-lg-3 col-md-2">
 								<form action="./projectmain">
-									<button type="submit" id="track" name="projectId"
-										value="${project.projectId}"
-										class="btn btn-outline btn-primary btn-lg">
-										<img src="eye.png" width=17px; height=17px;>
-									</button>
+									<a href="#" data-toggle="tooltip"
+										title="Open project">
+										<button type="submit" id="track" name="projectId"
+											value="${project.projectId}"
+											class="btn btn-outline btn-primary btn-lg">
+											<img src="eye.png" width=17px; height=17px;>
+										</button>
+									</a>
 								</form>
 								<form action="./deleteProject" method="post">
+								<a href="#" data-toggle="tooltip"
+										title="Delete project">
 									<button type="submit" class="btn btn-outline btn-danger"
 										value="${project.projectId}" id="delete" name="projectId">
 										<img src="bin.png" width=17px; height=17px;>
-									</button>
+									</button></a>
 
 								</form>
 
@@ -207,6 +212,10 @@
 			return value.replace(/^\s+|\s+$/g, "");
 		}
 	</script>
-
+	<script>
+		$(document).ready(function() {
+			$('[data-toggle="tooltip"]').tooltip();
+		});
+	</script>
 </body>
 </html>

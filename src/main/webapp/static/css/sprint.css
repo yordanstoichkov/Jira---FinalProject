@@ -4,13 +4,24 @@
  * Copyright 2013-2016 Start Bootstrap
  * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE)
  */
-
 thead tr:first-child {
 	background: #fccfb1;
 	color: #fff;
 	border: none;
-
 	font-size: 150%;
+}
+
+.zaglavie {
+	margin-top: -40px;
+}
+
+.zaglavie1 {
+	margin-top: -80px;
+}
+
+.description {
+	margin-top: -20px;
+	padding-left: -60px;
 }
 /*!
  * Bootstrap v3.3.7 (http://getbootstrap.com)
@@ -39,10 +50,14 @@ audio
 
 
 
+
+
 :not
 
 
+
  
+
 
 
 (
@@ -51,7 +66,9 @@ controls
 ]
 
 
+
  
+
 
 
 ){
@@ -60,13 +77,19 @@ display
 
 
 
+
+
 :
+
 
 
  
 
 
+
 none
+
+
 
 
 
@@ -77,10 +100,14 @@ height
 
 
 
+
+
 :
 
 
+
  
+
 
 
 0
@@ -113,7 +140,11 @@ h1 {
 	margin: .67em 0;
 	font-size: 2em
 }
-
+.podravni{
+	display: inline;
+	float: center;
+	margin-left: 300px;
+}
 mark {
 	color: #000;
 	background: #ff0
@@ -147,17 +178,23 @@ svg
 
 
 
+
+
 :not
 
 
+
  
+
 
 
 (
 :root
 
 
+
  
+
 
 
 ){
@@ -166,13 +203,19 @@ overflow
 
 
 
+
+
 :
+
 
 
  
 
 
+
 hidden
+
+
 
 
 
@@ -1950,7 +1993,7 @@ pre code {
 
 .row {
 	padding-left: 300px;
-	padding-top:50px;
+	padding-top: 50px;
 	margin-right: -15px;
 	margin-left: -15px;
 	width: 2300px;
@@ -4074,38 +4117,50 @@ tbody.collapse.in {
 
 
 
+
+
 :not
 
 
+
  
+
 
 
 (
 :first-child
 
 
+
  
+
 
 
 )
 :not
 
 
+
  
+
 
 
 (
 :last-child
 
 
+
  
+
 
 
 )
 :not
 
 
+
  
+
 
 
 (
@@ -4113,7 +4168,9 @@ tbody.collapse.in {
 
 
 
+
 	
+
 
 
 ){
@@ -4122,10 +4179,14 @@ border-radius
 
 
 
+
+
 :
 
 
+
  
+
 
 
 0
@@ -4141,7 +4202,11 @@ border-radius
 
 
 
+
+
 :first-child
+
+
 
 
 
@@ -4149,28 +4214,36 @@ border-radius
 :not
 
 
+
  
+
 
 
 (
 :last-child
 
 
+
  
+
 
 
 )
 :not
 
 
+
  
+
 
 
 (
 .dropdown-toggle
 
 
+
  
+
 
 
 ){
@@ -4179,10 +4252,14 @@ border-top-right-radius
 
 
 
+
+
 :
 
 
+
  
+
 
 
 0;
@@ -4191,10 +4268,14 @@ border-bottom-right-radius
 
 
 
+
+
 :
 
 
+
  
+
 
 
 0
@@ -4206,7 +4287,11 @@ border-bottom-right-radius
 
 
 
+
+
 :last-child
+
+
 
 
 
@@ -4214,14 +4299,18 @@ border-bottom-right-radius
 :not
 
 
+
  
+
 
 
 (
 :first-child
 
 
+
  
+
 
 
 ),
@@ -4232,18 +4321,24 @@ border-bottom-right-radius
 
 
 
+
+
 :not
+
 
 
 
 	
 
 
+
 (
 :first-child
 
 
+
  
+
 
 
 ){
@@ -4252,10 +4347,14 @@ border-top-left-radius
 
 
 
+
+
 :
 
 
+
  
+
 
 
 0;
@@ -4264,10 +4363,14 @@ border-bottom-left-radius
 
 
 
+
+
 :
 
 
+
  
+
 
 
 0
@@ -4354,31 +4457,41 @@ border-bottom-left-radius
 
 
 
+
+
 :not
 
 
+
  
+
 
 
 (
 :first-child
 
 
+
  
+
 
 
 )
 :not
 
 
+
  
+
 
 
 (
 :last-child
 
 
+
  
+
 
 
 ){
@@ -4387,10 +4500,14 @@ border-radius
 
 
 
+
+
 :
 
 
+
  
+
 
 
 0
@@ -4402,7 +4519,11 @@ border-radius
 
 
 
+
+
 :first-child
+
+
 
 
 
@@ -4410,14 +4531,18 @@ border-radius
 :not
 
 
+
  
+
 
 
 (
 :last-child
 
 
+
  
+
 
 
 ){
@@ -4426,14 +4551,20 @@ border-top-left-radius
 
 
 
+
+
 :
+
 
 
  
 
 
+
 4
 px
+
+
 
 
 
@@ -4444,14 +4575,20 @@ border-top-right-radius
 
 
 
+
+
 :
+
 
 
  
 
 
+
 4
 px
+
+
 
 
 
@@ -4462,10 +4599,14 @@ border-bottom-right-radius
 
 
 
+
+
 :
 
 
+
  
+
 
 
 0;
@@ -4474,10 +4615,14 @@ border-bottom-left-radius
 
 
 
+
+
 :
 
 
+
  
+
 
 
 0
@@ -4489,7 +4634,11 @@ border-bottom-left-radius
 
 
 
+
+
 :last-child
+
+
 
 
 
@@ -4497,14 +4646,18 @@ border-bottom-left-radius
 :not
 
 
+
  
+
 
 
 (
 :first-child
 
 
+
  
+
 
 
 ){
@@ -4513,10 +4666,14 @@ border-top-left-radius
 
 
 
+
+
 :
 
 
+
  
+
 
 
 0;
@@ -4525,10 +4682,14 @@ border-top-right-radius
 
 
 
+
+
 :
 
 
+
  
+
 
 
 0;
@@ -4537,14 +4698,20 @@ border-bottom-right-radius
 
 
 
+
+
 :
+
 
 
  
 
 
+
 4
 px
+
+
 
 
 
@@ -4555,14 +4722,20 @@ border-bottom-left-radius
 
 
 
+
+
 :
+
 
 
  
 
 
+
 4
 px
+
+
 
 
 
@@ -4692,7 +4865,9 @@ select[multiple].input-group-sm>.form-control, select[multiple].input-group-sm>.
 .input-group
 
 
+
  
+
 
 
 .form-control
@@ -4700,31 +4875,41 @@ select[multiple].input-group-sm>.form-control, select[multiple].input-group-sm>.
 
 
 
+
+
 :not
 
 
+
  
+
 
 
 (
 :first-child
 
 
+
  
+
 
 
 )
 :not
 
 
+
  
+
 
 
 (
 :last-child
 
 
+
  
+
 
 
 ),
@@ -4733,31 +4918,41 @@ select[multiple].input-group-sm>.form-control, select[multiple].input-group-sm>.
 
 
 
+
+
 :not
 
 
+
  
+
 
 
 (
 :first-child
 
 
+
  
+
 
 
 )
 :not
 
 
+
  
+
 
 
 (
 :last-child
 
 
+
  
+
 
 
 ),
@@ -4766,31 +4961,41 @@ select[multiple].input-group-sm>.form-control, select[multiple].input-group-sm>.
 
 
 
+
+
 :not
 
 
+
  
+
 
 
 (
 :first-child
 
 
+
  
+
 
 
 )
 :not
 
 
+
  
+
 
 
 (
 :last-child
 
 
+
  
+
 
 
 ){
@@ -4799,10 +5004,14 @@ border-radius
 
 
 
+
+
 :
 
 
+
  
+
 
 
 0
@@ -4845,10 +5054,14 @@ border-radius
 .input-group
 
 
+
  
 
 
+
 .form-control
+
+
 
 
 
@@ -4860,9 +5073,13 @@ border-radius
 
 
 
+
+
 :first-child
 ,
 .input-group-btn
+
+
 
 
 
@@ -4872,6 +5089,8 @@ border-radius
 .btn
 ,
 .input-group-btn
+
+
 
 
 
@@ -4883,6 +5102,8 @@ border-radius
 .btn
 ,
 .input-group-btn
+
+
 
 
 
@@ -4896,9 +5117,13 @@ border-radius
 
 
 
+
+
 :last-child
 >
 .btn-group
+
+
 
 
 
@@ -4907,14 +5132,18 @@ border-radius
 
 
 
+
 	
+
 
 
 (
 :last-child
 
 
+
  
+
 
 
 )>
@@ -4925,6 +5154,8 @@ border-radius
 
 
 
+
+
 :last-child
 >
 .btn
@@ -4932,10 +5163,14 @@ border-radius
 
 
 
+
+
 :not
 
 
+
  
+
 
 
 (
@@ -4943,21 +5178,27 @@ border-radius
 
 
 
+
 	
+
 
 
 )
 :not
 
 
+
  
+
 
 
 (
 .dropdown-toggle
 
 
+
  
+
 
 
 ){
@@ -4966,10 +5207,14 @@ border-top-right-radius
 
 
 
+
+
 :
 
 
+
  
+
 
 
 0;
@@ -4978,10 +5223,14 @@ border-bottom-right-radius
 
 
 
+
+
 :
 
 
+
  
+
 
 
 0
@@ -6960,6 +7209,15 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:focus,
 	color: #333;
 	background-color: #f5f5f5;
 	border-color: #f8b194
+}
+.panel-defaultt {
+	border-color: #d0ccd0
+}
+
+.panel-defaultt>.panel-heading {
+	color: #333;
+	background-color: #f5f5f5;
+	border-color: #d0ccd0
 }
 
 .panel-default>.panel-heading+.panel-collapse>.panel-body {

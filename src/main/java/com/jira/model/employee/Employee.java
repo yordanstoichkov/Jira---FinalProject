@@ -54,14 +54,18 @@ public class Employee {
 		}
 	}
 
-	public Employee(String firstName, String lastName, Jobs job, String email, String password)
-			throws EmployeeException {
+	public Employee(String firstName, String lastName, String email, String password) throws EmployeeException {
 		this(email, password);
-		if (!isNameValid(lastName) || !isNameValid(firstName) || job == null) {
+		if (!isNameValid(lastName) || !isNameValid(firstName)) {
 			throw new EmployeeException("You should give legal personal information");
 		}
 		this.firstName = firstName;
 		this.lastName = lastName;
+	}
+
+	public Employee(String firstName, String lastName, Jobs job, String email, String password)
+			throws EmployeeException {
+		this(firstName, lastName, email, password);
 		this.setJob(job);
 	}
 

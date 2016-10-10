@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.jira.model.employee.Employee;
-import com.jira.model.employee.EmployeeDAO;
 import com.jira.model.employee.IEmployeeDAO;
 import com.jira.model.exceptions.EmployeeException;
 import com.jira.model.exceptions.IsssueExeption;
@@ -30,7 +29,6 @@ import com.jira.model.project.ISprintDAO;
 import com.jira.model.project.Issue;
 import com.jira.model.project.PartOfProjectException;
 import com.jira.model.project.Project;
-import com.jira.model.project.ProjectDAO;
 import com.jira.model.project.Sprint;
 import com.jira.model.project.WorkFlow;
 
@@ -161,6 +159,12 @@ public class ProjectController {
 	public String getActiveSprintOfProject(Model model, HttpSession session) {
 		Project project = (Project) session.getAttribute("project");
 		model.addAttribute("project", project);
+		for (Sprint sprint : project.getSprints()) {
+			if (sprint.getStatus() == WorkFlow.IN_PROGRESS) {
+				session.setAttribute("activeSprint", sprint);
+				model.addAttribute(sprint);
+			}
+		}
 		int userId = (int) session.getAttribute("userId");
 		model.addAttribute("userId", userId);
 		return "active";
@@ -192,4 +196,75 @@ public class ProjectController {
 		return "redirect:active";
 	}
 
+	@RequestMapping(value = "/issue", method = RequestMethod.POST)
+	public String showIssueInfo(@RequestParam("issueId") int issueId, Model model, HttpSession session) {
+		System.out.println(issueId);
+		Project project = (Project) session.getAttribute("project");
+		model.addAttribute("project", project);
+		Sprint sprint = (Sprint) session.getAttribute("activeSprint");
+		model.addAttribute("sprint", sprint);
+		int userId = (int) session.getAttribute("userId");
+		model.addAttribute("userId", userId);
+		for (Issue issue : sprint.getIssues()) {
+			if (issue.getIssueId() == issueId) {
+				model.addAttribute(issue);
+				break;
+			}
+		}
+		List<Integer> developersId = new ArrayList<Integer>();
+		try {
+			developersId.addAll(empDAO.getDevelopers(issueId));
+		} catch (EmployeeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// model.addAttribute("developersId", developersId);
+		List<Integer> reviewersId = new ArrayList<Integer>();
+		try {
+			reviewersId.addAll(empDAO.getReviewers(issueId));
+		} catch (EmployeeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// model.addAttribute("reviewersId", reviewersId);
+		List<Integer> managersId = new ArrayList<Integer>();
+		try {
+			managersId.addAll(empDAO.getManagers(project.getProjectId()));
+		} catch (EmployeeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// model.addAttribute("managersId", managersId);
+		List<String> namesOfManagers = new ArrayList<String>();
+		if (managersId != null) {
+			for (Integer empId : managersId) {
+				Employee emp = empDAO.getEmployeeById(empId);
+				if (emp != null) {
+					namesOfManagers.add(emp.getFirstName() + " " + emp.getLastName());
+				}
+			}
+		}
+		model.addAttribute("namesOfManagers", namesOfManagers);
+		List<String> namesOfDevelopers = new ArrayList<String>();
+		if (developersId != null) {
+			for (Integer empId : developersId) {
+				Employee emp = empDAO.getEmployeeById(empId);
+				if (emp != null) {
+					namesOfDevelopers.add(emp.getFirstName() + " " + emp.getLastName());
+				}
+			}
+		}
+		model.addAttribute("namesOfDevelopers", namesOfDevelopers);
+		List<String> namesOfReviewers = new ArrayList<String>();
+		if (reviewersId != null) {
+			for (Integer empId : reviewersId) {
+				Employee emp = empDAO.getEmployeeById(empId);
+				if (emp != null) {
+					namesOfReviewers.add(emp.getFirstName() + " " + emp.getLastName());
+				}
+			}
+		}
+		model.addAttribute("namesOfReviewers", namesOfReviewers);
+		return "issue";
+	}
 }
