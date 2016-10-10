@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.jira.model.comment.Comment;
 import com.jira.model.employee.Employee;
 import com.jira.model.employee.EmployeeDAO;
 import com.jira.model.employee.IEmployeeDAO;
@@ -273,6 +274,15 @@ public class ProjectController {
 			}
 		}
 		model.addAttribute("namesOfReviewers", namesOfReviewers);
+		List<Comment> commentsOfIssue = null;
+		try {
+			commentsOfIssue = issueDAO.getComments(issueId);
+		} catch (IsssueExeption e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		model.addAttribute("commentsOfIssue", commentsOfIssue);
 		return "issue";
 	}
+	
 }

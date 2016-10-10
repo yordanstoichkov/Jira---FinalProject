@@ -1,5 +1,8 @@
 package com.jira.model.project;
 
+import java.util.List;
+
+import com.jira.model.comment.Comment;
 import com.jira.model.exceptions.IsssueExeption;
 
 public interface IIssueDAO {
@@ -15,6 +18,8 @@ public interface IIssueDAO {
 	Issue getIssue(int issueID) throws IsssueExeption;
 
 	public int updateIssueStatus(int issueId) throws IsssueExeption;
+	
+	List<Comment> getComments(int issueId) throws IsssueExeption;
 
 
 }

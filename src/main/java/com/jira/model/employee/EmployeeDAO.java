@@ -41,7 +41,6 @@ public class EmployeeDAO implements IEmployeeDAO {
 	private static final String JOB_BY_ID_SQL = "SELECT job_title FROM jobs WHERE job_id = ?";
 	private static final String SELECT_DEVELOPERS_OF_ISSUE_SQL = "SELECT developer_id FROM issues_developers WHERE issue_id = ?";
 	private static final String SELECT_REVIEWERS_OF_ISSUE_SQL = "SELECT reviewer_id FROM issue_reviewers WHERE issue_id = ?";
-	private static final String GET_EMPLOYEE_NAMES = "SELECT first_name, last_name FROM employees";
 
 	@Autowired
 	private IProjectDAO projectDAO;
@@ -341,12 +340,12 @@ public class EmployeeDAO implements IEmployeeDAO {
 			ps.setInt(1, employeeId);
 			ResultSet rs = ps.executeQuery();
 			rs.next();
-			String firstName = rs.getString("first_name");
-			String lastName = rs.getString("last_name");
-			String email = rs.getString("email");
-			String password = rs.getString("password");
-
-			employee = new Employee(firstName, lastName, email, password);
+			String firstName=rs.getString("first_name");
+			String lastName=rs.getString("last_name");
+			String email=rs.getString("email");
+			String password=rs.getString("password");
+			
+			employee =new Employee(firstName, lastName, email, password);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -357,8 +356,7 @@ public class EmployeeDAO implements IEmployeeDAO {
 		return employee;
 
 	}
-
-	public List<String> getEmployeesNames() {
+public List<String> getEmployeesNames() {
 		Connection connection = DBConnection.getConnection();
 		List<String> names = new ArrayList<String>();
 		try {

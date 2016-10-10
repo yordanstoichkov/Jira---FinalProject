@@ -21,15 +21,18 @@
 <script type="text/javascript" src="apprise.js"></script>
 </head>
 <body>
-
 	<div class="main" style="padding-top: 75px">
 		<div class="button">
-			<button class="myButton" id="myBtn">
+			<button type="button" id="mybtn" class="btn btn-primary btn-lg"
+				style="margin-left: 80px; width: 300px;">
 				<i class="fa fa-plus"
 					style="font-size: 1.5em; padding-right: 15px; padding-top: 5px"></i>Create
 				new project
 			</button>
 		</div>
+
+		<hr style="width: 90%; color: black">
+
 		<!-- The Modal -->
 		<div id="myModal" class="modal">
 
@@ -53,135 +56,160 @@
 
 		<div class="container">
 			<div class="col-lg-12">
+
+
+
 				<c:forEach var="project" items="${projects}">
+
+
 					<div class="panel panel-default">
-						<div class="panel-body">
-							<div id="projectName">
-								<div class="timeline-panel">
-									<div class="timeline-body">
-										<h3>
-											<c:out value="${project.title}" />
-										</h3>
-									</div>
+						<div class="panel-heading">
+							<h4 class="panel-title">
+								<a data-toggle="collapse" data-parent="#accordion"
+									href="#collapseOne"> <c:out value="${project.title}" />
+
+								</a>
+							</h4>
+						</div>
+						<div id="collapseOne" class="panel-collapse collapse in">
+							<div class="panel-body">
+								<div class="col-lg-3 col-md-2" style="padding-top:30px;">
+									<form action="./projectmain">
+										<a href="#" data-toggle="tooltip" title="Open project">
+											<button type="submit" id="track" name="projectId" 
+												value="${project.projectId}"
+												class="btn btn-outline btn-primary btn-lg">
+												<img src="eye.png" width=17px; height=17px;>
+											</button>
+										</a>
+									</form>
+									<form action="./deleteProject" method="post">
+										<a href="#" data-toggle="tooltip" title="Delete project">
+											<button type="submit" class="btn btn-outline btn-danger"
+												value="${project.projectId}" id="delete" name="projectId">
+												<img src="bin.png" width=17px; height=17px;>
+											</button>
+										</a>
+
+									</form>
+
 								</div>
-							</div>
-							<div class="col-lg-3 col-md-2">
-								<form action="./projectmain">
-									<a href="#" data-toggle="tooltip" title="Open project">
-										<button type="submit" id="track" name="projectId"
-											value="${project.projectId}"
-											class="btn btn-outline btn-primary btn-lg">
-											<img src="eye.png" width=17px; height=17px;>
-										</button>
-									</a>
-								</form>
-								<form action="./deleteProject" method="post">
-									<a href="#" data-toggle="tooltip" title="Delete project">
-										<button type="submit" class="btn btn-outline btn-danger"
-											value="${project.projectId}" id="delete" name="projectId">
-											<img src="bin.png" width=17px; height=17px;>
-										</button>
-									</a>
-
-								</form>
-
-							</div>
 
 
-							<div class="col-lg-3 col-md-6" id="kvadrat">
-								<div class="panel panel-red">
-									<div class="panel-heading">
-										<div class="row">
-											<div class="col-xs-3">
-												<i class="fa fa-times" style="font-size: 5.0em;"></i>
-											</div>
-											<div class="col-xs-9 text-right">
-												<div class="huge">
-													<font size="4"> <c:out value="${project.toDo}" />
-													</font>
+								<div class="col-lg-3 col-md-6" id="kvadrat">
+									<div class="panel panel-red">
+										<div class="panel-heading">
+											<div class="row">
+												<div class="col-xs-3">
+													<i class="fa fa-times" style="font-size: 5.0em;"></i>
 												</div>
-												<div id="status">
-													<h3>
-														<b>To Do</b>
-													</h3>
+												<div class="col-xs-9 text-right">
+													<div class="huge">
+														<font size="4"> <c:out value="${project.toDo}" />
+														</font>
+													</div>
+													<div id="status">
+														<h3>
+															<b>To Do</b>
+														</h3>
+													</div>
 												</div>
 											</div>
 										</div>
-									</div>
-									<div class="panel-footer">
-										<a href="#"><span class="pull-left">View Details</span></a> <span
-											class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-										<div class="clearfix"></div>
+										<div class="panel-footer">
+											<a href="#"><span class="pull-left">View Details</span></a> <span
+												class="pull-right"><i
+												class="fa fa-arrow-circle-right"></i></span>
+											<div class="clearfix"></div>
+										</div>
 									</div>
 								</div>
-							</div>
-							<div class="col-lg-3 col-md-6" id="kvadrat">
-								<div class="panel panel-yellow">
-									<div class="panel-heading">
-										<div class="row">
-											<div class="col-xs-3">
-												<i class="fa fa-cog" style="font-size: 5.0em;"></i>
-											</div>
-											<div class="col-xs-9 text-right">
-												<div class="huge">
-													<font size="4"> <c:out value="${project.inProgress}" />
-													</font>
+								<div class="col-lg-3 col-md-6" id="kvadrat">
+									<div class="panel panel-yellow">
+										<div class="panel-heading">
+											<div class="row">
+												<div class="col-xs-3">
+													<i class="fa fa-cog" style="font-size: 5.0em;"></i>
 												</div>
-												<div id="status">
-													<h3>
-														<b>In Progress</b>
-													</h3>
+												<div class="col-xs-9 text-right">
+													<div class="huge">
+														<font size="4"> <c:out
+																value="${project.inProgress}" />
+														</font>
+													</div>
+													<div id="status">
+														<h3>
+															<b>In Progress</b>
+														</h3>
+													</div>
 												</div>
 											</div>
 										</div>
-									</div>
 
-									<div class="panel-footer">
-										<a href="#"><span class="pull-left">View Details</span></a> <span
-											class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-										<div class="clearfix"></div>
+										<div class="panel-footer">
+											<a href="#"><span class="pull-left">View Details</span></a> <span
+												class="pull-right"><i
+												class="fa fa-arrow-circle-right"></i></span>
+											<div class="clearfix"></div>
+										</div>
 									</div>
 								</div>
-							</div>
-							<div class="col-lg-3 col-md-6" id="kvadrat">
-								<div class="panel panel-green">
-									<div class="panel-heading">
-										<div class="row">
-											<div class="col-xs-3">
-												<i class="fa fa-check" style="font-size: 5.0em;"> </i>
-											</div>
-											<div class="col-xs-9 text-right">
-												<div class="huge">
-													<font size="4"> <c:out value="${project.done}" />
-													</font>
+								<div class="col-lg-3 col-md-6" id="kvadrat">
+									<div class="panel panel-green">
+										<div class="panel-heading">
+											<div class="row">
+												<div class="col-xs-3">
+													<i class="fa fa-check" style="font-size: 5.0em;"> </i>
 												</div>
-												<div>
-													<h3>
-														<b>Done</b>
-													</h3>
+												<div class="col-xs-9 text-right">
+													<div class="huge">
+														<font size="4"> <c:out value="${project.done}" />
+														</font>
+													</div>
+													<div>
+														<h3>
+															<b>Done</b>
+														</h3>
+													</div>
 												</div>
 											</div>
 										</div>
-									</div>
-									<div class="panel-footer">
-										<a href="#"><span class="pull-left">View Details</span> </a><span
-											class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-										<div class="clearfix"></div>
-									</div>
+										<div class="panel-footer">
+											<a href="#"><span class="pull-left">View Details</span> </a><span
+												class="pull-right"><i
+												class="fa fa-arrow-circle-right"></i></span>
+											<div class="clearfix"></div>
+										</div>
 
+									</div>
 								</div>
+
 							</div>
 						</div>
-
 					</div>
+
+
 				</c:forEach>
+
+
+
+
+
+
+
+
+
+
+
+
+
 			</div>
 
 		</div>
 	</div>
 	<script>
 		var modal = document.getElementById('myModal');
-		var btn = document.getElementById("myBtn");
+		var btn = document.getElementById("mybtn");
 		var span = document.getElementsByClassName("close")[0];
 		btn.onclick = function() {
 			modal.style.display = "block";

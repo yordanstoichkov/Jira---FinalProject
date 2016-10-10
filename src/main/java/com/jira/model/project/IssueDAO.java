@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,9 +16,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.jira.model.comment.Comment;
 import com.jira.model.dbConnection.DBConnection;
 import com.jira.model.employee.Employee;
 import com.jira.model.employee.EmployeeDAO;
+import com.jira.model.employee.IEmployeeDAO;
 import com.jira.model.exceptions.EmployeeException;
 import com.jira.model.exceptions.IsssueExeption;
 import com.jira.model.exceptions.ProjectException;
@@ -36,9 +40,12 @@ public class IssueDAO implements IIssueDAO {
 	private static final String GET_ISSUE_SQL = "SELECT * FROM issues WHERE issue_id = ?";
 	private static final String SELECT_DEVELOPERS_OF_ISSUE_SQL = "SELECT developer_id FROM issues_developers WHERE issue_id = ?";
 	private static final String UPDATE_STATUS_ID = "UPDATE issues SET status_id= ? WHERE issue_id = ?;";
+	private static final String SELECT_COMMENTS_OF_ISSUE_SQL = "SELECT * FROM comments WHERE issue_id = ?";
 
 	@Autowired
 	private IPartOfProjectDAO partDAO;
+	@Autowired
+	private IEmployeeDAO employeeDAO;
 
 	/*
 	 * (non-Javadoc)
@@ -133,7 +140,6 @@ public class IssueDAO implements IIssueDAO {
 
 	}
 
-	
 	public int updateIssueStatus(int issueId) throws IsssueExeption {
 		if (issueId <= 0) {
 			throw new IsssueExeption("Invalid issue given");
@@ -290,4 +296,33 @@ public class IssueDAO implements IIssueDAO {
 		}
 		return result;
 	}
+
+	public static java.sql.Date localTimeToDate(LocalDateTime lt) {
+		return new java.sql.Date(lt.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+	}
+
+	public List<Comment> getComments(int issueId) throws IsssueExeption {
+		Connection connection = DBConnection.getConnection();
+		List<Comment> commentsOfIssue = new ArrayList<>();
+		try {
+			PreparedStatement ps = connection.prepareStatement(SELECT_COMMENTS_OF_ISSUE_SQL);
+			ps.setInt(1, issueId);
+			ResultSet rs = ps.executeQuery();
+			Comment comment = null;
+			while (rs.next()) {
+				String text = rs.getString("comment");
+				int employeeId = rs.getInt("employee_id");
+				Date date = rs.getDate("date");
+				Employee emp = employeeDAO.getEmployeeById(employeeId);
+				LocalDate localDate = date.toLocalDate();
+				comment = new Comment(text, emp, localDate);
+				commentsOfIssue.add(comment);
+			}
+
+		} catch (SQLException e) {
+			throw new IsssueExeption("We can get comments right now. Please, try again later!");
+		}
+		return commentsOfIssue;
+	}
+
 }

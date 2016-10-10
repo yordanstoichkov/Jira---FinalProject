@@ -2,7 +2,6 @@
 <%@page session="false"%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 
 <!DOCTYPE html>
@@ -13,9 +12,24 @@
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
 <script type="text/javascript" src="jquery-3.1.1.min.js"></script>
+
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+<title>SB Admin 2 - Bootstrap Admin Theme</title>
+<link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+<link href="../dist/css/sb-admin-2.css" rel="stylesheet">
+<link href="../vendor/morrisjs/morris.css" rel="stylesheet">
+<link href="../vendor/font-awesome/css/font-awesome.min.css"
+	rel="stylesheet" type="text/css">
 </head>
-<body>
+<body onload="giveComments()">
+
 	<div class="row">
 		<div class="zaglavie">
 			<h1 class="page-header" style="color: #1b5c9e;">
@@ -65,6 +79,7 @@
 						</i>
 					</c:if>
 				</div>
+
 				<c:if test="${ issue.priority=='LOW'}">
 					<span style="color: #1b5c9e; display: inline; font-size: 80%">
 						&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
@@ -156,5 +171,54 @@
 			</div>
 			<!-- /.panel -->
 		</div>
+	</div>
+	<div class="chats" style="width: 1300px; padding-left: 300px;">
+		<div class="chat-panel panel panel-defaultt">
+			<div class="panel-heading">
+				<i class="fa fa-comments fa-fw"></i> Comments
+				<div class="btn-group pull-right"></div>
+			</div>
+			<!-- /.panel-heading -->
+			<div class="panel-body">
+				<ul class="chat">
+					<c:forEach items="${commentsOfIssue}" var="comment">
+						<li class="left clearfix">
+							<div class="chat-body clearfix">
+								<div class="header">
+									<span class="chat-img pull-left"> <img src="manager.png"
+										alt="User Avatar" class="img-circle"
+										style="width: 30px; height: 30px" />
+									</span><strong class="primary-font"><br> <c:out
+											value="${comment.writer.firstName}"></c:out> <c:out
+											value="${comment.writer.lastName}"></c:out></strong> <small
+										class="pull-right text-muted"> <i
+										class="fa fa-clock-o fa-fw"></i> <c:out
+											value="${comment.date}" />
+									</small>
+								</div>
+
+								<br>
+								<c:out value="${comment.comment}" />
+							</div>
+						</li>
+						<hr>
+					</c:forEach>
+
+				</ul>
+			</div>
+			<!-- /.panel-body -->
+			<div class="panel-footer">
+				<div class="input-group">
+					<input id="btn-input" type="text" class="form-control input-sm"
+						placeholder="Type your message here..." /> <span
+						class="input-group-btn">
+						<button class="btn btn-warning btn-sm" id="btn-chat">
+							Send</button>
+					</span>
+				</div>
+			</div>
+			<!-- /.panel-footer -->
+		</div>
+	</div>
 </body>
 </html>

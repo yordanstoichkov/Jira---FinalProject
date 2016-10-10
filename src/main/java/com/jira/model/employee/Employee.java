@@ -54,6 +54,14 @@ public class Employee {
 		}
 	}
 
+	public Employee(String email, String password) throws EmployeeException {
+		if (!isEmailValid(email) || !stringValidate(password)) {
+			throw new EmployeeException("Illegal email or password");
+		}
+		this.email = email;
+		this.password = password;
+	}
+
 	public Employee(String firstName, String lastName, String email, String password) throws EmployeeException {
 		this(email, password);
 		if (!isNameValid(lastName) || !isNameValid(firstName)) {
@@ -67,14 +75,6 @@ public class Employee {
 			throws EmployeeException {
 		this(firstName, lastName, email, password);
 		this.setJob(job);
-	}
-
-	public Employee(String email, String password) throws EmployeeException {
-		if (!isEmailValid(email) || !stringValidate(password)) {
-			throw new EmployeeException("Illegal email or password");
-		}
-		this.email = email;
-		this.password = password;
 	}
 
 	public static boolean isNameValid(String name) {
