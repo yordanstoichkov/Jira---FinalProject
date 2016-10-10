@@ -35,23 +35,29 @@
 							<th colspan="4"><h1 style="font-size: 130%">Sprint:
 									${sprint.title}</h1></th>
 							<c:if test="${not empty activeSprint}">
-								<th><form action="./startsprint" method="post">
-										<span style="padding-right: 8px; padding-top: 3px;">
+								<th><span style="padding-right: 8px; padding-top: 3px;">
 
-											<button style="float: right;" data-toggle="tooltip"
-												title="There is active sprint" class="btn btn-warning"
-												disabled>Start sprint</button>
-										</span>
-									</form></th>
+										<button style="float: right;" data-toggle="tooltip"
+											title="There is active sprint" class="btn" disabled>Start
+											sprint</button>
+								</span></th>
 							</c:if>
 							<c:if test="${empty activeSprint}">
-								<th><form action="./startsprint" method="post">
-										<span style="padding-right: 8px; padding-top: 3px;">
-											<button style="float: right" name="sprintId"
-												value="${sprint.sprintId}" type="submit"
-												class="btn btn-warning">Start sprint</button>
-										</span>
-									</form></th>
+								<c:if test="${empty activeSprint.issues}">
+									<th><span style="padding-right: 8px; padding-top: 3px;">
+
+											<button style="float: right;" data-toggle="tooltip"
+												title="There are not issues in this sprint" class="btn" disabled>Start
+												sprint</button>
+									</span></th>
+								</c:if>
+									<th><form action="./startsprint" method="post">
+											<span style="padding-right: 8px; padding-top: 3px;">
+												<button style="float: right" name="sprintId"
+													value="${sprint.sprintId}" type="submit"
+													class="btn btn-warning">Start sprint</button>
+											</span>
+										</form></th>
 							</c:if>
 						</tr>
 						<tr>

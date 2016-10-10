@@ -17,9 +17,15 @@ form {
 	border-radius: 8px;
 }
 
-h1 {
+.sprfrm {
+	text-align: center;
+	padding-left:200px
+}
+
+.sprinth1 {
 	margin: 0 0 5px 0;
 	text-align: center;
+	padding-right: 105px
 }
 
 input[type="text"], input[type="password"], input[type="date"], input[type="datetime"],
@@ -41,7 +47,6 @@ input[type="text"], input[type="password"], input[type="date"], input[type="date
 }
 
 input[type="textarea"] {
-	
 	background: rgba(255, 255, 255, 0.1);
 	border: none;
 	font-size: 16px;

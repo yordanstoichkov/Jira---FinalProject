@@ -37,7 +37,7 @@
 						style="font-size: 2.0em;"></i> Home</a></li>
 				<li><a href="./projects"><i class="fa fa-paste"
 						style="font-size: 2.0em;"></i>Projects</a></li>
-				<li><a href="./error"><i class="fa fa-phone"
+				<li><a href="./home"><i class="fa fa-phone"
 						style="font-size: 2.0em;"></i> Contact</a></li>
 
 
@@ -50,9 +50,40 @@
 				%>
 				<li><a href="#"><i class="fa fa-pencil"
 						style="font-size: 2.0em;"></i>Your issues</a></li>
-				<li style="float: right"><a class="active" href="./logout">LogOut</a></li>
-				<li style="float: right"><a class="active" href="#">Hi, <%=request.getSession().getAttribute("username")%>
-				</a></li>
+				<li style="float: right; padding-right:20px;padding-top:5px"><div class="dropdown">
+						<a onclick="myFunction()" class="dropbtn"> Hi, <%=request.getSession().getAttribute("username")%></a>
+						<div id="myDropdown" class="dropdown-content">
+							<a href="#about">Profile</a> <a href="#contact">Account Statistics</a> <a
+								class="active" href="./logout">LogOut</a>
+						</div>
+					</div></li>
+
+
+				<script>
+					/* When the user clicks on the button,
+					 toggle between hiding and showing the dropdown content */
+					function myFunction() {
+						document.getElementById("myDropdown").classList
+								.toggle("show");
+					}
+
+					// Close the dropdown if the user clicks outside of it
+					window.onclick = function(event) {
+						if (!event.target.matches('.dropbtn')) {
+
+							var dropdowns = document
+									.getElementsByClassName("dropdown-content");
+							var i;
+							for (i = 0; i < dropdowns.length; i++) {
+								var openDropdown = dropdowns[i];
+								if (openDropdown.classList.contains('show')) {
+									openDropdown.classList.remove('show');
+								}
+							}
+						}
+					}
+				</script>
+
 				<%
 					}
 				%>

@@ -7,43 +7,50 @@
 <link rel="stylesheet" href="sprActivate.css">
 </head>
 <body>
-<script>
- $("#date_retour").datepicker(
-     {
-        changeMonth: true,
-        changeYear: true,
-        dateFormat: 'dd/mm/yy',
-        minDate: $("#date_depart").val(),
-        maxDate: $("#date_depart").val()+1m,
-        defaultDate: $("#date_depart").val()
-    });
- </script>
-	<h1 style="font-size: 150%; padding-left: 300px; padding-top: 35px;">Sprint
+	<script>
+		function customRange(input) {
+			if (input.id == 'to') {
+				var x = $('#from').datepicker("getDate");
+				$(".to").datepicker("option", "minDate", x);
+			} else if (input.id == 'from') {
+				var x = $('#to').datepicker("getDate");
+				$(".from").datepicker("option", "maxDate", x);
+			}
+		}
+	</script>
+	<h1 class="sprinth1"
+		style="font-size: 150%; padding-left: 300px; padding-top: 35px;">Sprint
 		name :</h1>
-	<h1
-		style="font-size: 150%; color: blue; padding-left: 300px; padding-top: 45px;">${sprint.title }</h1>
+	<h1 class="sprinth1"
+		style="font-size: 150%; color: blue; padding-left: 300px; padding-top: 45px;">${sprint.title}</h1>
 	<div class="col-lg-12" style="padding-left: 250px; padding-top: 30px">
 		<hr style="width: 90%;">
 	</div>
 	<div class="sprfrm">
-		<form:form name="form" commandName="sprint">
+		<form name="form" action="./beginsprint" method="post">
 			<fieldset class="contact-inner">
-				<label>Sprint start date:</label>
+
 				<p class="contact-input">
-					<form:input type="date" path="startDate" id="myDate"
-						></form:input>
+					<label>Sprint start date:</label> <input type="date"
+						name="startDate" id="from" onclick="customRange('from')"></input>
 				</p>
+				<p class="contact-input">
+					<label>Sprint end date:</label> <input type="date" name="to"
+						id="date_depart" onclick="customRange('to')"></input>
+				</p>
+
 				<br /> <label style="padding-bottom: 15px">Sprint goals:</label>
 				<p class="contact-input">
 
-					<form:input cols='60' rows='8' type="textarea" path="sprintGoal" />
+					<input type="textarea" name="sprintGoal" />
 				</p>
 				<p id="demo"></p>
 				<p class="contact-submit">
-					<button type="submit" value="Start Sprint"> Start sprint</button>
+					<button type="submit" name="sprintId" value="${sprint.sprintId}">Start
+						sprint</button>
 				</p>
 			</fieldset>
-		</form:form>
+		</form>
 	</div>
 </body>
 </html>
