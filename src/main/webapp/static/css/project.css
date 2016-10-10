@@ -3,11 +3,13 @@
  * Copyright 2013-2016 Start Bootstrap
  * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE)
  */
+
 html {
 	font-family: sans-serif;
 	-webkit-text-size-adjust: 100%;
 	-ms-text-size-adjust: 100%
 }
+
 body {
 	background: url("back.jpg") no-repeat center center fixed;
 	-webkit-background-size: cover;
@@ -15,9 +17,11 @@ body {
 	-o-background-size: cover;
 	background-size: cover;
 }
+
 form {
-    display: inline;
+	display: inline;
 }
+
 #wrapper {
 	width: 100%;
 }
@@ -63,6 +67,7 @@ form {
 	font-size: 14px;
 	font-weight: 700;
 }
+
 #delete {
 	margin-left: 20px;
 	margin-top: 10px;

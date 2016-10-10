@@ -22,37 +22,36 @@
 </head>
 <body>
 
+	<div class="main" style="padding-top: 75px">
+		<div class="button">
+			<button class="myButton" id="myBtn">
+				<i class="fa fa-plus"
+					style="font-size: 1.5em; padding-right: 15px; padding-top: 5px"></i>Create
+				new project
+			</button>
+		</div>
+		<!-- The Modal -->
+		<div id="myModal" class="modal">
 
-	<div class="button">
-		<button class="myButton" id="myBtn">
-			<i class="fa fa-plus"
-				style="font-size: 1.5em; padding-right: 15px; padding-top: 5px"></i>Create
-			new project
-		</button>
-	</div>
-	<!-- The Modal -->
-	<div id="myModal" class="modal">
+			<!-- Modal content -->
+			<div class="modal-content">
+				<span class="close">×</span>
+				<form:form name="form" commandName="emptyproject"
+					onsubmit="return validateForm()">
+					<label>Enter title*</label>
+					<form:input type="text" name="title" path="title"
+						cssErrorClass="error" />
+					<p id="demo"></p>
+					<form:errors path="title" cssClass="error"></form:errors>
+					<br />
+					<input type="submit" value="Create project" />
+				</form:form>
+			</div>
 
-		<!-- Modal content -->
-		<div class="modal-content">
-			<span class="close">×</span>
-			<form:form name="form" commandName="emptyproject"
-				onsubmit="return validateForm()">
-				<label>Enter title*</label>
-				<form:input type="text" name="title" path="title"
-					cssErrorClass="error" />
-				<p id="demo"></p>
-				<form:errors path="title" cssClass="error"></form:errors>
-				<br />
-				<input type="submit" value="Create project" />
-			</form:form>
 		</div>
 
-	</div>
 
-
-	<div class="container">
-		<div id="absolute">
+		<div class="container">
 			<div class="col-lg-12">
 				<c:forEach var="project" items="${projects}">
 					<div class="panel panel-default">
@@ -68,8 +67,7 @@
 							</div>
 							<div class="col-lg-3 col-md-2">
 								<form action="./projectmain">
-									<a href="#" data-toggle="tooltip"
-										title="Open project">
+									<a href="#" data-toggle="tooltip" title="Open project">
 										<button type="submit" id="track" name="projectId"
 											value="${project.projectId}"
 											class="btn btn-outline btn-primary btn-lg">
@@ -78,12 +76,12 @@
 									</a>
 								</form>
 								<form action="./deleteProject" method="post">
-								<a href="#" data-toggle="tooltip"
-										title="Delete project">
-									<button type="submit" class="btn btn-outline btn-danger"
-										value="${project.projectId}" id="delete" name="projectId">
-										<img src="bin.png" width=17px; height=17px;>
-									</button></a>
+									<a href="#" data-toggle="tooltip" title="Delete project">
+										<button type="submit" class="btn btn-outline btn-danger"
+											value="${project.projectId}" id="delete" name="projectId">
+											<img src="bin.png" width=17px; height=17px;>
+										</button>
+									</a>
 
 								</form>
 
