@@ -41,6 +41,7 @@ public class IssueDAO implements IIssueDAO {
 	private static final String SELECT_DEVELOPERS_OF_ISSUE_SQL = "SELECT developer_id FROM issues_developers WHERE issue_id = ?";
 	private static final String UPDATE_STATUS_ID = "UPDATE issues SET status_id= ? WHERE issue_id = ?;";
 	private static final String SELECT_COMMENTS_OF_ISSUE_SQL = "SELECT * FROM comments WHERE issue_id = ?";
+	private static final String INSERT_ISSUE_COMMENT_SQL = "INSERT INTO  comments VALUES(NULL , ? , ? , ? , ?)";
 
 	@Autowired
 	private IPartOfProjectDAO partDAO;
@@ -315,7 +316,8 @@ public class IssueDAO implements IIssueDAO {
 				Date date = rs.getDate("date");
 				Employee emp = employeeDAO.getEmployeeById(employeeId);
 				LocalDate localDate = date.toLocalDate();
-				comment = new Comment(text, emp, localDate);
+				comment = new Comment(text, emp.getEmployeeID());
+				comment.setDate(localDate);
 				commentsOfIssue.add(comment);
 			}
 
@@ -325,4 +327,16 @@ public class IssueDAO implements IIssueDAO {
 		return commentsOfIssue;
 	}
 
+	public void commentIssue(Comment comment) {
+		Connection connection = DBConnection.getConnection();
+		try {
+			PreparedStatement ps = connection.prepareStatement(INSERT_ISSUE_COMMENT_SQL);
+			Date.valueOf(comment.getDate());
+
+			ps.setDate(1, Date.valueOf(comment.getDate()));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

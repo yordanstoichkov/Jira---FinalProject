@@ -1,5 +1,6 @@
 <%@include file="navigation.jsp"%>
 <%@page session="false"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
@@ -209,16 +210,33 @@
 			<!-- /.panel-body -->
 			<div class="panel-footer">
 				<div class="input-group">
-					<input id="btn-input" type="text" class="form-control input-sm"
-						placeholder="Type your message here..." /> <span
-						class="input-group-btn">
-						<button class="btn btn-warning btn-sm" id="btn-chat">
-							Send</button>
-					</span>
+					<form:form commandName="emptyComment" action="./comment">
+						<span class="input-group-btn"> <form:input path="comment" id="btn-input"
+							type="text" class="form-control input-sm"
+							placeholder="Type your message here..." style="width: 800px;" />
+							<button class="btn btn-warning btn-sm" id="btn-chat">
+								Send</button>
+						</span>
+					</form:form>
 				</div>
 			</div>
 			<!-- /.panel-footer -->
 		</div>
 	</div>
+	<script>
+		function validateForm() {
+			$("#demo").empty();
+			var text;
+			var x = trim(document.forms["form"]["title"].value);
+			if (x == null || x == "") {
+				text = "Name must be filled out";
+				$("#demo").append(text);
+				return false;
+			}
+		}
+		function trim(value) {
+			return value.replace(/^\s+|\s+$/g, "");
+		}
+	</script>
 </body>
 </html>

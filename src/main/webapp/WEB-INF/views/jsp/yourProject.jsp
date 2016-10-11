@@ -93,9 +93,9 @@
 						</c:forEach>
 						<tr>
 							<td style="text-align: left" colspan="5"><form
-									action="./changeIssue" method="post">
+									action="./newIssue" method="post">
 									<button type="submit" class="myButton" id="myBtn"
-										name="issueId" value="0">
+										name="sprintId" value="${sprint.sprintId}">
 										<i class="fa fa-plus-circle"></i> Add issue
 									</button>
 								</form></td>

@@ -41,7 +41,7 @@ public class EmployeeDAO implements IEmployeeDAO {
 	private static final String JOB_BY_ID_SQL = "SELECT job_title FROM jobs WHERE job_id = ?";
 	private static final String SELECT_DEVELOPERS_OF_ISSUE_SQL = "SELECT developer_id FROM issues_developers WHERE issue_id = ?";
 	private static final String SELECT_REVIEWERS_OF_ISSUE_SQL = "SELECT reviewer_id FROM issue_reviewers WHERE issue_id = ?";
-
+	private static final String GET_EMPLOYEE_NAMES = "SELECT first_name, last_name FROM employees";
 	@Autowired
 	private IProjectDAO projectDAO;
 

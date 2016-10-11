@@ -19,7 +19,7 @@
 			
 				<div class="forma">
 					<div class="panel-heading">
-						<h1 class="panel-title" style="color: white; font-size: 250%;">Login</h1>
+						<h1 class="panel-title" style="color: #5c85d6; font-size: 250%;">Login</h1>
 					</div>
 					<div class="panel-body">
 						<c:if test="${not empty message }">
@@ -43,7 +43,7 @@
 
 								<div class="checkbox">
 									<label> <input name="remember" type="checkbox"
-										value="Remember Me"><span style="color: white;">Remember
+										value="Remember Me"><span style="color: #5c85d6;">Remember
 											Me</span>
 									</label>
 								</div>

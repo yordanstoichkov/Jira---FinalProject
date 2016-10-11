@@ -21,9 +21,9 @@
   }
 }
 .counts{
-	color: white;
-	text-align:left;
-	padding-top: 90px;
+	color: #2e5cb8;
+	text-align:center;
+	padding-top: 150px;
 	padding-left: 20px;
 	padding-right:20px;
 }
@@ -292,7 +292,7 @@ table.dataTable thead .sorting:after {
   background-color: #f0ad4e;
 }
 .forma{
-	padding-top:100px;
+	padding-top:150px;
 }
 .panel-yellow > a {
   color: #f0ad4e;

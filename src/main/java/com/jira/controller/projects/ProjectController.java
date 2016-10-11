@@ -281,6 +281,7 @@ public class ProjectController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		model.addAttribute("emptyComment", new Comment(issueId,userId));	
 		model.addAttribute("commentsOfIssue", commentsOfIssue);
 		return "issue";
 	}

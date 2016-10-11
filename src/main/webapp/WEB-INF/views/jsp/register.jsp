@@ -28,12 +28,12 @@
 					});
 		}
 	</script>
-	<div class="container">
+	<div class="container" style="padding-top:100px;">
 		<div class="row">
 			<div class="col-md-4 col-md-offset-4">
 
 				<div class="panel-heading">
-					<h1 class="panel-title" style="color: white; font-size: 250%;">Register</h1>
+					<h1 class="panel-title" style="color: #2e5cb8;; font-size: 250%;">Register</h1>
 				</div>
 				<div class="panel-body">
 
@@ -69,7 +69,7 @@
 									name="passwordrepeat" type="password" value="">
 							</div>
 							<div class="form-group">
-								<label style="color: white;" for="username">Choose your
+								<label style="color: #2e5cb8;;" for="username">Choose your
 									job: </label> <select class="form-control" name="job">
 									<option value="MANAGER">Manager</option>
 									<option value="DEVELOPER">Developer</option>
