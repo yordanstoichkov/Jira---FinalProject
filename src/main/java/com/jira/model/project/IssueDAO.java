@@ -327,16 +327,20 @@ public class IssueDAO implements IIssueDAO {
 		return commentsOfIssue;
 	}
 
-	public void commentIssue(Comment comment) {
+	public void commentIssue(Comment comment) throws IsssueExeption {
 		Connection connection = DBConnection.getConnection();
 		try {
 			PreparedStatement ps = connection.prepareStatement(INSERT_ISSUE_COMMENT_SQL);
 			Date.valueOf(comment.getDate());
-
 			ps.setDate(1, Date.valueOf(comment.getDate()));
+			ps.setString(2, comment.getComment());
+			ps.setInt(3,comment.getIssueId());
+			ps.setInt(4, comment.getWriter());
+			ps.executeUpdate();
+	
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new IsssueExeption("We can insert comment right now. Please, try again later!");
+
 		}
 	}
 }

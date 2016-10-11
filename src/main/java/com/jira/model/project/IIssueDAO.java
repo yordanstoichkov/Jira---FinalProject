@@ -21,5 +21,5 @@ public interface IIssueDAO {
 	
 	List<Comment> getComments(int issueId) throws IsssueExeption;
 
-
+	void commentIssue(Comment comment) throws IsssueExeption;
 }

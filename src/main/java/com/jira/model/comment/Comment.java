@@ -47,5 +47,11 @@ public class Comment {
 	public void setDate(LocalDate date) {
 		this.date = date;
 	}
+	public int getIssueId() {
+		return issueId;
+	}
+	public void setIssueId(int issueId) {
+		this.issueId = issueId;
+	}
 
 }
