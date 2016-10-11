@@ -1,8 +1,11 @@
 package com.jira.controller.projects;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
+import java.util.UUID;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +13,23 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.auth.profile.ProfileCredentialsProvider;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
+import com.jira.WebInitializer;
+import com.jira.model.connections.S3Connection;
+import com.jira.model.employee.Employee;
 import com.jira.model.exceptions.SprintException;
 import com.jira.model.project.ISprintDAO;
 import com.jira.model.project.Project;
@@ -27,7 +42,7 @@ import com.jira.model.project.WorkFlow;
 public class SprintController {
 	@Autowired
 	private ISprintDAO sprintDAO;
-
+	
 	@RequestMapping(value = "/startsprint", method = RequestMethod.POST)
 	public String startSprint(@RequestParam("sprintId") int sprintId, Model model, HttpSession session) {
 		Project project = (Project) session.getAttribute("project");
@@ -37,6 +52,7 @@ public class SprintController {
 				model.addAttribute("sprint", sprint);
 			}
 		}
+		model.addAttribute("user", session.getAttribute("user"));
 		return "startSprint";
 	}
 
@@ -90,4 +106,5 @@ public class SprintController {
 		return "TestjspAjax";
 	}
 
+	
 }

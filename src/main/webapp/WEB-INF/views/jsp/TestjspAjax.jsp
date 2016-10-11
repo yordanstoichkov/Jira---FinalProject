@@ -40,5 +40,20 @@
 	<option>Red</option>
 	</datalist>
 	<div id="names"></div>
+
+	<form method="POST" enctype="multipart/form-data" action="./home">
+		<table>
+			<tr>
+				<td>File to upload:</td>
+				<td><input type="file" id="file" name="file" accept="image/*" /></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><input type="submit" value="Upload" /></td>
+			</tr>
+		</table>
+	</form>
+
+	<img src="${picture}">
 </body>
 </html>

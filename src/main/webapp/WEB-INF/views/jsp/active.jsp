@@ -52,7 +52,7 @@
 							<c:forEach items="${sprint.issues}" var="issue">
 								<c:if test="${issue.status=='TO_DO'}">
 									<tr>
-										<td class="danger"><form action="./issue" method="post">
+										<td class="danger"><form action="./issue">
 												<a  data-toggle="tooltip"
 													title="Click for more information"><input type="image"
 													src="info.png" width=17px; height=17px; align="left"
@@ -81,7 +81,7 @@
 								<c:if test="${issue.status=='IN_PROGRESS'}">
 									<tr>
 										<td></td>
-										<td class="warning"><form action="./issue" method="post">
+										<td class="warning"><form action="./issue">
 												<a data-toggle="tooltip"
 													title="Click for more information"> <input type="image"
 													src="info.png" width=17px; height=17px; align="left"
@@ -110,7 +110,7 @@
 									<tr>
 										<td></td>
 										<td></td>
-										<td class="success"><form action="./issue" method="post">
+										<td class="success"><form action="./issue">
 												<a data-toggle="tooltip"
 													title="Click for more information"> <input type="image"
 													src="info.png" width=17px; height=17px; align="left"

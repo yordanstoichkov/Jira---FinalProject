@@ -19,6 +19,30 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 </head>
 <body>
+	<script>
+		function getEmployeeName() {
+			var name = $("#employee").val();
+			$.get("http://localhost:8080/JiraProject/givenames?start=" + name,
+					function(data) {
+						$("#suggestions").empty();
+						for ( var index in data) {
+
+							var item = data[index];
+							var p = document.createElement("option");
+							p.innerHTML = item;
+							$("#suggestions").append(p);
+						}
+					});
+
+		}
+		function typefunction() {
+			var name = $("#employee").val();
+			var p = document.createElement("p");
+			p.innerHTML = name;
+			$("#names").append(p);
+			$("#employee").empty()
+		}
+	</script>
 	<div class="row">
 		<div class="zaglavie">
 			<h1 class="page-header" style="color: #1b5c9e;">
@@ -52,13 +76,12 @@
 		style="margin-left: 280px;" onsubmit="Validatebodypanelbumper()">
 
 		<div class="form-group"
-			style="width: 200px;color: #1b5c9e; padding-top: 20px;">
+			style="width: 200px; color: #1b5c9e; padding-top: 20px;">
 			<label>Choose file</label><input type="file" id="file" name="file"
 				accept="image/*" />
 		</div>
 
-		<div class="form-group"
-			style="width: 200px; color: #1b5c9e;">
+		<div class="form-group" style="width: 200px; color: #1b5c9e;">
 
 			<input type="submit" value="Upload file" />
 
@@ -79,8 +102,11 @@
 	<div class="form-group input-group"
 		style="width: 500px; margin-left: 280px; color: #1b5c9e;">
 
-		<input type="text" class="form-control"> <span
-			class="input-group-btn">
+		<input type="text" class="form-control" list="suggestions"
+			onkeyup="getEmployeeName()"> <span class="input-group-btn">
+			<datalist id="suggestions" onclick="typefunction()">
+				<option>Red</option>
+			</datalist>
 			<button class="btn btn-default" type="button">
 				<i class="fa fa-search"></i>
 			</button>

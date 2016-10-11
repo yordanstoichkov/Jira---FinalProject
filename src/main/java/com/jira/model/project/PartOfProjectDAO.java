@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import org.springframework.stereotype.Component;
 
-import com.jira.model.dbConnection.DBConnection;
+import com.jira.model.connections.DBConnection;
 
 import ch.qos.logback.core.subst.Token.Type;
 

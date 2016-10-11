@@ -210,12 +210,12 @@
 			<!-- /.panel-body -->
 			<div class="panel-footer">
 				<div class="input-group">
-					<form:form commandName="emptyComment" action="./comment">
-						<span class="input-group-btn"> <form:input path="comment" id="btn-input"
-							type="text" class="form-control input-sm"
-							placeholder="Type your message here..." style="width: 800px;" />
-							<button class="btn btn-warning btn-sm" id="btn-chat">
-								Send</button>
+					<form:form commandName="emptycomment" >
+						<span class="input-group-btn"> <form:input path="comment"
+								id="btn-input" type="text" class="form-control input-sm"
+								placeholder="Type your message here..." style="width: 800px;" />
+							<button type="submit" class="btn btn-warning btn-sm"
+								name="issueId" value="${issue.issueId}" id="btn-chat">Send</button>
 						</span>
 					</form:form>
 				</div>

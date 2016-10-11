@@ -47,10 +47,11 @@
 				<%
 					} else {
 				%>
-				<li><a href="#"><i class="fa fa-pencil"
+				<li><a href="./myIssues"><i class="fa fa-pencil"
 						style="font-size: 2.0em;"></i>Your issues</a></li>
 				<li style="float: right; padding-right:20px;padding-top:5px"><div class="dropdown">
-						<a onclick="myFunction()" class="dropbtn"> Hi, <%=request.getSession().getAttribute("username")%></a>
+						<a onclick="myFunction()" class="dropbtn"><img
+							src="${user.avatarPath}" width="25" height="30" /> Hi, <%=request.getSession().getAttribute("username")%></a>
 						<div id="myDropdown" class="dropdown-content">
 							<a href="#about">Profile</a> <a href="#contact">Account Statistics</a> <a
 								class="active" href="./logout">LogOut</a>

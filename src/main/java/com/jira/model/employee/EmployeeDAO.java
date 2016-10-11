@@ -15,18 +15,21 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
-import com.jira.model.dbConnection.DBConnection;
+import com.jira.model.connections.DBConnection;
 import com.jira.model.employee.Employee.Jobs;
 import com.jira.model.exceptions.EmployeeException;
+import com.jira.model.exceptions.IsssueExeption;
 import com.jira.model.exceptions.ProjectException;
+import com.jira.model.project.IIssueDAO;
 import com.jira.model.project.IProjectDAO;
+import com.jira.model.project.Issue;
 import com.jira.model.project.Project;
 import com.jira.model.project.ProjectDAO;
 
 @Component
 public class EmployeeDAO implements IEmployeeDAO {
 	private static final String DELETE_USER_SQL = "DELETE from employees where employee_id = ?;";
-	private static final String REGISTER_USER_TO_DB_SQL = "INSERT into employees VALUES(NULL,?,?,?,?,md5(?));";
+	private static final String REGISTER_USER_TO_DB_SQL = "INSERT into employees VALUES(NULL,?,?,?,?,md5(?),?);";
 	private static final String LOGIN_USER_SQL = "SELECT * FROM employees WHERE email = ? AND password = md5(?);";
 	private static final String JOB_ID_SQL = "SELECT job_id FROM jobs WHERE job_title = ?";
 	private static final String GET_EMPLOYEE_ID_SQL = "SELECT employee_id FROM employees WHERE email = ? ";
@@ -42,8 +45,12 @@ public class EmployeeDAO implements IEmployeeDAO {
 	private static final String SELECT_DEVELOPERS_OF_ISSUE_SQL = "SELECT developer_id FROM issues_developers WHERE issue_id = ?";
 	private static final String SELECT_REVIEWERS_OF_ISSUE_SQL = "SELECT reviewer_id FROM issue_reviewers WHERE issue_id = ?";
 	private static final String GET_EMPLOYEE_NAMES = "SELECT first_name, last_name FROM employees";
+	private static final String GET_EMPLOYEES_ISSUES = "SELECT DISTINCT(issue_id) FROM issues_developers WHERE developer_id=?";
+
 	@Autowired
 	private IProjectDAO projectDAO;
+	@Autowired
+	private IIssueDAO issueDAO;
 
 	/*
 	 * (non-Javadoc)
@@ -75,6 +82,7 @@ public class EmployeeDAO implements IEmployeeDAO {
 			ps.setInt(3, jobID);
 			ps.setString(4, emp.getEmail());
 			ps.setString(5, emp.getPassword());
+			ps.setString(6, emp.getAvatarPath());
 			ps.executeUpdate();
 
 			ResultSet rs = ps.getGeneratedKeys();
@@ -121,10 +129,11 @@ public class EmployeeDAO implements IEmployeeDAO {
 			String firstName = rs.getString("first_name");
 			String lastName = rs.getString("last_name");
 			int jobID = rs.getInt("job_id");
+			String avatarPath = rs.getString("avatar_path");
 			emp.setLastName(lastName);
 			emp.setFirstName(firstName);
 			emp.setEmployeeID(id);
-
+			emp.setAvatarPath(avatarPath);
 			PreparedStatement jobPS = connection.prepareStatement(JOB_BY_ID_SQL);
 			jobPS.setInt(1, jobID);
 
@@ -340,12 +349,12 @@ public class EmployeeDAO implements IEmployeeDAO {
 			ps.setInt(1, employeeId);
 			ResultSet rs = ps.executeQuery();
 			rs.next();
-			String firstName=rs.getString("first_name");
-			String lastName=rs.getString("last_name");
-			String email=rs.getString("email");
-			String password=rs.getString("password");
-			
-			employee =new Employee(firstName, lastName, email, password);
+			String firstName = rs.getString("first_name");
+			String lastName = rs.getString("last_name");
+			String email = rs.getString("email");
+			String password = rs.getString("password");
+
+			employee = new Employee(firstName, lastName, email, password);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -356,7 +365,8 @@ public class EmployeeDAO implements IEmployeeDAO {
 		return employee;
 
 	}
-public List<String> getEmployeesNames() {
+
+	public List<String> getEmployeesNames() {
 		Connection connection = DBConnection.getConnection();
 		List<String> names = new ArrayList<String>();
 		try {
@@ -373,6 +383,30 @@ public List<String> getEmployeesNames() {
 			e.printStackTrace();
 		}
 		return names;
+
+	}
+
+	public List<Issue> getEmployeesIssues(Employee emp) throws EmployeeException {
+		Connection connection = DBConnection.getConnection();
+		List<Integer> issuesId = new ArrayList<Integer>();
+		List<Issue> issues = new ArrayList<Issue>();
+		try {
+			PreparedStatement ps = connection.prepareStatement(GET_EMPLOYEES_ISSUES);
+			ps.setInt(1, emp.getEmployeeID());
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				issuesId.add(rs.getInt("issue_id"));
+			}
+			for (Integer id : issuesId) {
+				issues.add(issueDAO.getIssue(id));
+			}
+
+		} catch (SQLException e) {
+			throw new EmployeeException("Currently we have a problem getting your issues", e);
+		} catch (IsssueExeption e) {
+			throw new EmployeeException("Currently we have a problem getting your issues", e);
+		}
+		return issues;
 
 	}
 }

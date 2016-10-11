@@ -45,7 +45,7 @@ public class UserController {
 			request.setAttribute("message", e.getMessage());
 			return "index";
 		}
-
+		model.addAttribute("user", login);
 		if (loginID > 0) {
 			HttpSession session = request.getSession();
 			session.setMaxInactiveInterval(100000);
@@ -78,6 +78,7 @@ public class UserController {
 				return "register";
 			}
 		}
+
 		String jobPar = request.getParameter("job");
 		Jobs job = null;
 		if (jobPar.equals(Jobs.DEVELOPER.toString())) {
@@ -99,11 +100,12 @@ public class UserController {
 			request.setAttribute("message", e.getMessage());
 			return "register";
 		}
-
+		model.addAttribute("user", regUser);
 		if (empID != 0) {
 			request.setAttribute("message", "You are registered now login");
 			return "redirect:index";
 		}
+
 		return "register";
 	}
 

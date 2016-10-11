@@ -9,6 +9,7 @@ import com.jira.model.exceptions.EmployeeException;
 import com.jira.model.project.WorkFlow;
 
 public class Employee {
+	private static final String DEFAULT_AVATAR_URL = "https://s3.amazonaws.com/avatars-jira/default.png";
 	private static final String NAME_REGEX = "/^[a-z ,.'-]+$/i";
 	private static final String EMAIL_REGEX = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
 	private String firstName;
@@ -58,6 +59,7 @@ public class Employee {
 		if (!isEmailValid(email) || !stringValidate(password)) {
 			throw new EmployeeException("Illegal email or password");
 		}
+		this.avatarPath=DEFAULT_AVATAR_URL;
 		this.email = email;
 		this.password = password;
 	}

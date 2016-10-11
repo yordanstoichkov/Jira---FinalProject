@@ -35,8 +35,8 @@
 						name="startDate" id="from" onclick="customRange('from')"></input>
 				</p>
 				<p class="contact-input">
-					<label>Sprint end date:</label> <input type="date" name="to"
-						id="date_depart" onclick="customRange('to')"></input>
+					<label>Sprint end date:</label> <input type="date" name="endDate"
+						id="to" onclick="customRange('to')"></input>
 				</p>
 
 				<br /> <label style="padding-bottom: 15px">Sprint goals:</label>

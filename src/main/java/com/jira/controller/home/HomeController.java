@@ -1,5 +1,7 @@
 package com.jira.controller.home;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -7,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.amazonaws.http.HttpRequest;
 import com.jira.model.employee.EmployeeDAO;
 import com.jira.model.employee.IEmployeeDAO;
 import com.jira.model.exceptions.EmployeeException;
@@ -29,7 +32,7 @@ public class HomeController {
 	private IIssueDAO issueDAO;
 
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
-	public String showIndex(Model model) {
+	public String showIndex(Model model, HttpServletRequest request) {
 		try {
 			int usersCount = empDAO.getUserCount();
 			int projectsCount = projectDAO.getProjectCount();
@@ -44,6 +47,9 @@ public class HomeController {
 			e.printStackTrace();
 		} catch (IsssueExeption e) {
 			e.printStackTrace();
+		}
+		if (request.getSession(false) != null) {
+			model.addAttribute("user", request.getSession().getAttribute("user"));
 		}
 		return "index";
 	}

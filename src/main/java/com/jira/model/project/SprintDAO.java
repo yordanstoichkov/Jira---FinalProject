@@ -10,7 +10,7 @@ import java.sql.Statement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.jira.model.dbConnection.DBConnection;
+import com.jira.model.connections.DBConnection;
 import com.jira.model.exceptions.IsssueExeption;
 import com.jira.model.exceptions.ProjectException;
 import com.jira.model.exceptions.SprintException;
@@ -20,8 +20,8 @@ public class SprintDAO implements ISprintDAO {
 	private static final String INSERT_SPRINT_SQL = "INSERT INTO sprints VALUES (null, null, null, ?, ?, ?, NULL);";
 	private static final String SELECT_SPRINT_STATUS_SQL = "SELECT status_id FROM statuses WHERE status = ?";
 	private static final String SELECT_SPRINT_SQL = "SELECT * FROM sprints WHERE sprint_id = ?";
-	private static final String START_SPRINT_SQL = "UPDATE sprints SET start_date=?, end_date=?, sprint_goal=?, status_id=? WHERE sprint_id=?";
 	private static final String SELECT_ISSUES_SQL = "SELECT issue_id " + "FROM issues " + "WHERE sprint_id=?";
+	private static final String START_SPRINT_SQL = "UPDATE sprints SET start_date=?, end_date=?, sprint_goal=?, status_id=? WHERE sprint_id=?";
 
 	@Autowired
 	private IIssueDAO issueDAO;
@@ -132,7 +132,6 @@ public class SprintDAO implements ISprintDAO {
 			sprintStPS.setInt(4, statusId);
 			sprintStPS.setInt(5, sprint.getSprintId());
 			sprintStPS.executeUpdate();
-
 		} catch (SQLException e) {
 			throw new SprintException("Something went wrong can't start your sprint", e);
 		} catch (PartOfProjectException e) {

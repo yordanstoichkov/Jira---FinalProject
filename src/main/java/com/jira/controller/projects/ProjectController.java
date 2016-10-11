@@ -93,7 +93,6 @@ public class ProjectController {
 		} catch (ProjectException e) {
 			e.printStackTrace();
 		}
-		System.out.println(project.getTitle());
 		return "redirect:/projects";
 	}
 
@@ -124,30 +123,41 @@ public class ProjectController {
 	@RequestMapping(value = "/projectmain", method = RequestMethod.GET)
 	public String getProject(@RequestParam("projectId") int projectId, Model model, HttpSession session) {
 		Employee emp = (Employee) session.getAttribute("user");
+		model.addAttribute("user", emp);
 		List<Project> projects = new ArrayList<Project>();
+		List<Integer> managers = new ArrayList<Integer>();
+		int manager = 0;
 		try {
+			managers.addAll(empDAO.getManagers(projectId));
 			projects.addAll(empDAO.giveMyProjects(emp));
 		} catch (EmployeeException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		for (Integer id : managers) {
+			if (emp.getEmployeeID() == id) {
+				manager = 1;
+			}
 		}
 		Project result = null;
 		for (Project project : projects) {
 			if (project.getProjectId() == projectId) {
 				result = project;
 			}
-			
+
 		}
-		for(Sprint sprint : result.getSprints()){
-			if(sprint.getStatus().equals(WorkFlow.IN_PROGRESS)){
+		for (Sprint sprint : result.getSprints()) {
+			if (sprint.getStatus().equals(WorkFlow.IN_PROGRESS)) {
 				model.addAttribute("activeSprint", sprint);
 			}
 		}
+		model.addAttribute("manager", manager);
 		session.setAttribute("project", result);
 		model.addAttribute("project", result);
 		model.addAttribute("issueempty", new Issue());
 		model.addAttribute("emptysprint", new Sprint());
 		model.addAttribute("user", emp);
+
 		return "yourProject";
 	}
 
@@ -174,6 +184,7 @@ public class ProjectController {
 				model.addAttribute(sprint);
 			}
 		}
+		model.addAttribute("user", session.getAttribute("user"));
 		int userId = (int) session.getAttribute("userId");
 		model.addAttribute("userId", userId);
 		return "active";
@@ -205,7 +216,7 @@ public class ProjectController {
 		return "redirect:active";
 	}
 
-	@RequestMapping(value = "/issue", method = RequestMethod.POST)
+	@RequestMapping(value = "/issue", method = RequestMethod.GET)
 	public String showIssueInfo(@RequestParam("issueId") int issueId, Model model, HttpSession session) {
 		System.out.println(issueId);
 		Project project = (Project) session.getAttribute("project");
@@ -220,6 +231,7 @@ public class ProjectController {
 				break;
 			}
 		}
+		model.addAttribute("user", session.getAttribute("user"));
 		List<Integer> developersId = new ArrayList<Integer>();
 		try {
 			developersId.addAll(empDAO.getDevelopers(issueId));
@@ -274,16 +286,17 @@ public class ProjectController {
 			}
 		}
 		model.addAttribute("namesOfReviewers", namesOfReviewers);
-		List<Comment> commentsOfIssue = null;
+		List<Comment> commentsOfIssue = new ArrayList<Comment>();
 		try {
-			commentsOfIssue = issueDAO.getComments(issueId);
+			commentsOfIssue.addAll(issueDAO.getComments(issueId));
 		} catch (IsssueExeption e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		model.addAttribute("emptyComment", new Comment(issueId,userId));	
+		model.addAttribute("emptycomment", new Comment());
 		model.addAttribute("commentsOfIssue", commentsOfIssue);
+		System.out.println(commentsOfIssue);
 		return "issue";
 	}
-	
+
 }

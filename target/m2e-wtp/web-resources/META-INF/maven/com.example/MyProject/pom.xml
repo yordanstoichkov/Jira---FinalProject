@@ -25,6 +25,12 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>bouncycastle</groupId>
+			<artifactId>bouncycastle-jce-jdk13</artifactId>
+			<version>112</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
 		</dependency>
@@ -49,7 +55,7 @@
 		<dependency>
 			<groupId>com.amazonaws</groupId>
 			<artifactId>aws-java-sdk</artifactId>
-			<version>1.9.22</version>
+			<version>1.9.30</version>
 		</dependency>
 
 		<dependency>

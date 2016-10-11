@@ -13,7 +13,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.jira.model.dbConnection.DBConnection;
+import com.jira.model.connections.DBConnection;
 import com.jira.model.employee.Employee;
 import com.jira.model.exceptions.ProjectException;
 import com.jira.model.exceptions.SprintException;

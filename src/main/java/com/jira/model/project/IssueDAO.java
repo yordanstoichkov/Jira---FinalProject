@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.jira.model.comment.Comment;
-import com.jira.model.dbConnection.DBConnection;
+import com.jira.model.connections.DBConnection;
 import com.jira.model.employee.Employee;
 import com.jira.model.employee.EmployeeDAO;
 import com.jira.model.employee.IEmployeeDAO;
@@ -309,14 +309,13 @@ public class IssueDAO implements IIssueDAO {
 			PreparedStatement ps = connection.prepareStatement(SELECT_COMMENTS_OF_ISSUE_SQL);
 			ps.setInt(1, issueId);
 			ResultSet rs = ps.executeQuery();
-			Comment comment = null;
 			while (rs.next()) {
 				String text = rs.getString("comment");
 				int employeeId = rs.getInt("employee_id");
 				Date date = rs.getDate("date");
 				Employee emp = employeeDAO.getEmployeeById(employeeId);
 				LocalDate localDate = date.toLocalDate();
-				comment = new Comment(text, emp.getEmployeeID());
+				Comment comment = new Comment(text, emp);
 				comment.setDate(localDate);
 				commentsOfIssue.add(comment);
 			}
@@ -335,7 +334,7 @@ public class IssueDAO implements IIssueDAO {
 			ps.setDate(1, Date.valueOf(comment.getDate()));
 			ps.setString(2, comment.getComment());
 			ps.setInt(3,comment.getIssueId());
-			ps.setInt(4, comment.getWriter());
+			ps.setInt(4, comment.getWriter().getEmployeeID());
 			ps.executeUpdate();
 	
 		} catch (SQLException e) {
