@@ -10,14 +10,7 @@
 <link href="iconic.css" rel="stylesheet">
 </head>
 <body>
-	<script>
-		$(document).ready(function() {
-			$('[data-toggle="tooltip"]').tooltip();
-		});
-	</script>
-
-
-	<c:if test="${user.job=='MANAGER'}">
+	<c:if test="${manager=='1'}">
 		<div class="createSP">
 			<button type="button" class="sprintButton" id="sprintBtn">Create
 				Sprint</button>
@@ -43,32 +36,38 @@
 								</span></th>
 							</c:if>
 							<c:if test="${empty activeSprint}">
-								<c:if test="${empty activeSprint.issues}">
-									<th><span style="padding-right: 8px; padding-top: 3px;">
+								<c:choose>
+									<c:when test="${empty sprint.issues}">
+										<th><span style="padding-right: 8px; padding-top: 3px;">
 
-											<button style="float: right;" data-toggle="tooltip"
-												title="There are not issues in this sprint" class="btn" disabled>Start
-												sprint</button>
-									</span></th>
-								</c:if>
-									<th><form action="./startsprint" method="put">
-											<span style="padding-right: 8px; padding-top: 3px;">
-												<button style="float: right" name="sprintId"
-													value="${sprint.sprintId}" type="submit"
-													class="btn btn-warning">Start sprint</button>
-											</span>
-										</form></th>
+												<button style="float: right;" data-toggle="tooltip"
+													title="There are not issues in this sprint" class="btn"
+													disabled>Start sprint</button>
+										</span></th>
+									</c:when>
+									<c:otherwise>
+										<th><form action="./startsprint" method="post">
+												<span style="padding-right: 8px; padding-top: 3px;">
+													<button style="float: right" name="sprintId"
+														value="${sprint.sprintId}" type="submit"
+														class="btn btn-warning">Start sprint</button>
+												</span>
+											</form></th>
+									</c:otherwise>
+								</c:choose>
 							</c:if>
 						</tr>
 						<tr>
-							<th>#</th>
-							<th colspan="4">Issues</th>
+							<th colspan="2">Issues</th>
+							<th>Issue Priority</th>
+							<th>Issue asignees</th>
+							<th></th>
+
 						</tr>
 					</thead>
 					<tbody>
 						<c:forEach items="${sprint.issues}" var="issue">
 							<tr>
-								<td>${issue.issueId}</td>
 								<td><c:if test="${issue.type == 'TASK'}">
 										<img src="task.png" height="20" width="20">
 									</c:if> <c:if test="${issue.type == 'BUG'}">
@@ -76,24 +75,37 @@
 									</c:if> ${issue.title}</td>
 								<td></td>
 								<c:if test="${issue.priority == 'MEDIUM'}">
-									<td><img src="medium.png" height="20" width="20"></td>
+									<td><img src="medium.png" title="Medium" height="20"
+										width="20"></td>
 								</c:if>
 								<c:if test="${issue.priority == 'HIGH'}">
-									<td><img src="high.png" height="20" width="20"></td>
+									<td><img src="high.png" title="High" height="20"
+										width="20"></td>
 								</c:if>
 								<c:if test="${issue.priority == 'LOW'}">
-									<td><img src="low.png" height="20" width="20"></td>
+									<td><img src="low.png" title="Low" height="20" width="20"></td>
 								</c:if>
-								<td><form action="./issue" method="put">
-										<button style="paddling-right: 3px; font-size: 20px;"
-											class="fa fa-pencil" name="issueId" value="${issue.issueId}"></button>
+								<td><c:forEach items="${issue.employees}" var="employee">
+										<a href="#"><img title="${employee.firstName}" height="20"
+											width="20" src="${employee.avatarPath}"></a>
+									</c:forEach></td>
+								<td><form action="./issue" method="put"
+										style="display: inline">
+										<button style="padding-right: 3px; font-size: 20px;"
+											class="fa fa-pencil" name="issueId" value="${issue.issueId}"
+											title="Edit issue"></button>
 									</form>
-									<button style="font-size: 20px;" class="fa fa-trash-o"></button></td>
+									<form action="./deleteissue" method="post"
+										style="display: inline">
+										<button style="padding-right: 3px; font-size: 20px;"
+											class="fa fa-trash-o" name="issueId" value="${issue.issueId}"
+											title="Remove issue"></button>
+									</form></td>
 							</tr>
 						</c:forEach>
 						<tr>
 							<td style="text-align: left" colspan="5"><form
-									action="./newIssue" >
+									action="./newIssue">
 									<button type="submit" class="myButton" id="myBtn"
 										name="sprintId" value="${sprint.sprintId}">
 										<i class="fa fa-plus-circle"></i> Add issue

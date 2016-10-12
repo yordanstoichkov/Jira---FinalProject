@@ -133,12 +133,12 @@
 		</div>
 
 	</div>
-	<form method="POST" enctype="multipart/form-data"
+	<form method="POST" enctype="multipart/form-data" action="./upload"
 		style="margin-left: 300px;" onsubmit="Validatebodypanelbumper()">
 
 		<div class="form-group" style="width: 200px; color: #1b5c9e;">
-			<label>Choose file</label><input type="file" id="file" name="file"
-				accept="image/*" />
+			<label>Choose pdf file to upload</label><input type="file" id="file" name="file"
+				accept="application/pdf" />
 		</div>
 
 		<div class="form-group" style="width: 200px; color: #1b5c9e;">
@@ -147,8 +147,9 @@
 
 		</div>
 	</form>
-
-		<a href="${issue.filePath}">Get issue</a>
+	<div style="padding-left: 300px">
+		<a href="${issue.filePath}">Get issue file</a>
+	</div>
 	<div class="row">
 		<div class="col-lg-6">
 			<div class="panel panel-defaultt">

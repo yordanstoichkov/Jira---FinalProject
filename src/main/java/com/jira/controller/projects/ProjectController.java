@@ -154,9 +154,7 @@ public class ProjectController {
 		model.addAttribute("manager", manager);
 		session.setAttribute("project", result);
 		model.addAttribute("project", result);
-		model.addAttribute("issueempty", new Issue());
 		model.addAttribute("emptysprint", new Sprint());
-		model.addAttribute("user", emp);
 
 		return "yourProject";
 	}
@@ -166,9 +164,13 @@ public class ProjectController {
 		Project project = (Project) session.getAttribute("project");
 		try {
 			sprint.setProject(project);
+			project.addSprint(sprint);
 			sprintDAO.createSprint(sprint);
 		} catch (SprintException e) {
 
+		} catch (ProjectException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 		return "redirect:/projectmain?projectId=" + project.getProjectId();
@@ -301,9 +303,10 @@ public class ProjectController {
 		System.out.println(commentsOfIssue);
 		return "issue";
 	}
-	@RequestMapping(value="/overview", method=RequestMethod.GET)
+
+	@RequestMapping(value = "/overview", method = RequestMethod.GET)
 	public String projectOverView(Model model, HttpSession session) {
-		Project project=(Project) session.getAttribute("project");
+		Project project = (Project) session.getAttribute("project");
 		model.addAttribute("project", project);
 		return "overview";
 	}

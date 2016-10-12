@@ -19,22 +19,22 @@ public class Issue {
 	private LocalDate lastUpdate;
 	private PriorityLevel priority;
 	private String description;
-	private List<Integer> asignees= new ArrayList<Integer>();
+	private List<Integer> asignees = new ArrayList<Integer>();
+	private List<Employee> employees = new ArrayList<Employee>();
 	private String asigneesInfo;
 	private String title;
 	private String filePath;
 
 	public Issue(Sprint sprint) {
 		this.status = WorkFlow.TO_DO;
-		this.sprint=sprint;
-		
+		this.sprint = sprint;
+
 	}
-	
 
 	public Issue(String title, PriorityLevel priority, IssueType type, List<Integer> asignees, String description)
 			throws ProjectException, EmployeeException, IsssueExeption {
 		this.title = title;
-		
+
 		this.priority = priority;
 		this.type = type;
 		if (asignees != null) {
@@ -167,14 +167,20 @@ public class Issue {
 		this.filePath = filePath;
 	}
 
-
 	public String getAsigneesInfo() {
 		return asigneesInfo;
 	}
 
-
 	public void setAsigneesInfo(String asigneesInfo) {
-		this.asigneesInfo=asigneesInfo;
+		this.asigneesInfo = asigneesInfo;
+	}
+
+	public List<Employee> getEmployees() {
+		return employees;
+	}
+
+	public void setEmployees(Employee employees) {
+		this.employees.add(employees);
 	}
 
 }

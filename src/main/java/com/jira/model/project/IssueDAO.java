@@ -43,6 +43,7 @@ public class IssueDAO implements IIssueDAO {
 	private static final String SELECT_COMMENTS_OF_ISSUE_SQL = "SELECT * FROM comments WHERE issue_id = ?";
 	private static final String INSERT_ISSUE_COMMENT_SQL = "INSERT INTO  comments VALUES(NULL , ? , ? , ? , ?)";
 	private static final String ADD_ISSUE_FILE_SQL = "UPDATE issues SET file_path=? WHERE issue_id= ?";
+	private static final String DELETE_ISSUE_SQL = "DELETE FROM issues WHERE issue_id=?";
 
 	@Autowired
 	private IPartOfProjectDAO partDAO;
@@ -294,8 +295,14 @@ public class IssueDAO implements IIssueDAO {
 			PreparedStatement asigneesPS = connection.prepareStatement(SELECT_DEVELOPERS_OF_ISSUE_SQL);
 			asigneesPS.setInt(1, issueID);
 			ResultSet asigneesRS = asigneesPS.executeQuery();
+			List<Integer> asignees = new ArrayList<Integer>();
 			while (asigneesRS.next()) {
-				result.setAsignee(asigneesRS.getInt("developer_id"));
+				int asignee = asigneesRS.getInt("developer_id");
+				asignees.add(asignee);
+				result.setAsignee(asignee);
+			}
+			for (Integer asigneeId : asignees) {
+				result.setEmployees(employeeDAO.getEmployeeById(asigneeId));
 			}
 		} catch (SQLException e) {
 			throw new IsssueExeption("Unfortunately your issue couln't be found", e);
@@ -364,5 +371,20 @@ public class IssueDAO implements IIssueDAO {
 			throw new IsssueExeption("We can insert file right now. Please, try again later!");
 
 		}
+	}
+
+	@Override
+	public void deleteIssue(int issueId) throws IsssueExeption {
+		Connection connection = DBConnection.getConnection();
+		try {
+			PreparedStatement issueDelPS = connection.prepareStatement(DELETE_ISSUE_SQL);
+			issueDelPS.setInt(1, issueId);
+			issueDelPS.executeUpdate();
+
+		} catch (SQLException e) {
+			throw new IsssueExeption("We delete issue right now. Please, try again later!", e);
+
+		}
+
 	}
 }

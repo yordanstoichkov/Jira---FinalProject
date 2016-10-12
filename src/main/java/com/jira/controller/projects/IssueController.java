@@ -66,7 +66,7 @@ public class IssueController {
 		Sprint sprint = null;
 		for (Sprint oneSprint : project.getSprints()) {
 			if (oneSprint.getSprintId() == sprintId) {
-				sprint=oneSprint;
+				sprint = oneSprint;
 			}
 		}
 
@@ -131,7 +131,7 @@ public class IssueController {
 		return "yourIssues";
 	}
 
-	@RequestMapping(value = "/issue", method = RequestMethod.PUT)
+	@RequestMapping(value = "/issue", method = RequestMethod.POST)
 	public String addComent(@ModelAttribute Comment comment, Model model, @RequestParam("issueId") int issueId,
 			HttpSession session) {
 		Issue issue = null;
@@ -152,6 +152,19 @@ public class IssueController {
 		}
 		model.addAttribute("issue", issue);
 		return "redirect:issue?issueId=" + issueId;
+	}
+
+	@RequestMapping(value = "/deleteissue", method = RequestMethod.POST)
+	public String deleteIssue(Model model, @RequestParam("issueId") int issueId, HttpSession session) {
+		Project project = (Project) session.getAttribute("project");
+		System.out.println(issueId);
+		try {
+			issueDAO.deleteIssue(issueId);
+		} catch (IsssueExeption e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "redirect:projectmain?projectId=" + project.getProjectId();
 	}
 
 }

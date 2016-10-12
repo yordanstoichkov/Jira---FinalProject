@@ -25,7 +25,7 @@ public class IssueTest {
 	@Test
 	public void test() throws ProjectException, EmployeeException, IsssueExeption, PartOfProjectException, SprintException {
 	
-		Issue testIssue = new Issue("Opalq", PriorityLevel.MEDIUM, IssueType.TASK, Arrays.asList(72));
+		Issue testIssue = new Issue();
 
 		testIssue.setIssueId(dao.createIssue(testIssue));
 		testIssue.setDescription("AKO ZARABOTI EKSTRA");
