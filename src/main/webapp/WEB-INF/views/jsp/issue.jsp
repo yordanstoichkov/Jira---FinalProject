@@ -133,6 +133,22 @@
 		</div>
 
 	</div>
+	<form method="POST" enctype="multipart/form-data"
+		style="margin-left: 300px;" onsubmit="Validatebodypanelbumper()">
+
+		<div class="form-group" style="width: 200px; color: #1b5c9e;">
+			<label>Choose file</label><input type="file" id="file" name="file"
+				accept="image/*" />
+		</div>
+
+		<div class="form-group" style="width: 200px; color: #1b5c9e;">
+
+			<input type="submit" name="issueId" value="${issue.issueId}" />
+
+		</div>
+	</form>
+
+		<a href="${issue.filePath}">Get issue</a>
 	<div class="row">
 		<div class="col-lg-6">
 			<div class="panel panel-defaultt">
@@ -210,7 +226,7 @@
 			<!-- /.panel-body -->
 			<div class="panel-footer">
 				<div class="input-group">
-					<form:form commandName="emptycomment" >
+					<form:form commandName="emptycomment">
 						<span class="input-group-btn"> <form:input path="comment"
 								id="btn-input" type="text" class="form-control input-sm"
 								placeholder="Type your message here..." style="width: 800px;" />

@@ -51,7 +51,7 @@
 												sprint</button>
 									</span></th>
 								</c:if>
-									<th><form action="./startsprint" method="post">
+									<th><form action="./startsprint" method="put">
 											<span style="padding-right: 8px; padding-top: 3px;">
 												<button style="float: right" name="sprintId"
 													value="${sprint.sprintId}" type="submit"
@@ -84,7 +84,7 @@
 								<c:if test="${issue.priority == 'LOW'}">
 									<td><img src="low.png" height="20" width="20"></td>
 								</c:if>
-								<td><form action="./changeIssue" method="post">
+								<td><form action="./issue" method="put">
 										<button style="paddling-right: 3px; font-size: 20px;"
 											class="fa fa-pencil" name="issueId" value="${issue.issueId}"></button>
 									</form>
@@ -93,7 +93,7 @@
 						</c:forEach>
 						<tr>
 							<td style="text-align: left" colspan="5"><form
-									action="./newIssue" method="post">
+									action="./newIssue" >
 									<button type="submit" class="myButton" id="myBtn"
 										name="sprintId" value="${sprint.sprintId}">
 										<i class="fa fa-plus-circle"></i> Add issue

@@ -36,7 +36,7 @@
 	<div class="header"></div>
 	<input id="employee" list="suggestions" onkeyup="getEmployeeName()"
 		onblur="typefunction()">
-	<datalist id="suggestions" onclick="typefunction()">
+	<datalist id="suggestions">
 	<option>Red</option>
 	</datalist>
 	<div id="names"></div>

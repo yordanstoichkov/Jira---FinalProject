@@ -36,4 +36,7 @@ public interface IEmployeeDAO {
 	public List<String> getEmployeesNames();
 
 	public List<Issue> getEmployeesIssues(Employee emp) throws EmployeeException;
+
+	int getEmployeeIdByEmail(String email) throws EmployeeException;
+
 }

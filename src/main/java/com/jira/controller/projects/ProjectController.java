@@ -220,15 +220,18 @@ public class ProjectController {
 	public String showIssueInfo(@RequestParam("issueId") int issueId, Model model, HttpSession session) {
 		System.out.println(issueId);
 		Project project = (Project) session.getAttribute("project");
+
 		model.addAttribute("project", project);
-		Sprint sprint = (Sprint) session.getAttribute("activeSprint");
-		model.addAttribute("sprint", sprint);
+
 		int userId = (int) session.getAttribute("userId");
 		model.addAttribute("userId", userId);
-		for (Issue issue : sprint.getIssues()) {
-			if (issue.getIssueId() == issueId) {
-				model.addAttribute(issue);
-				break;
+		for (Sprint sprint : project.getSprints()) {
+			for (Issue issue : sprint.getIssues()) {
+				if (issue.getIssueId() == issueId) {
+					model.addAttribute(issue);
+					model.addAttribute("sprint", sprint);
+					break;
+				}
 			}
 		}
 		model.addAttribute("user", session.getAttribute("user"));
@@ -298,5 +301,10 @@ public class ProjectController {
 		System.out.println(commentsOfIssue);
 		return "issue";
 	}
-
+	@RequestMapping(value="/overview", method=RequestMethod.GET)
+	public String projectOverView(Model model, HttpSession session) {
+		Project project=(Project) session.getAttribute("project");
+		model.addAttribute("project", project);
+		return "overview";
+	}
 }

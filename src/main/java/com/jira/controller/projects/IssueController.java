@@ -23,10 +23,12 @@ import com.jira.model.employee.Employee;
 import com.jira.model.employee.IEmployeeDAO;
 import com.jira.model.exceptions.EmployeeException;
 import com.jira.model.exceptions.IsssueExeption;
+import com.jira.model.exceptions.ProjectException;
 import com.jira.model.exceptions.SprintException;
 import com.jira.model.project.IIssueDAO;
 import com.jira.model.project.ISprintDAO;
 import com.jira.model.project.Issue;
+import com.jira.model.project.Project;
 import com.jira.model.project.Sprint;
 
 @Scope("session")
@@ -41,7 +43,7 @@ public class IssueController {
 	@Autowired
 	private IIssueDAO issueDAO;
 
-	@RequestMapping(value = "/newIssue", method = RequestMethod.POST)
+	@RequestMapping(value = "/newIssue", method = RequestMethod.GET)
 	public String addNewIssue(@RequestParam("sprintId") int sprintId, Model model, HttpSession session) {
 		Employee emp = (Employee) session.getAttribute("user");
 		Sprint sprint = null;
@@ -51,9 +53,55 @@ public class IssueController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		model.addAttribute("emptyIssue", new Issue(sprint));
 		model.addAttribute("user", emp);
 		model.addAttribute("sprint", sprint);
 		return "newIssue";
+	}
+
+	@RequestMapping(value = "/newIssue", method = RequestMethod.POST)
+	public String createIssue(@ModelAttribute Issue issue, @RequestParam("sprintId") int sprintId,
+			@RequestParam("assignee") String assignee, Model model, HttpSession session) {
+		Project project = (Project) session.getAttribute("project");
+		Sprint sprint = null;
+		for (Sprint oneSprint : project.getSprints()) {
+			if (oneSprint.getSprintId() == sprintId) {
+				sprint=oneSprint;
+			}
+		}
+
+		try {
+			issue.setSprint(sprint);
+		} catch (IsssueExeption e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String[] employeeNames = assignee.split(",");
+		String email = employeeNames[employeeNames.length - 1].trim();
+		System.out.println(issue.getPriority());
+		int employeeId = 0;
+		try {
+			employeeId = empDAO.getEmployeeIdByEmail(email);
+			issue.setAsignee(employeeId);
+			issueDAO.createIssue(issue);
+		} catch (IsssueExeption e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (EmployeeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ProjectException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		try {
+			sprint.addIssue(issue);
+		} catch (SprintException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "redirect:issue?issueId=" + issue.getIssueId();
 	}
 
 	@RequestMapping(value = "/myIssues", method = RequestMethod.GET)
@@ -83,7 +131,7 @@ public class IssueController {
 		return "yourIssues";
 	}
 
-	@RequestMapping(value = "/issue", method = RequestMethod.POST)
+	@RequestMapping(value = "/issue", method = RequestMethod.PUT)
 	public String addComent(@ModelAttribute Comment comment, Model model, @RequestParam("issueId") int issueId,
 			HttpSession session) {
 		Issue issue = null;

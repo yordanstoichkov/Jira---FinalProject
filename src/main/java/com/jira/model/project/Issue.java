@@ -19,22 +19,22 @@ public class Issue {
 	private LocalDate lastUpdate;
 	private PriorityLevel priority;
 	private String description;
-	private List<Integer> asignees = new ArrayList<Integer>();
+	private List<Integer> asignees= new ArrayList<Integer>();
+	private String asigneesInfo;
 	private String title;
-	private LocalDate startDate;
+	private String filePath;
 
-	public String getTitle() {
-		return title;
+	public Issue(Sprint sprint) {
+		this.status = WorkFlow.TO_DO;
+		this.sprint=sprint;
+		
 	}
+	
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public Issue(String title, PriorityLevel priority, IssueType type, List<Integer> asignees)
+	public Issue(String title, PriorityLevel priority, IssueType type, List<Integer> asignees, String description)
 			throws ProjectException, EmployeeException, IsssueExeption {
 		this.title = title;
-		this.status = WorkFlow.TO_DO;
+		
 		this.priority = priority;
 		this.type = type;
 		if (asignees != null) {
@@ -50,6 +50,14 @@ public class Issue {
 		} else {
 			throw new IsssueExeption("Please enter exsisting employee for this issue");
 		}
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public Issue(String title, WorkFlow status) throws ProjectException {
@@ -151,12 +159,22 @@ public class Issue {
 		return false;
 	}
 
-	public LocalDate getStartDate() {
-		return startDate;
+	public String getFilePath() {
+		return filePath;
 	}
 
-	public void setStartDate(LocalDate startDate) {
-		this.startDate = startDate;
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+
+
+	public String getAsigneesInfo() {
+		return asigneesInfo;
+	}
+
+
+	public void setAsigneesInfo(String asigneesInfo) {
+		this.asigneesInfo=asigneesInfo;
 	}
 
 }

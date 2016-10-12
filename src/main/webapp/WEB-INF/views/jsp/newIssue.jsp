@@ -1,6 +1,7 @@
 <%@include file="navigation.jsp"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ page session="false"%>
 <head>
 <link href="iconic.css" rel="stylesheet">
@@ -50,75 +51,63 @@
 			</h1>
 		</div>
 	</div>
-	<div class="form-group"
-		style="width: 400px; margin-left: 280px; color: #1b5c9e;">
-		<label>Enter issue title: </label> <input class="form-control"
-			style="color: #1b5c9e;" placeholder="Enter title...">
-	</div>
-	<div class="form-group"
-		style="width: 200px; margin-left: 280px; color: #1b5c9e; display: inline-block;">
-		<label>Issue type: </label> <select class="form-control">
-			<option>Task</option>
-			<option>Bug</option>
-		</select>
-	</div>
-	<div class="form-group"
-		style="width: 200px; margin-left: 50px; color: #1b5c9e; display: inline-block;">
+	<form:form commandName="emptyIssue">
+		<div class="form-group"
+			style="width: 400px; margin-left: 280px; color: #1b5c9e;">
+			<label>Enter issue title: </label>
+			<form:input path="title" class="form-control" style="color: #1b5c9e;"
+				placeholder="Enter title..." />
+		</div>
+		<div class="form-group"
+			style="width: 200px; margin-left: 280px; color: #1b5c9e; display: inline-block;">
+			<label>Issue type: </label>
+			<form:select path="type" class="form-control">
+				<form:option value="TASK">Task</form:option>
+				<form:option value="BUG">Bug</form:option>
+			</form:select>
+		</div>
+		<div class="form-group"
+			style="width: 200px; margin-left: 50px; color: #1b5c9e; display: inline-block;">
 
-		<label>Issue prioity: </label> <select class="form-control">
-			<option>Low</option>
-			<option>Middle</option>
-			<option>High</option>
-		</select>
-	</div>
-
-	<form method="POST" enctype="multipart/form-data"
-		style="margin-left: 280px;" onsubmit="Validatebodypanelbumper()">
+			<label>Issue prioity: </label>
+			<form:select path="priority" class="form-control">
+				<form:option value="LOW">Low</form:option>
+				<form:option value="MIDDLE">Middle</form:option>
+				<form:option value="HIGH">High</form:option>
+			</form:select>
+		</div>
 
 		<div class="form-group"
-			style="width: 200px; color: #1b5c9e; padding-top: 20px;">
-			<label>Choose file</label><input type="file" id="file" name="file"
-				accept="image/*" />
+			style="width: 500px; margin-left: 280px; color: #1b5c9e;">
+			<label>Description:</label>
+			<form:textarea path="description" class="form-control" rows="4"
+				placeholder="Enter description..."></form:textarea>
 		</div>
+		<div class="form-group input-group"
+			style="width: 500px; margin-left: 280px; color: #1b5c9e; padding-top: 20px;">
 
-		<div class="form-group" style="width: 200px; color: #1b5c9e;">
-
-			<input type="submit" value="Upload file" />
-
+			<label>Assign employees:</label>
 		</div>
-	</form>
+		<div class="form-group input-group"
+			style="width: 500px; margin-left: 280px; color: #1b5c9e;">
 
-	<div class="form-group"
-		style="width: 500px; margin-left: 280px; color: #1b5c9e;">
-		<label>Description:</label>
-		<textarea class="form-control" rows="4"
-			placeholder="Enter description..."></textarea>
-	</div>
-	<div class="form-group input-group"
-		style="width: 500px; margin-left: 280px; color: #1b5c9e; padding-top: 20px;">
+			<input name="assignee" id="employee" type="text" class="form-control"
+				list="suggestions" onkeyup="getEmployeeName()" /> <span
+				class="input-group-btn"> <datalist id="suggestions"
+					onclick="typefunction()">
 
-		<label>Assign employees:</label>
-	</div>
-	<div class="form-group input-group"
-		style="width: 500px; margin-left: 280px; color: #1b5c9e;">
+				</datalist>
 
-		<input type="text" class="form-control" list="suggestions"
-			onkeyup="getEmployeeName()"> <span class="input-group-btn">
-			<datalist id="suggestions" onclick="typefunction()">
-				<option>Red</option>
-			</datalist>
-			<button class="btn btn-default" type="button">
-				<i class="fa fa-search"></i>
-			</button>
-		</span>
-	</div>
-
-	<button type="button" class="btn btn-primary btn-lg"
-		style="width: 500px; margin-left: 280px; margin-bottom: 50px; margin-top: 20px;">
-		<i class="fa fa-plus"
-			style="font-size: 1.em; padding-right: 15px; padding-top: 5px"></i>Create
-		issue
-	</button>
+			</span>
+		</div>
+		<button type="submit" class="btn btn-primary btn-lg"
+			style="width: 500px; margin-left: 280px; margin-bottom: 50px; margin-top: 20px;"
+			name="sprintId" value="${sprint.sprintId}">
+			<i class="fa fa-plus"
+				style="font-size: 1.em; padding-right: 15px; padding-top: 5px"></i>Create
+			issue
+		</button>
+	</form:form>
 
 	<script type="text/javascript">
 		function Validatebodypanelbumper(theForm) {

@@ -44,7 +44,7 @@ public class EmployeeDAO implements IEmployeeDAO {
 	private static final String JOB_BY_ID_SQL = "SELECT job_title FROM jobs WHERE job_id = ?";
 	private static final String SELECT_DEVELOPERS_OF_ISSUE_SQL = "SELECT developer_id FROM issues_developers WHERE issue_id = ?";
 	private static final String SELECT_REVIEWERS_OF_ISSUE_SQL = "SELECT reviewer_id FROM issue_reviewers WHERE issue_id = ?";
-	private static final String GET_EMPLOYEE_NAMES = "SELECT first_name, last_name FROM employees";
+	private static final String GET_EMPLOYEE_NAMES = "SELECT first_name, last_name,email FROM employees";
 	private static final String GET_EMPLOYEES_ISSUES = "SELECT DISTINCT(issue_id) FROM issues_developers WHERE developer_id=?";
 
 	@Autowired
@@ -190,6 +190,23 @@ public class EmployeeDAO implements IEmployeeDAO {
 		try {
 			PreparedStatement asigneePS = connection.prepareStatement(GET_EMPLOYEE_ID_SQL);
 			asigneePS.setString(1, emp.getEmail());
+			ResultSet asigneeRS = asigneePS.executeQuery();
+
+			asigneeRS.next();
+			assigneeID = asigneeRS.getInt("employee_id");
+		} catch (SQLException e) {
+			throw new EmployeeException("There is no such user");
+		}
+		return assigneeID;
+	}
+	@Override
+	public int getEmployeeIdByEmail(String email) throws EmployeeException {
+		Connection connection = DBConnection.getConnection();
+
+		int assigneeID = 0;
+		try {
+			PreparedStatement asigneePS = connection.prepareStatement(GET_EMPLOYEE_ID_SQL);
+			asigneePS.setString(1, email);
 			ResultSet asigneeRS = asigneePS.executeQuery();
 
 			asigneeRS.next();
@@ -375,7 +392,8 @@ public class EmployeeDAO implements IEmployeeDAO {
 			while (rs.next()) {
 				String firstName = rs.getString("first_name");
 				String lastName = rs.getString("last_name");
-				names.add(firstName + " " + lastName);
+				String email = rs.getString("email");
+				names.add(firstName + " " + lastName + ", " + email);
 			}
 
 		} catch (SQLException e) {
@@ -409,4 +427,5 @@ public class EmployeeDAO implements IEmployeeDAO {
 		return issues;
 
 	}
+
 }

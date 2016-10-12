@@ -28,7 +28,7 @@
 						Plan</a></li>
 				<li><a href="./active">Active Sprint</a></li>
 				<li><a href="#">Done Sprints</a></li>
-				<li><a href="#">Project Overview</a></li>
+				<li><a href="./overview">Project Overview</a></li>
 			</ul>
 		</div>
 		<!-- /#sidebar-wrapper -->

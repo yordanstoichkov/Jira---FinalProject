@@ -31,7 +31,7 @@ public class IssueDAO implements IIssueDAO {
 	private static final int STATUS_ID_OF_DONE = 4;
 	private static final int STATUS_ID_OF_IN_PROGRESS = 2;
 	private static final int STATUS_ID_OF_TO_DO = 1;
-	private static final String CREATE_ISSUE_SQL = "INSERT INTO issues VALUES(NULL , NULL, NULL, ?, ? , ? , NULL, NULL, ?);";
+	private static final String CREATE_ISSUE_SQL = "INSERT INTO issues VALUES(NULL , NULL, ?, ?, ? , ? , NULL, ?, ?, NULL);";
 	private static final String INSERT_ISSUE_ASSIGNEE = "INSERT INTO issues_developers VALUES(?,?)";
 	private static final String UPDATE_ISSUE_DECRIPTION_SQL = "UPDATE issues SET description = ? WHERE issue_id=?";
 	private static final String GET_SPRINT_ID_SQL = "SELECT sprint_id FROM sprints WHERE sprin";
@@ -42,6 +42,7 @@ public class IssueDAO implements IIssueDAO {
 	private static final String UPDATE_STATUS_ID = "UPDATE issues SET status_id= ? WHERE issue_id = ?;";
 	private static final String SELECT_COMMENTS_OF_ISSUE_SQL = "SELECT * FROM comments WHERE issue_id = ?";
 	private static final String INSERT_ISSUE_COMMENT_SQL = "INSERT INTO  comments VALUES(NULL , ? , ? , ? , ?)";
+	private static final String ADD_ISSUE_FILE_SQL = "UPDATE issues SET file_path=? WHERE issue_id= ?";
 
 	@Autowired
 	private IPartOfProjectDAO partDAO;
@@ -71,15 +72,19 @@ public class IssueDAO implements IIssueDAO {
 			int priorityID = partDAO.getPriorityID(issue.getPriority());
 
 			PreparedStatement ps = connection.prepareStatement(CREATE_ISSUE_SQL, Statement.RETURN_GENERATED_KEYS);
-			ps.setInt(1, statusID);
-			ps.setInt(2, typeID);
-			ps.setString(3, issue.getTitle());
-			ps.setInt(4, priorityID);
+			ps.setInt(1, issue.getSprint().getSprintId());
+
+			ps.setInt(2, statusID);
+			ps.setInt(3, typeID);
+			ps.setString(4, issue.getTitle());
+			ps.setString(5, issue.getDescription());
+			ps.setInt(6, priorityID);
 			ps.executeUpdate();
 
 			ResultSet rs = ps.getGeneratedKeys();
 			rs.next();
 			issueID = rs.getInt(1);
+			issue.setIssueId(issueID);
 
 			List<Integer> asignees = issue.getAsignees();
 
@@ -269,6 +274,7 @@ public class IssueDAO implements IIssueDAO {
 			int statusID = issueRS.getInt("status_id");
 			String description = issueRS.getString("description");
 			Date startDate = issueRS.getDate("start_date");
+			String pathFile = issueRS.getString("file_path");
 			int typeID = issueRS.getInt("type_id");
 			Date lastUpdate = issueRS.getDate("last_update");
 			int priorityID = issueRS.getInt("priority_id");
@@ -277,6 +283,9 @@ public class IssueDAO implements IIssueDAO {
 			WorkFlow status = partDAO.getStatus(statusID);
 			result = new Issue(title, status);
 			result.setIssueId(issueID);
+			if (pathFile != null) {
+				result.setFilePath(pathFile);
+			}
 			if (description != null) {
 				result.setDescription(description);
 			}
@@ -333,12 +342,26 @@ public class IssueDAO implements IIssueDAO {
 			Date.valueOf(comment.getDate());
 			ps.setDate(1, Date.valueOf(comment.getDate()));
 			ps.setString(2, comment.getComment());
-			ps.setInt(3,comment.getIssueId());
+			ps.setInt(3, comment.getIssueId());
 			ps.setInt(4, comment.getWriter().getEmployeeID());
 			ps.executeUpdate();
-	
+
 		} catch (SQLException e) {
 			throw new IsssueExeption("We can insert comment right now. Please, try again later!");
+
+		}
+	}
+
+	public void addIssueFile(Issue issue) throws IsssueExeption {
+		Connection connection = DBConnection.getConnection();
+		try {
+			PreparedStatement ps = connection.prepareStatement(ADD_ISSUE_FILE_SQL);
+			ps.setString(1, issue.getFilePath());
+			ps.setInt(2, issue.getIssueId());
+			ps.executeUpdate();
+
+		} catch (SQLException e) {
+			throw new IsssueExeption("We can insert file right now. Please, try again later!");
 
 		}
 	}

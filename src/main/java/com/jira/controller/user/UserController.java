@@ -114,4 +114,12 @@ public class UserController {
 		return "register";
 	}
 
+	@RequestMapping(value = "/profile", method = RequestMethod.GET)
+	public String getProfile(Model model,HttpSession session) {
+		int empId= (int) session.getAttribute("userId");
+		Employee emp=empDAO.getEmployeeById(empId);
+		model.addAttribute("employee",emp);
+		return "profile";
+	}
+
 }

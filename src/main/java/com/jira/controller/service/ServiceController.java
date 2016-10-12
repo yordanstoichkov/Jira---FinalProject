@@ -47,10 +47,12 @@ public class ServiceController {
 		name = name.toLowerCase();
 		names.addAll(empDAO.getEmployeesNames());
 		for (String str : names) {
-			if (str.toLowerCase().startsWith(name)) {
+			String[] twoNames = str.split(" ");
+			if (twoNames[0].toLowerCase().startsWith(name) || twoNames[1].toLowerCase().startsWith(name)) {
 				result.add(str);
 			}
 		}
 		return result;
 	}
+
 }
