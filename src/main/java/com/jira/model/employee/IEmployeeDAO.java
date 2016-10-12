@@ -38,5 +38,7 @@ public interface IEmployeeDAO {
 	public List<Issue> getEmployeesIssues(Employee emp) throws EmployeeException;
 
 	int getEmployeeIdByEmail(String email) throws EmployeeException;
+	
+	public void updateAvatar(String avatarPath, int employeeId) throws EmployeeException;
 
 }

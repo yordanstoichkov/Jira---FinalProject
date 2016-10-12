@@ -116,10 +116,10 @@ public class UserController {
 
 	@RequestMapping(value = "/profile", method = RequestMethod.GET)
 	public String getProfile(Model model,HttpSession session) {
-		int empId= (int) session.getAttribute("userId");
-		Employee emp=empDAO.getEmployeeById(empId);
-		model.addAttribute("employee",emp);
+		Employee user= (Employee) session.getAttribute("user");
+		model.addAttribute("user",user);
 		return "profile";
 	}
+
 
 }

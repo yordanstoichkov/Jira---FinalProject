@@ -1,6 +1,7 @@
 package com.jira.model.employee;
 
 import java.sql.Connection;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.jira.model.connections.DBConnection;
 import com.jira.model.employee.Employee.Jobs;
@@ -46,6 +48,7 @@ public class EmployeeDAO implements IEmployeeDAO {
 	private static final String SELECT_REVIEWERS_OF_ISSUE_SQL = "SELECT reviewer_id FROM issue_reviewers WHERE issue_id = ?";
 	private static final String GET_EMPLOYEE_NAMES = "SELECT first_name, last_name,email FROM employees";
 	private static final String GET_EMPLOYEES_ISSUES = "SELECT DISTINCT(issue_id) FROM issues_developers WHERE developer_id=?";
+	private static final String UPDATE_AVATAR_SQL = "UPDATE employees SET avatar_path= ?  WHERE employee_id=?";
 
 	@Autowired
 	private IProjectDAO projectDAO;
@@ -426,6 +429,20 @@ public class EmployeeDAO implements IEmployeeDAO {
 		}
 		return issues;
 
+	}
+	public void updateAvatar(String avatarPath, int employeeId) throws EmployeeException{
+		Connection connection = DBConnection.getConnection();
+			PreparedStatement ps;
+			try {
+				ps = connection.prepareStatement(UPDATE_AVATAR_SQL);
+				ps.setString(1, avatarPath);
+				ps.setInt(2, employeeId);
+				ps.executeUpdate();
+			} catch (SQLException e) {
+				throw new EmployeeException("Currently we have a problem getting your image", e);
+
+			}
+		
 	}
 
 }

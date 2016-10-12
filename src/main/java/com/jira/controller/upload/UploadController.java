@@ -17,6 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.jira.WebInitializer;
 import com.jira.model.connections.S3Connection;
 import com.jira.model.employee.Employee;
+import com.jira.model.employee.EmployeeDAO;
+import com.jira.model.exceptions.EmployeeException;
 import com.jira.model.exceptions.IsssueExeption;
 import com.jira.model.project.Issue;
 import com.jira.model.project.IssueDAO;
@@ -27,7 +29,8 @@ public class UploadController {
 	private S3Connection s3Con;
 	@Autowired
 	private IssueDAO issueDAO;
-
+	@Autowired
+	private EmployeeDAO employeeDAO;
 	@RequestMapping(value = "/issue", method = RequestMethod.POST)
 	public String uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("issueId") int issueId,
 			Model model, HttpSession session) throws IsssueExeption {
@@ -40,7 +43,7 @@ public class UploadController {
 			File picture = new File(WebInitializer.LOCATION + fileName);
 			FileCopyUtils.copy(file.getBytes(), picture);
 			String url = s3Con.s3Upload(fileName, issue.getTitle() + "" + issue.getIssueId());
-			issue.setFilePath(url);	
+			issue.setFilePath(url);
 			issueDAO.addIssueFile(issue);
 		} catch (IOException e) {
 			throw new IsssueExeption("We can not upload this file right now. Try again later!", e);
@@ -51,4 +54,27 @@ public class UploadController {
 		return "redirect:issue?issueId=" + issueId;
 	}
 
+	@RequestMapping(value = "/profile", method = RequestMethod.POST)
+	public String updateAvatar(@RequestParam("file") MultipartFile file, Model model, HttpSession session)
+			throws IsssueExeption {
+		Employee user = (Employee) session.getAttribute("user");
+		model.addAttribute("user", user);
+		String[] path = file.getOriginalFilename().split("\\\\");
+		String fileName = path[path.length - 1];
+		File avatar = new File(WebInitializer.LOCATION + fileName);
+		try {
+			FileCopyUtils.copy(file.getBytes(), avatar);
+			String url = s3Con.s3Upload(fileName, user.getEmail());
+			user.setAvatarPath(url);
+			employeeDAO.updateAvatar(url, user.getEmployeeID());
+			
+		} catch (IOException e) {
+			throw new IsssueExeption("We can not upload this picture right now. Try again later!", e);
+
+		} catch (EmployeeException e) {
+			throw new IsssueExeption("We can not upload this picture right now. Try again later!", e);
+
+		}
+		return "profile";
+	}
 }
