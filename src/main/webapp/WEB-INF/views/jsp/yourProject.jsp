@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="addtypes.css">
 <link href="plan.css" rel="stylesheet">
 <link href="iconic.css" rel="stylesheet">
+    <link href="bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 	<c:if test="${manager=='1'}">
@@ -86,27 +87,28 @@
 									<td><img src="low.png" title="Low" height="20" width="20"></td>
 								</c:if>
 								<td><c:forEach items="${issue.employees}" var="employee">
-										<a href="#"><img title="${employee.firstName}" height="20"
-											width="20" src="${employee.avatarPath}"></a>
+										<a href="./friend?id=${employee.employeeID}"><img
+											title="${employee.firstName}" height="20" width="20"
+											src="${employee.avatarPath}"></a>
 									</c:forEach></td>
 								<td><form action="./issue" method="put"
 										style="display: inline">
-										<button style="padding-right: 3px; font-size: 20px;"
-											class="fa fa-pencil" name="issueId" value="${issue.issueId}"
-											title="Edit issue"></button>
+										<input type="image" src="info.png" width=20px height=20px
+											name="issueId" value="${issue.issueId}"
+											title="Open issue details" />
+
 									</form>
 									<form action="./deleteissue" method="post"
 										style="display: inline">
-										<button style="padding-right: 3px; font-size: 20px;"
-											class="fa fa-trash-o" name="issueId" value="${issue.issueId}"
-											title="Remove issue"></button>
+										<input type="image" src="bin.png" width=20px height=20px
+											name="issueId" value="${issue.issueId}" title="Remove issue"></input>
 									</form></td>
 							</tr>
 						</c:forEach>
 						<tr>
 							<td style="text-align: left" colspan="5"><form
 									action="./newIssue">
-									<button type="submit" class="myButton" id="myBtn"
+									<button type="submit" style="margin-bottom:8px;" class="btn btn-danger" id="myBtn"
 										name="sprintId" value="${sprint.sprintId}">
 										<i class="fa fa-plus-circle"></i> Add issue
 									</button>

@@ -31,7 +31,7 @@
 		<nav>
 
 			<ul class="menu">
-				<li><img src="logo.png" width=100px; height=57px;></li>
+				<li><img src="logo.png" width=90px; height=57px;></li>
 				<li><a href="./"><i class="fa fa-home"
 						style="font-size: 2.0em;"></i> Home</a></li>
 				<li><a href="./projects"><i class="fa fa-paste"

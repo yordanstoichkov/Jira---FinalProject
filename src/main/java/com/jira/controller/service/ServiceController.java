@@ -33,9 +33,9 @@ public class ServiceController {
 			return "{}";
 		}
 		if (check != 0) {
-			return "{\"photo\":\"no.png\", \"message\":\"Email is already taken\"}";
+			return "no.png";
 		} else {
-			return "yes.png, This email is free and ligal";
+			return "yes.png";
 		}
 
 	}

@@ -8,6 +8,8 @@ public interface ISprintDAO {
 
 	Sprint getSprint(int sprintID) throws SprintException;
 
-		public void startSprint(Sprint sprint) throws SprintException;
+	public void startSprint(Sprint sprint) throws SprintException;
+
+	public void updateSprintStatus(int sprintId) throws SprintException;
 
 }

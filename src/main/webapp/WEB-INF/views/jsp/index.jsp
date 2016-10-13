@@ -21,18 +21,18 @@
 	%>
 	<img src="teamBack.png" style="float: right; margin-top:-80px;">
 	<div class="counts">
-		<h2>
+		<h3>
 			<span class="user" style="color: #2e5cb8"><i class="fa fa-group"
-				style="font-size: 1.0em; color: #2e5cb8"></i>&nbsp;Jira users:
+				style="font-size: 1.0em; color: #2e5cb8"></i>&nbsp;IdeaTracker users:
 				${usersCount}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 			<span class="project" style="color: #2e5cb8"><i class="fa fa-folder-open"
-				style="font-size: 1.0em; color: #2e5cb8"></i>&nbsp;Jira projects:
+				style="font-size: 1.0em; color: #2e5cb8"></i>&nbsp;IdeaTracker projects:
 				${projectsCount}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 			<span class="issue" style="color: #2e5cb8"><i class="fa fa-thumb-tack"
-				style="font-size: 1.0em; color: #2e5cb8"></i>&nbsp;Jira issues: ${issuesCount}</span>
+				style="font-size: 1.0em; color: #2e5cb8"></i>&nbsp;IdeaTracker issues: ${issuesCount}</span>
 
 
-		</h2>
+		</h3>
 
 	</div>
 	<%

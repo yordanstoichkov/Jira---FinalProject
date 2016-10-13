@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,6 +31,7 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.jira.WebInitializer;
 import com.jira.model.connections.S3Connection;
 import com.jira.model.employee.Employee;
+import com.jira.model.exceptions.ProjectException;
 import com.jira.model.exceptions.SprintException;
 import com.jira.model.project.ISprintDAO;
 import com.jira.model.project.Project;
@@ -42,7 +44,7 @@ import com.jira.model.project.WorkFlow;
 public class SprintController {
 	@Autowired
 	private ISprintDAO sprintDAO;
-	
+
 	@RequestMapping(value = "/startsprint", method = RequestMethod.POST)
 	public String startSprint(@RequestParam("sprintId") int sprintId, Model model, HttpSession session) {
 		Project project = (Project) session.getAttribute("project");
@@ -101,10 +103,51 @@ public class SprintController {
 		return "redirect:active";
 	}
 
-	@RequestMapping(value = "/home", method = RequestMethod.GET)
-	public String startSprint(Model model, HttpSession session) {
-		return "TestjspAjax";
+	@RequestMapping(value = "/active", method = RequestMethod.GET)
+	public String getActiveSprintOfProject(Model model, HttpSession session) {
+		Project project = (Project) session.getAttribute("project");
+		model.addAttribute("project", project);
+		boolean isActiveSprint = false;
+		for (Sprint sprint : project.getSprints()) {
+			if (sprint.getStatus() == WorkFlow.IN_PROGRESS) {
+				isActiveSprint = true;
+				session.setAttribute("activeSprint", sprint);
+				model.addAttribute("activeSprint", sprint);
+			} else {
+				model.addAttribute("activeSprint", null);
+			}
+		}
+		if (!isActiveSprint) {
+			model.addAttribute("message", "There is no active sprint. You can start a new one.");
+		}
+		model.addAttribute("user", session.getAttribute("user"));
+		int userId = (int) session.getAttribute("userId");
+		model.addAttribute("userId", userId);
+		return "active";
 	}
 
-	
+	@RequestMapping(value = "/projectmain", method = RequestMethod.POST)
+	public String addSprint(@ModelAttribute Sprint sprint, HttpSession session) {
+		Project project = (Project) session.getAttribute("project");
+		try {
+			sprint.setProject(project);
+			project.addSprint(sprint);
+			sprintDAO.createSprint(sprint);
+		} catch (SprintException e) {
+
+		} catch (ProjectException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return "redirect:/projectmain?projectId=" + project.getProjectId();
+	}
+
+	@RequestMapping(value = "done", method = RequestMethod.GET)
+	public String getDoneSprints(Model model, HttpSession session) {
+		Project project = (Project) session.getAttribute("project");
+		model.addAttribute("project", project);
+		return "done";
+	}
+
 }

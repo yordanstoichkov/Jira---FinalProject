@@ -27,7 +27,7 @@
 				<li><a href="./projectmain?projectId=${project.projectId}">Project
 						Plan</a></li>
 				<li><a href="./active">Active Sprint</a></li>
-				<li><a href="#">Done Sprints</a></li>
+				<li><a href="./done">Done Sprints</a></li>
 				<li><a href="./overview">Project Overview</a></li>
 			</ul>
 		</div>

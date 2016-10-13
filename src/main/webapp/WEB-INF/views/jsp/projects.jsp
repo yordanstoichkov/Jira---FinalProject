@@ -117,7 +117,7 @@
 											</div>
 										</div>
 										<div class="panel-footer">
-											<a href="#"><span class="pull-left">View Details</span></a> <span
+											<a href="./active"><span class="pull-left">View Details</span></a> <span
 												class="pull-right"><i
 												class="fa fa-arrow-circle-right"></i></span>
 											<div class="clearfix"></div>
@@ -147,7 +147,7 @@
 										</div>
 
 										<div class="panel-footer">
-											<a href="#"><span class="pull-left">View Details</span></a> <span
+											<a href="./active"><span class="pull-left">View Details</span></a> <span
 												class="pull-right"><i
 												class="fa fa-arrow-circle-right"></i></span>
 											<div class="clearfix"></div>
@@ -175,7 +175,7 @@
 											</div>
 										</div>
 										<div class="panel-footer">
-											<a href="#"><span class="pull-left">View Details</span> </a><span
+											<a href="./active"><span class="pull-left">View Details</span> </a><span
 												class="pull-right"><i
 												class="fa fa-arrow-circle-right"></i></span>
 											<div class="clearfix"></div>

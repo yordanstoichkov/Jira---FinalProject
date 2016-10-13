@@ -1,6 +1,7 @@
 package com.jira.controller.projects;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -26,10 +27,13 @@ import com.jira.model.exceptions.IssueExeption;
 import com.jira.model.exceptions.ProjectException;
 import com.jira.model.exceptions.SprintException;
 import com.jira.model.project.IIssueDAO;
+import com.jira.model.project.IPartOfProjectDAO;
 import com.jira.model.project.ISprintDAO;
 import com.jira.model.project.Issue;
+import com.jira.model.project.PartOfProjectException;
 import com.jira.model.project.Project;
 import com.jira.model.project.Sprint;
+import com.jira.model.project.WorkFlow;
 
 @Scope("session")
 @Component
@@ -42,6 +46,8 @@ public class IssueController {
 	private ISprintDAO sprintDAO;
 	@Autowired
 	private IIssueDAO issueDAO;
+	@Autowired
+	private IPartOfProjectDAO partDAO;
 
 	@RequestMapping(value = "/newIssue", method = RequestMethod.GET)
 	public String addNewIssue(@RequestParam("sprintId") int sprintId, Model model, HttpSession session) {
@@ -55,7 +61,6 @@ public class IssueController {
 		}
 		model.addAttribute("emptyIssue", new Issue(sprint));
 		model.addAttribute("user", emp);
-		model.addAttribute("project", session.getAttribute("project"));
 		model.addAttribute("sprint", sprint);
 		return "newIssue";
 	}
@@ -166,6 +171,142 @@ public class IssueController {
 			e.printStackTrace();
 		}
 		return "redirect:projectmain?projectId=" + project.getProjectId();
+	}
+
+	@RequestMapping(value = "/issue", method = RequestMethod.GET)
+	public String showIssueInfo(@RequestParam("issueId") int issueId, Model model, HttpSession session) {
+		System.out.println(issueId);
+		Project project = (Project) session.getAttribute("project");
+
+		model.addAttribute("project", project);
+
+		int userId = (int) session.getAttribute("userId");
+		model.addAttribute("userId", userId);
+		for (Sprint sprint : project.getSprints()) {
+			for (Issue issue : sprint.getIssues()) {
+				if (issue.getIssueId() == issueId) {
+					model.addAttribute(issue);
+					model.addAttribute("sprint", sprint);
+					break;
+				}
+			}
+		}
+		model.addAttribute("user", session.getAttribute("user"));
+		List<Integer> developersId = new ArrayList<Integer>();
+		try {
+			developersId.addAll(empDAO.getDevelopers(issueId));
+		} catch (EmployeeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// model.addAttribute("developersId", developersId);
+		List<Integer> reviewersId = new ArrayList<Integer>();
+		try {
+			reviewersId.addAll(empDAO.getReviewers(issueId));
+		} catch (EmployeeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// model.addAttribute("reviewersId", reviewersId);
+		List<Integer> managersId = new ArrayList<Integer>();
+		try {
+			managersId.addAll(empDAO.getManagers(project.getProjectId()));
+		} catch (EmployeeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// model.addAttribute("managersId", managersId);
+		List<String> namesOfManagers = new ArrayList<String>();
+		if (managersId != null) {
+			for (Integer empId : managersId) {
+				Employee emp = empDAO.getEmployeeById(empId);
+				if (emp != null) {
+					namesOfManagers.add(emp.getFirstName() + " " + emp.getLastName());
+				}
+			}
+		}
+		model.addAttribute("namesOfManagers", namesOfManagers);
+		List<String> namesOfDevelopers = new ArrayList<String>();
+		if (developersId != null) {
+			for (Integer empId : developersId) {
+				Employee emp = empDAO.getEmployeeById(empId);
+				if (emp != null) {
+					namesOfDevelopers.add(emp.getFirstName() + " " + emp.getLastName());
+				}
+			}
+		}
+		model.addAttribute("namesOfDevelopers", namesOfDevelopers);
+		List<String> namesOfReviewers = new ArrayList<String>();
+		if (reviewersId != null) {
+			for (Integer empId : reviewersId) {
+				Employee emp = empDAO.getEmployeeById(empId);
+				if (emp != null) {
+					namesOfReviewers.add(emp.getFirstName() + " " + emp.getLastName());
+				}
+			}
+		}
+		model.addAttribute("namesOfReviewers", namesOfReviewers);
+		List<Comment> commentsOfIssue = new ArrayList<Comment>();
+		try {
+			commentsOfIssue.addAll(issueDAO.getComments(issueId));
+		} catch (IssueExeption e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		model.addAttribute("emptycomment", new Comment());
+		model.addAttribute("commentsOfIssue", commentsOfIssue);
+		System.out.println(commentsOfIssue);
+		return "issue";
+	}
+
+	@RequestMapping(value = "/active", method = RequestMethod.POST)
+	public String updateIssueStatus(@RequestParam("issueId") int issueId, Model model, HttpSession session) {
+		Project project = (Project) session.getAttribute("project");
+		model.addAttribute("project", project);
+		Employee user=(Employee) session.getAttribute("user");
+		model.addAttribute("userId", user.getEmployeeID());
+		Sprint activeSprint = (Sprint) session.getAttribute("activeSprint");
+		// for (Sprint sprint : project.getSprints()) {
+		// if (sprint.getStatus() == WorkFlow.IN_PROGRESS) {
+		// model.addAttribute("sprint", sprint);
+		// activeSprint = sprint;
+		// }
+		// }
+		for (Issue issue : activeSprint.getIssues()) {
+			if (issue.getIssueId() == issueId) {
+				try {
+					int newIssueId = issueDAO.updateIssueStatus(issueId);
+					WorkFlow status = partDAO.getStatus(newIssueId);
+					issue.setStatus(status);
+				} catch (IssueExeption e) {
+
+				} catch (PartOfProjectException e) {
+
+				}
+			}
+		}
+
+		boolean isSprintDone = true;
+		for (Issue issue : activeSprint.getIssues()) {
+			if ((issue.getStatus().equals(WorkFlow.TO_DO)) || (issue.getStatus().equals(WorkFlow.IN_PROGRESS))) {
+				isSprintDone = false;
+				break;
+			}
+		}
+		if (isSprintDone) {
+			try {
+				sprintDAO.updateSprintStatus(activeSprint.getSprintId());
+			} catch (SprintException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			activeSprint.setStatus(WorkFlow.DONE);
+			model.addAttribute("activeSprint", null);
+			model.addAttribute("message", "Your sprint is already done. You can start a new one.");
+		} else {
+			model.addAttribute("activeSprint", activeSprint);
+		}
+		return "active";
 	}
 
 }

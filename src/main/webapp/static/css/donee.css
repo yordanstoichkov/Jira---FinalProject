@@ -28,7 +28,7 @@ table {
 	line-height: 40px;
 	border-collapse: separate;
 	border-spacing: 0;
-	border: 2px solid #ff4f53;
+	border: 2px solid #72b674;
 	width: 850px;
 	margin: 50px auto;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .16);
@@ -37,7 +37,7 @@ table {
 }
 
 thead tr:first-child {
-	background: #ff8083;
+	background: #72b674;
 	color: #fff;
 	border: none;
 }
@@ -52,7 +52,7 @@ th:first-child, td:first-child {
 }
 
 thead tr:last-child th {
-	border-bottom: 3px solid #ff4f53;
+	border-bottom: 3px solid #72b674;
 }
 
 tbody tr:hover {
@@ -64,7 +64,7 @@ tbody tr:last-child td {
 }
 
 tbody td {
-	border-bottom: 1px solid #ff4f53;
+	border-bottom: 1px solid #72b674;
 }
 
 td:last-child {
@@ -201,7 +201,7 @@ td:last-child {
 	-moz-transition: .3s;
 	-o-transition: .3s;
 	display: inline-block;
-	color: #ff4f53;
+	color: #72b674;
 	border: 2px #e74c3c solid;
 	background-color: #fff;
 	border-color: #e74c3c

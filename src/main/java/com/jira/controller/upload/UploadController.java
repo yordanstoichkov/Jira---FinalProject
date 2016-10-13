@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.jira.WebInitializer;
 import com.jira.model.connections.S3Connection;
 import com.jira.model.employee.Employee;
+import com.jira.model.employee.EmployeeDAO;
 import com.jira.model.employee.IEmployeeDAO;
 import com.jira.model.exceptions.EmployeeException;
 import com.jira.model.exceptions.IssueExeption;
@@ -54,7 +55,7 @@ public class UploadController {
 			File picture = new File(WebInitializer.LOCATION + fileName);
 			FileCopyUtils.copy(file.getBytes(), picture);
 			String url = s3Con.s3Upload(fileName, issue.getTitle() + "" + issue.getIssueId());
-			issue.setFilePath(url);
+			issue.setFilePath(url);	
 			issueDAO.addIssueFile(issue);
 		} catch (IOException e) {
 			throw new IssueExeption("We can not upload this file right now. Try again later!", e);
@@ -78,7 +79,7 @@ public class UploadController {
 			String url = s3Con.s3Upload(fileName, user.getEmail());
 			user.setAvatarPath(url);
 			employeeDAO.updateAvatar(url, user.getEmployeeID());
-
+			
 		} catch (IOException e) {
 			throw new IssueExeption("We can not upload this picture right now. Try again later!", e);
 

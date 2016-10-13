@@ -120,5 +120,12 @@ public class UserController {
 		model.addAttribute("user",user);
 		return "profile";
 	}
+	@RequestMapping(value = "/friend", method = RequestMethod.GET)
+	public String getFriendProfile(@RequestParam("id") int id,Model model,HttpSession session) {
+		Employee friend=empDAO.getEmployeeById(id);
+		model.addAttribute("user",friend);
+		
+		return "friend";
+	}
 
 }

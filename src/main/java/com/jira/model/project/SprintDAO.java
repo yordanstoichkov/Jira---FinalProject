@@ -17,11 +17,15 @@ import com.jira.model.exceptions.SprintException;
 
 @Component
 public class SprintDAO implements ISprintDAO {
+	private static final int STATUS_ID_OF_DONE = 4;
+	private static final int STATUS_ID_OF_IN_PROGRESS = 2;
+	private static final int STATUS_ID_OF_TO_DO = 1;
 	private static final String INSERT_SPRINT_SQL = "INSERT INTO sprints VALUES (null, null, null, ?, ?, ?, NULL);";
 	private static final String SELECT_SPRINT_STATUS_SQL = "SELECT status_id FROM statuses WHERE status = ?";
 	private static final String SELECT_SPRINT_SQL = "SELECT * FROM sprints WHERE sprint_id = ?";
 	private static final String SELECT_ISSUES_SQL = "SELECT issue_id " + "FROM issues " + "WHERE sprint_id=?";
 	private static final String START_SPRINT_SQL = "UPDATE sprints SET start_date=?, end_date=?, sprint_goal=?, status_id=? WHERE sprint_id=?";
+	private static final String UPDATE_SPRINT_STATUS_SQL = "UPDATE sprints SET status_id=? WHERE sprint_id=?";
 
 	@Autowired
 	private IIssueDAO issueDAO;
@@ -137,6 +141,51 @@ public class SprintDAO implements ISprintDAO {
 		} catch (PartOfProjectException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+
+	public void updateSprintStatus(int sprintId) throws SprintException {
+		if (sprintId <= 0) {
+			throw new SprintException("Invalid issue given");
+		}
+		int newStatusId = 1;
+
+		Connection connection = DBConnection.getConnection();
+		try {
+			connection.setAutoCommit(false);
+			PreparedStatement ps = connection.prepareStatement(SELECT_SPRINT_SQL);
+			ps.setInt(1, sprintId);
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			int statusId = rs.getInt("status_id");
+			PreparedStatement ps2 = connection.prepareStatement(UPDATE_SPRINT_STATUS_SQL);
+			if (statusId == STATUS_ID_OF_TO_DO) {
+				ps2.setInt(1, STATUS_ID_OF_IN_PROGRESS);
+				newStatusId = STATUS_ID_OF_IN_PROGRESS;
+			}
+			if (statusId == STATUS_ID_OF_IN_PROGRESS) {
+				ps2.setInt(1, STATUS_ID_OF_DONE);
+				newStatusId = STATUS_ID_OF_DONE;
+			}
+
+			ps2.setInt(2, sprintId);
+			ps2.executeUpdate();
+
+			connection.commit();
+		} catch (SQLException e) {
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {
+				throw new SprintException("You can not change the status of issue right now! Try again later!");
+			}
+			throw new SprintException("You can not change the status of issue right now! Try again later!");
+		} finally {
+			try {
+				connection.setAutoCommit(true);
+			} catch (SQLException e) {
+				throw new SprintException("You can not change the status of issue right now! Try again later!");
+
+			}
 		}
 	}
 }

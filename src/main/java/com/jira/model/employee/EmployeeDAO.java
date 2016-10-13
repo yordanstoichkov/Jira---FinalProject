@@ -369,15 +369,28 @@ public class EmployeeDAO implements IEmployeeDAO {
 			PreparedStatement ps = connection.prepareStatement(GET_EMPLOYEE_SQL);
 			ps.setInt(1, employeeId);
 			ResultSet rs = ps.executeQuery();
-			rs.next();
-			String firstName = rs.getString("first_name");
-			String lastName = rs.getString("last_name");
-			String email = rs.getString("email");
-			String password = rs.getString("password");
-			String avatarPath = rs.getString("avatar_path");
+			if (rs.next()) {
+				String firstName = rs.getString("first_name");
+				String lastName = rs.getString("last_name");
+				String email = rs.getString("email");
+				String password = rs.getString("password");
+				String avatarPath = rs.getString("avatar_path");
+				int jobID = rs.getInt("job_id");
+				employee = new Employee(firstName, lastName, email, password);
+				if (avatarPath != null && !avatarPath.equals("")) {
+					employee.setAvatarPath(avatarPath);
+				}
+				employee.setEmployeeID(employeeId);
+				PreparedStatement jobPS = connection.prepareStatement(JOB_BY_ID_SQL);
+				jobPS.setInt(1, jobID);
 
-			employee = new Employee(firstName, lastName, email, password);
-			employee.setAvatarPath(avatarPath);
+				ResultSet jobRS = jobPS.executeQuery();
+				if (jobRS.next()) {
+					String jobStr = jobRS.getString("job_title");
+					Jobs job = Jobs.getJob(jobStr);
+					employee.setJob(job);
+				}
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -433,19 +446,20 @@ public class EmployeeDAO implements IEmployeeDAO {
 		return issues;
 
 	}
-	public void updateAvatar(String avatarPath, int employeeId) throws EmployeeException{
-		Connection connection = DBConnection.getConnection();
-			PreparedStatement ps;
-			try {
-				ps = connection.prepareStatement(UPDATE_AVATAR_SQL);
-				ps.setString(1, avatarPath);
-				ps.setInt(2, employeeId);
-				ps.executeUpdate();
-			} catch (SQLException e) {
-				throw new EmployeeException("Currently we have a problem getting your image", e);
 
-			}
-		
+	public void updateAvatar(String avatarPath, int employeeId) throws EmployeeException {
+		Connection connection = DBConnection.getConnection();
+		PreparedStatement ps;
+		try {
+			ps = connection.prepareStatement(UPDATE_AVATAR_SQL);
+			ps.setString(1, avatarPath);
+			ps.setInt(2, employeeId);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			throw new EmployeeException("Currently we have a problem getting your image", e);
+
+		}
+
 	}
 
 }

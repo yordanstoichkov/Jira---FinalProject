@@ -18,20 +18,17 @@
 					"http://localhost:8080/JiraProject/checkemail?email="
 							+ email, function(data) {
 						$("#answer").empty();
+						var obj = data;
 						var img = document.createElement("img");
-						img.src = data.photo;
+						img.src = obj;
 						img.width = 20;
 						img.height = 20;
 						img.id = "em";
-						$("#answer").append(img);
-						var p = document.createElement("p");
-						p.innerHTML = data.message;
-						p.attr('style', 'display:inline');
-						$("#answer").append(p);
+						$("#answer").append(img)
 					});
 		}
 	</script>
-	<div class="container" style="padding-top: 100px;">
+	<div class="container" style="padding-top:100px;">
 		<div class="row">
 			<div class="col-md-4 col-md-offset-4">
 
@@ -72,8 +69,8 @@
 									name="passwordrepeat" type="password" value="">
 							</div>
 							<div class="form-group">
-								<label style="color: #2e5cb8;" for="username">Choose
-									your job: </label> <select class="form-control" name="job">
+								<label style="color: #2e5cb8;;" for="username">Choose your
+									job: </label> <select class="form-control" name="job">
 									<option value="MANAGER">Manager</option>
 									<option value="DEVELOPER">Developer</option>
 									<option value="QA">QA</option>

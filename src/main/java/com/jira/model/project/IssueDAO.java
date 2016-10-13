@@ -179,14 +179,14 @@ public class IssueDAO implements IIssueDAO {
 			try {
 				connection.rollback();
 			} catch (SQLException e1) {
-				throw new IssueExeption("You can not change the status of issue right now! Try again later!");
+				throw new IssueExeption("You can not change the status of issue right now! Try again later!",e1);
 			}
-			throw new IssueExeption("You can not change the status of issue right now! Try again later!");
+			throw new IssueExeption("You can not change the status of issue right now! Try again later!",e);
 		} finally {
 			try {
 				connection.setAutoCommit(true);
 			} catch (SQLException e) {
-				throw new IssueExeption("You can not change the status of issue right now! Try again later!");
+				throw new IssueExeption("You can not change the status of issue right now! Try again later!",e);
 
 			}
 		}
@@ -387,4 +387,6 @@ public class IssueDAO implements IIssueDAO {
 		}
 
 	}
+
+
 }
