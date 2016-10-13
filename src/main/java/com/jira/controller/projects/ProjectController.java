@@ -21,7 +21,7 @@ import com.jira.model.employee.Employee;
 import com.jira.model.employee.EmployeeDAO;
 import com.jira.model.employee.IEmployeeDAO;
 import com.jira.model.exceptions.EmployeeException;
-import com.jira.model.exceptions.IsssueExeption;
+import com.jira.model.exceptions.IssueExeption;
 import com.jira.model.exceptions.ProjectException;
 import com.jira.model.exceptions.SprintException;
 import com.jira.model.project.IIssueDAO;
@@ -204,7 +204,7 @@ public class ProjectController {
 							int newIssueId = issueDAO.updateIssueStatus(issueId);
 							WorkFlow status = partDAO.getStatus(newIssueId);
 							issue.setStatus(status);
-						} catch (IsssueExeption e) {
+						} catch (IssueExeption e) {
 
 						} catch (PartOfProjectException e) {
 
@@ -294,7 +294,7 @@ public class ProjectController {
 		List<Comment> commentsOfIssue = new ArrayList<Comment>();
 		try {
 			commentsOfIssue.addAll(issueDAO.getComments(issueId));
-		} catch (IsssueExeption e) {
+		} catch (IssueExeption e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

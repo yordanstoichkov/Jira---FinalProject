@@ -3,20 +3,32 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ page session="false"%>
 <script type="text/javascript" src="jquery-3.1.1.min.js"></script>
-
 <link rel="stylesheet" href="sprActivate.css">
 </head>
 <body>
 	<script>
-		function customRange(input) {
-			if (input.id == 'to') {
-				var x = $('#from').datepicker("getDate");
-				$(".to").datepicker("option", "minDate", x);
-			} else if (input.id == 'from') {
-				var x = $('#to').datepicker("getDate");
-				$(".from").datepicker("option", "maxDate", x);
+		function compareDates() {
+			var startDate = new Date($('#from').val());
+			var endDate = new Date($('#to').val());
+			if (startDate > endDate) {
+				alert('End date is before start date');
+				return false;
 			}
 		}
+
+		var today = new Date();
+		var dd = today.getDate();
+		var mm = today.getMonth() + 1; //January is 0!
+		var yyyy = today.getFullYear();
+		if (dd < 10) {
+			dd = '0' + dd
+		}
+		if (mm < 10) {
+			mm = '0' + mm
+		}
+
+		today = yyyy + '-' + mm + '-' + dd;
+		document.getElementById("datefield").setAttribute("min", today);
 	</script>
 	<h1 class="sprinth1"
 		style="font-size: 150%; padding-left: 300px; padding-top: 35px;">Sprint
@@ -27,16 +39,16 @@
 		<hr style="width: 90%;">
 	</div>
 	<div class="sprfrm">
-		<form name="form" action="./beginsprint" method="post">
+		<form name="form" id="form" action="./beginsprint" method="post"
+			onsubmit="return compareDates()">
 			<fieldset class="contact-inner">
-
 				<p class="contact-input">
 					<label>Sprint start date:</label> <input type="date"
-						name="startDate" id="from" onclick="customRange('from')"></input>
+						name="startDate" id="from" min='2000-13-13'></input>
 				</p>
 				<p class="contact-input">
 					<label>Sprint end date:</label> <input type="date" name="endDate"
-						id="to" onclick="customRange('to')"></input>
+						id="to"></input>
 				</p>
 
 				<br /> <label style="padding-bottom: 15px">Sprint goals:</label>

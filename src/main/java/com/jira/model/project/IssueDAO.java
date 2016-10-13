@@ -22,7 +22,7 @@ import com.jira.model.employee.Employee;
 import com.jira.model.employee.EmployeeDAO;
 import com.jira.model.employee.IEmployeeDAO;
 import com.jira.model.exceptions.EmployeeException;
-import com.jira.model.exceptions.IsssueExeption;
+import com.jira.model.exceptions.IssueExeption;
 import com.jira.model.exceptions.ProjectException;
 
 @Component
@@ -57,9 +57,9 @@ public class IssueDAO implements IIssueDAO {
 	 * Issue)
 	 */
 	@Override
-	public int createIssue(Issue issue) throws IsssueExeption {
+	public int createIssue(Issue issue) throws IssueExeption {
 		if (issue == null) {
-			throw new IsssueExeption("Invalid issue given");
+			throw new IssueExeption("Invalid issue given");
 		}
 		Connection connection = DBConnection.getConnection();
 		int issueID = 0;
@@ -106,17 +106,17 @@ public class IssueDAO implements IIssueDAO {
 			try {
 				connection.rollback();
 			} catch (SQLException e1) {
-				throw new IsssueExeption("This issue cannot be created right now", e);
+				throw new IssueExeption("This issue cannot be created right now", e);
 			}
-			throw new IsssueExeption("This issue cannot be created right now", e);
+			throw new IssueExeption("This issue cannot be created right now", e);
 		} catch (Exception e) {
-			throw new IsssueExeption("This issue cannot be created right now", e);
+			throw new IssueExeption("This issue cannot be created right now", e);
 
 		} finally {
 			try {
 				connection.setAutoCommit(true);
 			} catch (SQLException e) {
-				throw new IsssueExeption("This issue cannot be created right now", e);
+				throw new IssueExeption("This issue cannot be created right now", e);
 			}
 		}
 		return issueID;
@@ -130,9 +130,9 @@ public class IssueDAO implements IIssueDAO {
 	 * project.Issue)
 	 */
 	@Override
-	public void addDescriptionToIssue(Issue issue) throws IsssueExeption {
+	public void addDescriptionToIssue(Issue issue) throws IssueExeption {
 		if (issue == null) {
-			throw new IsssueExeption("Invalid issue given");
+			throw new IssueExeption("Invalid issue given");
 		}
 		Connection connection = DBConnection.getConnection();
 
@@ -142,14 +142,14 @@ public class IssueDAO implements IIssueDAO {
 			updateIssue.setInt(2, issue.getIssueId());
 			updateIssue.executeUpdate();
 		} catch (SQLException e) {
-			throw new IsssueExeption("This issue description couldn't be added");
+			throw new IssueExeption("This issue description couldn't be added");
 		}
 
 	}
 
-	public int updateIssueStatus(int issueId) throws IsssueExeption {
+	public int updateIssueStatus(int issueId) throws IssueExeption {
 		if (issueId <= 0) {
-			throw new IsssueExeption("Invalid issue given");
+			throw new IssueExeption("Invalid issue given");
 		}
 		int newStatusId = 1;
 
@@ -179,14 +179,14 @@ public class IssueDAO implements IIssueDAO {
 			try {
 				connection.rollback();
 			} catch (SQLException e1) {
-				throw new IsssueExeption("You can not change the status of issue right now! Try again later!");
+				throw new IssueExeption("You can not change the status of issue right now! Try again later!");
 			}
-			throw new IsssueExeption("You can not change the status of issue right now! Try again later!");
+			throw new IssueExeption("You can not change the status of issue right now! Try again later!");
 		} finally {
 			try {
 				connection.setAutoCommit(true);
 			} catch (SQLException e) {
-				throw new IsssueExeption("You can not change the status of issue right now! Try again later!");
+				throw new IssueExeption("You can not change the status of issue right now! Try again later!");
 
 			}
 		}
@@ -202,9 +202,9 @@ public class IssueDAO implements IIssueDAO {
 	 * Issue, com.jira.model.project.Sprint)
 	 */
 	@Override
-	public void addIssueToSprint(Issue issue, Sprint sprint) throws IsssueExeption {
+	public void addIssueToSprint(Issue issue, Sprint sprint) throws IssueExeption {
 		if (issue == null) {
-			throw new IsssueExeption("Invalid issue given");
+			throw new IssueExeption("Invalid issue given");
 		}
 		Connection connection = DBConnection.getConnection();
 
@@ -219,14 +219,14 @@ public class IssueDAO implements IIssueDAO {
 			try {
 				connection.rollback();
 			} catch (SQLException e1) {
-				throw new IsssueExeption("This issue cannot be created right now", e);
+				throw new IssueExeption("This issue cannot be created right now", e);
 			}
-			throw new IsssueExeption("This issue cannot be created right now", e);
+			throw new IssueExeption("This issue cannot be created right now", e);
 		} finally {
 			try {
 				connection.setAutoCommit(true);
 			} catch (SQLException e) {
-				throw new IsssueExeption("This issue cannot be created right now", e);
+				throw new IssueExeption("This issue cannot be created right now", e);
 			}
 		}
 	}
@@ -237,7 +237,7 @@ public class IssueDAO implements IIssueDAO {
 	 * @see com.jira.model.project.IIssueDAO#getIssueCount()
 	 */
 	@Override
-	public int getIssueCount() throws IsssueExeption {
+	public int getIssueCount() throws IssueExeption {
 		Connection connection = DBConnection.getConnection();
 
 		int issueCount = 0;
@@ -248,7 +248,7 @@ public class IssueDAO implements IIssueDAO {
 			issueCount = result.getInt("issue_count");
 
 		} catch (SQLException e) {
-			throw new IsssueExeption("There was a problem getting the number", e);
+			throw new IssueExeption("There was a problem getting the number", e);
 		}
 		return issueCount;
 
@@ -260,9 +260,9 @@ public class IssueDAO implements IIssueDAO {
 	 * @see com.jira.model.project.IIssueDAO#getIssue(int)
 	 */
 	@Override
-	public Issue getIssue(int issueID) throws IsssueExeption {
+	public Issue getIssue(int issueID) throws IssueExeption {
 		if (issueID <= 0) {
-			throw new IsssueExeption("Invalid issue given");
+			throw new IssueExeption("Invalid issue given");
 		}
 		Connection connection = DBConnection.getConnection();
 		Issue result = null;
@@ -305,11 +305,11 @@ public class IssueDAO implements IIssueDAO {
 				result.setEmployees(employeeDAO.getEmployeeById(asigneeId));
 			}
 		} catch (SQLException e) {
-			throw new IsssueExeption("Unfortunately your issue couln't be found", e);
+			throw new IssueExeption("Unfortunately your issue couln't be found", e);
 		} catch (ProjectException e) {
-			throw new IsssueExeption("Unfortunately your issue couln't be found", e);
+			throw new IssueExeption("Unfortunately your issue couln't be found", e);
 		} catch (PartOfProjectException e) {
-			throw new IsssueExeption("Unfortunately your issue couln't be found", e);
+			throw new IssueExeption("Unfortunately your issue couln't be found", e);
 		}
 		return result;
 	}
@@ -318,7 +318,7 @@ public class IssueDAO implements IIssueDAO {
 		return new java.sql.Date(lt.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
 	}
 
-	public List<Comment> getComments(int issueId) throws IsssueExeption {
+	public List<Comment> getComments(int issueId) throws IssueExeption {
 		Connection connection = DBConnection.getConnection();
 		List<Comment> commentsOfIssue = new ArrayList<>();
 		try {
@@ -337,12 +337,12 @@ public class IssueDAO implements IIssueDAO {
 			}
 
 		} catch (SQLException e) {
-			throw new IsssueExeption("We can get comments right now. Please, try again later!");
+			throw new IssueExeption("We can get comments right now. Please, try again later!");
 		}
 		return commentsOfIssue;
 	}
 
-	public void commentIssue(Comment comment) throws IsssueExeption {
+	public void commentIssue(Comment comment) throws IssueExeption {
 		Connection connection = DBConnection.getConnection();
 		try {
 			PreparedStatement ps = connection.prepareStatement(INSERT_ISSUE_COMMENT_SQL);
@@ -354,12 +354,12 @@ public class IssueDAO implements IIssueDAO {
 			ps.executeUpdate();
 
 		} catch (SQLException e) {
-			throw new IsssueExeption("We can insert comment right now. Please, try again later!");
+			throw new IssueExeption("We can insert comment right now. Please, try again later!");
 
 		}
 	}
 
-	public void addIssueFile(Issue issue) throws IsssueExeption {
+	public void addIssueFile(Issue issue) throws IssueExeption {
 		Connection connection = DBConnection.getConnection();
 		try {
 			PreparedStatement ps = connection.prepareStatement(ADD_ISSUE_FILE_SQL);
@@ -368,13 +368,13 @@ public class IssueDAO implements IIssueDAO {
 			ps.executeUpdate();
 
 		} catch (SQLException e) {
-			throw new IsssueExeption("We can insert file right now. Please, try again later!");
+			throw new IssueExeption("We can insert file right now. Please, try again later!");
 
 		}
 	}
 
 	@Override
-	public void deleteIssue(int issueId) throws IsssueExeption {
+	public void deleteIssue(int issueId) throws IssueExeption {
 		Connection connection = DBConnection.getConnection();
 		try {
 			PreparedStatement issueDelPS = connection.prepareStatement(DELETE_ISSUE_SQL);
@@ -382,7 +382,7 @@ public class IssueDAO implements IIssueDAO {
 			issueDelPS.executeUpdate();
 
 		} catch (SQLException e) {
-			throw new IsssueExeption("We delete issue right now. Please, try again later!", e);
+			throw new IssueExeption("We delete issue right now. Please, try again later!", e);
 
 		}
 

@@ -8,7 +8,7 @@ import java.util.List;
 
 import com.jira.model.employee.Employee;
 import com.jira.model.exceptions.EmployeeException;
-import com.jira.model.exceptions.IsssueExeption;
+import com.jira.model.exceptions.IssueExeption;
 import com.jira.model.exceptions.ProjectException;
 
 public class Issue {
@@ -32,7 +32,7 @@ public class Issue {
 	}
 
 	public Issue(String title, PriorityLevel priority, IssueType type, List<Integer> asignees, String description)
-			throws ProjectException, EmployeeException, IsssueExeption {
+			throws ProjectException, EmployeeException, IssueExeption {
 		this.title = title;
 
 		this.priority = priority;
@@ -44,11 +44,11 @@ public class Issue {
 		}
 	}
 
-	private void setAsignees(List<Integer> asignees) throws IsssueExeption {
+	private void setAsignees(List<Integer> asignees) throws IssueExeption {
 		if (asignees != null) {
 			this.asignees.addAll(asignees);
 		} else {
-			throw new IsssueExeption("Please enter exsisting employee for this issue");
+			throw new IssueExeption("Please enter exsisting employee for this issue");
 		}
 	}
 
@@ -73,11 +73,11 @@ public class Issue {
 		return sprint;
 	}
 
-	public void setSprint(Sprint sprint) throws IsssueExeption {
+	public void setSprint(Sprint sprint) throws IssueExeption {
 		if (sprint != null) {
 			this.sprint = sprint;
 		} else {
-			throw new IsssueExeption("Please enter exsisting sprint for this issue");
+			throw new IssueExeption("Please enter exsisting sprint for this issue");
 		}
 	}
 

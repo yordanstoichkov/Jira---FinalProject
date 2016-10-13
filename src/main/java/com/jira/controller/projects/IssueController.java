@@ -22,7 +22,7 @@ import com.jira.model.comment.Comment;
 import com.jira.model.employee.Employee;
 import com.jira.model.employee.IEmployeeDAO;
 import com.jira.model.exceptions.EmployeeException;
-import com.jira.model.exceptions.IsssueExeption;
+import com.jira.model.exceptions.IssueExeption;
 import com.jira.model.exceptions.ProjectException;
 import com.jira.model.exceptions.SprintException;
 import com.jira.model.project.IIssueDAO;
@@ -55,6 +55,7 @@ public class IssueController {
 		}
 		model.addAttribute("emptyIssue", new Issue(sprint));
 		model.addAttribute("user", emp);
+		model.addAttribute("project", session.getAttribute("project"));
 		model.addAttribute("sprint", sprint);
 		return "newIssue";
 	}
@@ -72,7 +73,7 @@ public class IssueController {
 
 		try {
 			issue.setSprint(sprint);
-		} catch (IsssueExeption e) {
+		} catch (IssueExeption e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -84,7 +85,7 @@ public class IssueController {
 			employeeId = empDAO.getEmployeeIdByEmail(email);
 			issue.setAsignee(employeeId);
 			issueDAO.createIssue(issue);
-		} catch (IsssueExeption e1) {
+		} catch (IssueExeption e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (EmployeeException e) {
@@ -140,13 +141,13 @@ public class IssueController {
 			comment.setWriter(((Employee) session.getAttribute("user")));
 			comment.setDate(LocalDate.now());
 			issueDAO.commentIssue(comment);
-		} catch (IsssueExeption e) {
+		} catch (IssueExeption e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		try {
 			issue = issueDAO.getIssue(issueId);
-		} catch (IsssueExeption e) {
+		} catch (IssueExeption e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -160,7 +161,7 @@ public class IssueController {
 		System.out.println(issueId);
 		try {
 			issueDAO.deleteIssue(issueId);
-		} catch (IsssueExeption e) {
+		} catch (IssueExeption e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

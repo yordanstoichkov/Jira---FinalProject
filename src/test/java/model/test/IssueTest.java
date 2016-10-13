@@ -7,7 +7,7 @@ import org.junit.Test;
 import com.jira.model.employee.Employee;
 import com.jira.model.employee.Employee.Jobs;
 import com.jira.model.exceptions.EmployeeException;
-import com.jira.model.exceptions.IsssueExeption;
+import com.jira.model.exceptions.IssueExeption;
 import com.jira.model.exceptions.ProjectException;
 import com.jira.model.exceptions.SprintException;
 import com.jira.model.project.IIssueDAO;
@@ -23,7 +23,7 @@ public class IssueTest {
 	private IIssueDAO dao = new IssueDAO();
 
 	@Test
-	public void test() throws ProjectException, EmployeeException, IsssueExeption, PartOfProjectException, SprintException {
+	public void test() throws ProjectException, EmployeeException, IssueExeption, PartOfProjectException, SprintException {
 	
 		Issue testIssue = new Issue();
 

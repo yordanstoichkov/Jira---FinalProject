@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.jira.model.connections.DBConnection;
-import com.jira.model.exceptions.IsssueExeption;
+import com.jira.model.exceptions.IssueExeption;
 import com.jira.model.exceptions.ProjectException;
 import com.jira.model.exceptions.SprintException;
 
@@ -111,7 +111,7 @@ public class SprintDAO implements ISprintDAO {
 			throw new SprintException("Something went wrong can't get your sprint", e);
 		} catch (PartOfProjectException e) {
 			throw new SprintException("Something went wrong can't get your sprint", e);
-		} catch (IsssueExeption e) {
+		} catch (IssueExeption e) {
 			throw new SprintException("Something went wrong can't get your sprint", e);
 		}
 		return result;

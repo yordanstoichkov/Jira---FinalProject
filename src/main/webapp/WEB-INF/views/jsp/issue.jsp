@@ -137,8 +137,8 @@
 		style="margin-left: 300px;" onsubmit="Validatebodypanelbumper()">
 
 		<div class="form-group" style="width: 200px; color: #1b5c9e;">
-			<label>Choose pdf file to upload</label><input type="file" id="file" name="file"
-				accept="application/pdf" />
+			<label>Choose pdf file to upload</label><input type="file" id="file"
+				name="file" accept="application/pdf" />
 		</div>
 
 		<div class="form-group" style="width: 200px; color: #1b5c9e;">
@@ -148,7 +148,9 @@
 		</div>
 	</form>
 	<div style="padding-left: 300px">
-		<a href="${issue.filePath}">Get issue file</a>
+		<c:if test="${not empty issue.filePath}">
+			<a href="${issue.filePath}" download>Get issue file</a>
+		</c:if>
 	</div>
 	<div class="row">
 		<div class="col-lg-6">

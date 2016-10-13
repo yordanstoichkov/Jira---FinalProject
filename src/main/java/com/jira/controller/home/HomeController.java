@@ -13,7 +13,7 @@ import com.amazonaws.http.HttpRequest;
 import com.jira.model.employee.EmployeeDAO;
 import com.jira.model.employee.IEmployeeDAO;
 import com.jira.model.exceptions.EmployeeException;
-import com.jira.model.exceptions.IsssueExeption;
+import com.jira.model.exceptions.IssueExeption;
 import com.jira.model.exceptions.ProjectException;
 import com.jira.model.project.IIssueDAO;
 import com.jira.model.project.IProjectDAO;
@@ -45,7 +45,7 @@ public class HomeController {
 			e.printStackTrace();
 		} catch (ProjectException e) {
 			e.printStackTrace();
-		} catch (IsssueExeption e) {
+		} catch (IssueExeption e) {
 			e.printStackTrace();
 		}
 		if (request.getSession(false) != null) {
