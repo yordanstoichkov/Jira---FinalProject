@@ -54,4 +54,9 @@ public class HomeController {
 		return "index";
 	}
 
+	@RequestMapping(value = "/contact", method = RequestMethod.GET)
+	public String showIndex(Model model) {
+		return "contact";
+	}
+
 }

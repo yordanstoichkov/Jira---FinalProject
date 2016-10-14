@@ -143,7 +143,7 @@
 
 		<div class="form-group" style="width: 200px; color: #1b5c9e;">
 
-			<input type="submit" name="issueId" value="${issue.issueId}" />
+			<button type="submit" name="issueId" value="${issue.issueId}" >Upload file</button>
 
 		</div>
 	</form>

@@ -36,7 +36,7 @@
 						style="font-size: 2.0em;"></i> Home</a></li>
 				<li><a href="./projects"><i class="fa fa-paste"
 						style="font-size: 2.0em;"></i>Projects</a></li>
-				<li><a href="./home"><i class="fa fa-phone"
+				<li><a href="./contact"><i class="fa fa-phone"
 						style="font-size: 2.0em;"></i> Contact</a></li>
 
 

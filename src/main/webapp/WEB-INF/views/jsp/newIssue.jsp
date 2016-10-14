@@ -21,6 +21,7 @@
 </head>
 <body>
 	<script>
+		var i = 0;
 		function getEmployeeName() {
 			var name = $("#employee").val();
 			$.get("http://localhost:8080/JiraProject/givenames?start=" + name,
@@ -36,12 +37,41 @@
 					});
 
 		}
+		function getEmployeeName1() {
+			var name = $("#employee" + i).val();
+			$.get("http://localhost:8080/JiraProject/givenames?start=" + name,
+					function(data) {
+						$("#suggestions" + i).empty();
+						for ( var index in data) {
+
+							var item = data[index];
+							var p = document.createElement("option");
+							p.innerHTML = item;
+							$("#suggestions" + i).append(p);
+						}
+					});
+
+		}
 		function typefunction() {
 			var name = $("#employee").val();
 			var p = document.createElement("p");
 			p.innerHTML = name;
 			$("#names").append(p);
 			$("#employee").empty()
+		}
+		function setanotherfield() {
+			if (i < 4) {
+				i++;
+				$('<br/>').appendTo('#myform')
+				$('<input/>').attr({
+					type : 'text',
+					name : 'asignee' + i,
+					id : 'employee' + i,
+					class : 'form-control',
+					list : 'suggestions' + i
+				}).appendTo('#myform' + i).keyup(getEmployeeName1());
+			}
+
 		}
 	</script>
 	<div class="row">
@@ -57,6 +87,8 @@
 			<label>Enter issue title: </label>
 			<form:input path="title" class="form-control" style="color: #1b5c9e;"
 				placeholder="Enter title..." />
+			<form:errors path="title" cssClass="error" />
+			<span id="title.errors" class="error">Title is required!</span>
 		</div>
 		<div class="form-group"
 			style="width: 200px; margin-left: 280px; color: #1b5c9e; display: inline-block;">
@@ -88,12 +120,52 @@
 
 			<label>Assign employees:</label>
 		</div>
-		<div class="form-group input-group"
+		<div id="myform" class="form-group input-group"
 			style="width: 500px; margin-left: 280px; color: #1b5c9e;">
 
 			<input name="assignee" id="employee" type="text" class="form-control"
 				list="suggestions" onkeyup="getEmployeeName()" /> <span
-				class="input-group-btn"> <datalist id="suggestions"
+				class="input-group-btn"> <img src="yes.png" width="20"
+				height="20" onclick="setanotherfield()" />
+			<datalist id="suggestions">
+
+				</datalist>
+			</span>
+		</div>
+		<div id="myform1" class="form-group input-group"
+			style="width: 500px; margin-left: 280px; color: #1b5c9e;">
+
+			<span class="input-group-btn"> <datalist id="suggestions1"
+					onclick="typefunction()">
+
+				</datalist>
+
+			</span>
+		</div>
+		<div id="myform2" class="form-group input-group"
+			style="width: 500px; margin-left: 280px; color: #1b5c9e;">
+
+			<span class="input-group-btn"> <datalist id="suggestions2"
+					onclick="typefunction()">
+
+				</datalist>
+
+			</span>
+		</div>
+		<div id="myform3" class="form-group input-group"
+			style="width: 500px; margin-left: 280px; color: #1b5c9e;">
+
+			<span class="input-group-btn"> <datalist id="suggestions3"
+					onclick="typefunction()">
+
+				</datalist>
+
+			</span>
+		</div>
+		<div id="myform4" class="form-group input-group"
+			style="width: 500px; margin-left: 280px; color: #1b5c9e;">
+
+			<span class="input-group-btn"> <datalist id="suggestions4"
 					onclick="typefunction()">
 
 				</datalist>

@@ -56,6 +56,7 @@ public class UploadController {
 			FileCopyUtils.copy(file.getBytes(), picture);
 			String url = s3Con.s3Upload(fileName, issue.getTitle() + "" + issue.getIssueId());
 			issue.setFilePath(url);	
+			picture.delete();
 			issueDAO.addIssueFile(issue);
 		} catch (IOException e) {
 			throw new IssueExeption("We can not upload this file right now. Try again later!", e);
@@ -87,6 +88,7 @@ public class UploadController {
 			throw new IssueExeption("We can not upload this picture right now. Try again later!", e);
 
 		}
+		avatar.delete();
 		return "profile";
 	}
 }
