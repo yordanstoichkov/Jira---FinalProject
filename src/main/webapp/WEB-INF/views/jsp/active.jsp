@@ -8,6 +8,8 @@
 <link href="dataTables.responsive.css" rel="stylesheet">
 <link href="font-awesome.min.css" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="jquery-3.1.1.min.js"></script>
+    <link href="bootstrap.min.css" rel="stylesheet">
+
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport"

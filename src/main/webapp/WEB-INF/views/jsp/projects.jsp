@@ -19,6 +19,8 @@
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
 <script type="text/javascript" src="jquery-3.1.1.min.js"></script>
 <script type="text/javascript" src="apprise.js"></script>
+<script type="text/javascript" src="chart.js"></script>
+
 </head>
 <body>
 	<div class="main" style="padding-top: 75px">

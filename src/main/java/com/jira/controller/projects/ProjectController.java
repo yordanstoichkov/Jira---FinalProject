@@ -159,13 +159,31 @@ public class ProjectController {
 		return "yourProject";
 	}
 
-
-	
-
 	@RequestMapping(value = "/overview", method = RequestMethod.GET)
 	public String projectOverView(Model model, HttpSession session) {
 		Project project = (Project) session.getAttribute("project");
+		int toDo = 0;
+		int progress = 0;
+		int done = 0;
+		
+		for (Sprint sprint : project.getSprints()) {
+			if (sprint.getStatus().equals(WorkFlow.TO_DO)) {
+				toDo++;
+			}
+			if (sprint.getStatus().equals(WorkFlow.IN_PROGRESS)) {
+				progress++;
+			}
+			if (sprint.getStatus().equals(WorkFlow.DONE)) {
+				done++;
+			}
+
+		}
+	
 		model.addAttribute("project", project);
+		model.addAttribute("toDo", toDo);
+		model.addAttribute("progress", progress);
+		model.addAttribute("done", done);
+		
 		return "overview";
 	}
 }

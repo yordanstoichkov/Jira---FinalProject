@@ -3,10 +3,12 @@ package com.jira.controller.projects;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,11 +55,12 @@ public class IssueController {
 	public String addNewIssue(@RequestParam("sprintId") int sprintId, Model model, HttpSession session) {
 		Employee emp = (Employee) session.getAttribute("user");
 		Sprint sprint = null;
-		try {
-			sprint = sprintDAO.getSprint(sprintId);
-		} catch (SprintException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		Project project = (Project) session.getAttribute("project");
+		for (Sprint oneSprint : project.getSprints()) {
+			if (oneSprint.getSprintId() == sprintId) {
+				sprint = oneSprint;
+			}
 		}
 		model.addAttribute("emptyIssue", new Issue(sprint));
 		model.addAttribute("user", emp);
@@ -67,17 +70,43 @@ public class IssueController {
 
 	@RequestMapping(value = "/newIssue", method = RequestMethod.POST)
 	public String createIssue(@ModelAttribute Issue issue, @RequestParam("sprintId") int sprintId,
-			@RequestParam("assignee") String assignee, Model model, HttpSession session) {
+			@RequestParam("assignee") String assignee, Model model, HttpServletRequest request, HttpSession session) {
 		Project project = (Project) session.getAttribute("project");
 		Sprint sprint = null;
-		for (Sprint oneSprint : project.getSprints()) {
-			if (oneSprint.getSprintId() == sprintId) {
-				sprint = oneSprint;
+		try {
+			Set<String> asignees = new HashSet<String>();
+			asignees.add(assignee);
+			asignees.add(request.getParameter("asignee1"));
+			asignees.add(request.getParameter("asignee2"));
+			asignees.add(request.getParameter("asignee3"));
+			asignees.add(request.getParameter("asignee4"));
+			for (Sprint oneSprint : project.getSprints()) {
+				if (oneSprint.getSprintId() == sprintId) {
+					sprint = oneSprint;
+				}
 			}
 		}
 
 		try {
 			issue.setSprint(sprint);
+			for (String str : asignees) {
+				if (str != null && !str.trim().equals("")) {
+					String[] employeeNames = str.split(",");
+					String email = employeeNames[employeeNames.length - 1].trim();
+					int employeeId = 0;
+
+					employeeId = empDAO.getEmployeeIdByEmail(email);
+					if (employeeId > 0) {
+						issue.setAsignee(employeeId);
+					}
+				}
+			}
+
+			issueDAO.createIssue(issue);
+			sprint.addIssue(issue);
+		} catch (SprintException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} catch (IssueExeption e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

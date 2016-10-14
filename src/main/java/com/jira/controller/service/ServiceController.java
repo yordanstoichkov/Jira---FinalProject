@@ -3,6 +3,8 @@ package com.jira.controller.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +16,9 @@ import com.jira.model.employee.Employee;
 import com.jira.model.employee.EmployeeDAO;
 import com.jira.model.employee.IEmployeeDAO;
 import com.jira.model.exceptions.EmployeeException;
+import com.jira.model.project.Project;
+import com.jira.model.project.Sprint;
+import com.jira.model.project.WorkFlow;
 
 @RestController
 public class ServiceController {
