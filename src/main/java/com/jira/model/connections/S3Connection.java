@@ -1,9 +1,7 @@
 package com.jira.model.connections;
 
 import java.io.File;
-
 import org.springframework.stereotype.Component;
-
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.BasicAWSCredentials;

@@ -32,7 +32,7 @@
 
 			<ul class="menu">
 				<li><img src="logo.png" width=90px; height=57px;></li>
-				<li><a href="./"><i class="fa fa-home"
+				<li><a href="./home"><i class="fa fa-home"
 						style="font-size: 2.0em;"></i> Home</a></li>
 				<li><a href="./projects"><i class="fa fa-paste"
 						style="font-size: 2.0em;"></i>Projects</a></li>
@@ -53,8 +53,8 @@
 						<a onclick="myFunction()" class="dropbtn"><img
 							src="${user.avatarPath}" width="25" height="30" /> Hi, <%=request.getSession().getAttribute("username")%></a>
 						<div id="myDropdown" class="dropdown-content">
-							<a href="./profile" ">Profile</a>  <a
-								class="active" href="./logout">LogOut</a>
+							<a href="./profile" ">Profile</a>  
+							<a class="active" href="./logout">LogOut</a>
 						</div>
 					</div></li>
 

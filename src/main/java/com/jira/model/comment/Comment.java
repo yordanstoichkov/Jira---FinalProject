@@ -1,42 +1,73 @@
 package com.jira.model.comment;
 
-import java.sql.Date;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import com.jira.model.employee.Employee;
+import com.jira.model.employee.IValidator;
+import com.jira.model.exceptions.IssueException;
 
 public class Comment {
+	@Autowired
+	private IValidator validator;
+
 	private String comment;
 	private Employee writer;
 	private int commentID;
 	private LocalDate date;
 	private int issueId;
 
-	public Comment(String comment, Employee writer) {
-		this.comment = comment;
-		this.writer = writer;
-		this.date = LocalDate.now();
-
-	}
-
-	public Comment(int issueId, Employee writer) {
-
-		this.writer = writer;
-		this.issueId = issueId;
-
-	}
-
-	public Comment(String comment, Employee writer, LocalDate date, int issueId) {
-		this.comment = comment;
-		this.writer = writer;
-		this.date = date;
-		this.issueId = issueId;
-	}
-
 	public Comment() {
 	}
 
+	public Comment(String comment, Employee writer) throws IssueException {
+		this.setComment(comment);
+		this.setWriter(writer);
+		this.date = LocalDate.now();
+	}
+	public Comment(int issueId, Employee writer) throws IssueException {
+		this.setWriter(writer);
+		this.setIssueId(issueId);
+	}
+	public Comment(String comment, Employee writer, LocalDate date, int issueId) throws IssueException {
+		this(comment, writer);
+		this.setDate(date);
+		this.setIssueId(issueId);
+	}
+
+	// Setters
+	public void setComment(String comment) throws IssueException {
+		if (validator.stringValidator(comment)) {
+			this.comment = comment;
+		} else {
+			throw new IssueException("Invalid comment");
+		}
+	}
+
+	public void setDate(LocalDate date) throws IssueException {
+		if (validator.objectValidator(date)) {
+			this.date = date;
+		} else {
+			throw new IssueException("invalid date");
+		}
+	}
+
+	public void setIssueId(int issueId) throws IssueException {
+		if (validator.positiveNumberValidator(issueId)) {
+			this.issueId = issueId;
+		} else {
+			throw new IssueException("Invalid issue id");
+		}
+	}
+
+	public void setWriter(Employee emp) throws IssueException {
+		if (validator.objectValidator(emp)) {
+			this.writer = emp;
+		} else {
+			throw new IssueException("Invalid user");
+		}
+	}
+
+	// Getters
 	public String getComment() {
 		return comment;
 	}
@@ -49,25 +80,7 @@ public class Comment {
 		return date;
 	}
 
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
-
-	public void setDate(LocalDate date) {
-		this.date = date;
-	}
-
 	public int getIssueId() {
 		return issueId;
 	}
-
-	public void setIssueId(int issueId) {
-		this.issueId = issueId;
-	}
-
-	public void setWriter(Employee emp) {
-		this.writer = emp;
-
-	}
-
 }

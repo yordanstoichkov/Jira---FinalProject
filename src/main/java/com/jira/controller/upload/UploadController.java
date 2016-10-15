@@ -20,7 +20,7 @@ import com.jira.model.employee.Employee;
 import com.jira.model.employee.EmployeeDAO;
 import com.jira.model.employee.IEmployeeDAO;
 import com.jira.model.exceptions.EmployeeException;
-import com.jira.model.exceptions.IssueExeption;
+import com.jira.model.exceptions.IssueException;
 import com.jira.model.project.Issue;
 import com.jira.model.project.IssueDAO;
 import com.jira.model.project.Project;
@@ -37,7 +37,7 @@ public class UploadController {
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	public String uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("issueId") int issueId,
-			Model model, HttpSession session) throws IssueExeption {
+			Model model, HttpSession session) throws IssueException {
 		try {
 			Issue issue = null;
 			Project project = (Project) session.getAttribute("project");
@@ -60,9 +60,9 @@ public class UploadController {
 			picture.delete();
 			issueDAO.addIssueFile(issue);
 		} catch (IOException e) {
-			throw new IssueExeption("We can not upload this file right now. Try again later!", e);
-		} catch (IssueExeption e1) {
-			throw new IssueExeption("We can not upload this file right now. Try again later!", e1);
+			throw new IssueException("We can not upload this file right now. Try again later!", e);
+		} catch (IssueException e1) {
+			throw new IssueException("We can not upload this file right now. Try again later!", e1);
 		}
 
 		return "redirect:issue?issueId=" + issueId;
@@ -70,7 +70,7 @@ public class UploadController {
 
 	@RequestMapping(value = "/profile", method = RequestMethod.POST)
 	public String updateAvatar(@RequestParam("file") MultipartFile file, Model model, HttpSession session)
-			throws IssueExeption {
+			throws IssueException {
 		Employee user = (Employee) session.getAttribute("user");
 		model.addAttribute("user", user);
 		String[] path = file.getOriginalFilename().split("\\\\");
@@ -83,10 +83,10 @@ public class UploadController {
 			employeeDAO.updateAvatar(url, user.getEmployeeID());
 			
 		} catch (IOException e) {
-			throw new IssueExeption("We can not upload this picture right now. Try again later!", e);
+			throw new IssueException("We can not upload this picture right now. Try again later!", e);
 
 		} catch (EmployeeException e) {
-			throw new IssueExeption("We can not upload this picture right now. Try again later!", e);
+			throw new IssueException("We can not upload this picture right now. Try again later!", e);
 
 		}
 		avatar.delete();

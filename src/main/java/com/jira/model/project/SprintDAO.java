@@ -6,17 +6,23 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import com.jira.model.connections.DBConnection;
-import com.jira.model.exceptions.IssueExeption;
-import com.jira.model.exceptions.ProjectException;
+import com.jira.model.employee.IValidator;
+import com.jira.model.exceptions.IssueException;
+import com.jira.model.exceptions.PartOfProjectException;
 import com.jira.model.exceptions.SprintException;
 
 @Component
 public class SprintDAO implements ISprintDAO {
+	@Autowired
+	private IValidator validator;
+	@Autowired
+	private IIssueDAO issueDAO;
+	@Autowired
+	private IPartOfProjectDAO partDAO;
+
 	private static final int STATUS_ID_OF_DONE = 4;
 	private static final int STATUS_ID_OF_IN_PROGRESS = 2;
 	private static final int STATUS_ID_OF_TO_DO = 1;
@@ -27,21 +33,10 @@ public class SprintDAO implements ISprintDAO {
 	private static final String START_SPRINT_SQL = "UPDATE sprints SET start_date=?, end_date=?, sprint_goal=?, status_id=? WHERE sprint_id=?";
 	private static final String UPDATE_SPRINT_STATUS_SQL = "UPDATE sprints SET status_id=? WHERE sprint_id=?";
 
-	@Autowired
-	private IIssueDAO issueDAO;
-	@Autowired
-	private IPartOfProjectDAO partDAO;
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.jira.model.project.ISprintDAO#createSprint(com.jira.model.project.
-	 * Sprint)
-	 */
+	// Creating new sprint
 	@Override
 	public int createSprint(Sprint sprint) throws SprintException {
-		if (sprint == null) {
+		if (validator.objectValidator(sprint)) {
 			throw new SprintException("Invalid sprint entered");
 		}
 		Connection connection = DBConnection.getConnection();
@@ -67,7 +62,6 @@ public class SprintDAO implements ISprintDAO {
 				connection.rollback();
 			} catch (SQLException e1) {
 				throw new SprintException("You can not make your sprint right now! Please,try again later!", e1);
-
 			}
 			throw new SprintException("You can not make your sprint right now! Please,try again later!", e);
 		} finally {
@@ -79,14 +73,10 @@ public class SprintDAO implements ISprintDAO {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.jira.model.project.ISprintDAO#getSprint(int)
-	 */
+	// Getting sprint by sprint id
 	@Override
 	public Sprint getSprint(int sprintID) throws SprintException {
-		if (sprintID <= 0) {
+		if (validator.positiveNumberValidator(sprintID)) {
 			throw new SprintException("Invalid sprint id entered");
 		}
 		Connection connection = DBConnection.getConnection();
@@ -111,18 +101,18 @@ public class SprintDAO implements ISprintDAO {
 			}
 		} catch (SQLException e) {
 			throw new SprintException("Something went wrong can't get your sprint", e);
-		} catch (ProjectException e) {
-			throw new SprintException("Something went wrong can't get your sprint", e);
 		} catch (PartOfProjectException e) {
 			throw new SprintException("Something went wrong can't get your sprint", e);
-		} catch (IssueExeption e) {
+		} catch (IssueException e) {
 			throw new SprintException("Something went wrong can't get your sprint", e);
 		}
 		return result;
 	}
 
+	// Setting start date, end date, goal,status and id of sprint
+	@Override
 	public void startSprint(Sprint sprint) throws SprintException {
-		if (sprint == null) {
+		if (validator.objectValidator(sprint)) {
 			throw new SprintException("Invalid sprint entered");
 		}
 
@@ -137,20 +127,20 @@ public class SprintDAO implements ISprintDAO {
 			sprintStPS.setInt(5, sprint.getSprintId());
 			sprintStPS.executeUpdate();
 		} catch (SQLException e) {
-			throw new SprintException("Something went wrong can't start your sprint", e);
+			throw new SprintException("Something went wrong and can't start your sprint now.", e);
 		} catch (PartOfProjectException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new SprintException("Something went wrong and can't start your sprint now.", e);
 		}
 	}
 
+	// Changing sprint status by sprint id
+	@Override
 	public void updateSprintStatus(int sprintId) throws SprintException {
-		if (sprintId <= 0) {
+		if (validator.positiveNumberValidator(sprintId)) {
 			throw new SprintException("Invalid issue given");
 		}
-		int newStatusId = 1;
-
 		Connection connection = DBConnection.getConnection();
+		int newStatusId = 1;
 		try {
 			connection.setAutoCommit(false);
 			PreparedStatement ps = connection.prepareStatement(SELECT_SPRINT_SQL);
@@ -170,20 +160,19 @@ public class SprintDAO implements ISprintDAO {
 
 			ps2.setInt(2, sprintId);
 			ps2.executeUpdate();
-
 			connection.commit();
 		} catch (SQLException e) {
 			try {
 				connection.rollback();
 			} catch (SQLException e1) {
-				throw new SprintException("You can not change the status of issue right now! Try again later!");
+				throw new SprintException("You can not change the status of issue right now! Try again later!", e1);
 			}
-			throw new SprintException("You can not change the status of issue right now! Try again later!");
+			throw new SprintException("You can not change the status of issue right now! Try again later!", e);
 		} finally {
 			try {
 				connection.setAutoCommit(true);
 			} catch (SQLException e) {
-				throw new SprintException("You can not change the status of issue right now! Try again later!");
+				throw new SprintException("You can not change the status of issue right now! Try again later!", e);
 
 			}
 		}

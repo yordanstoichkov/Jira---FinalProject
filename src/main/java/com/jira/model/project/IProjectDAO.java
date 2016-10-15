@@ -1,7 +1,6 @@
 package com.jira.model.project;
 
 import java.time.LocalDate;
-
 import com.jira.model.employee.Employee;
 import com.jira.model.exceptions.ProjectException;
 

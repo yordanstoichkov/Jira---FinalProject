@@ -1,32 +1,34 @@
 package com.jira.model.project;
 
 import java.sql.Connection;
+import com.jira.model.exceptions.PartOfProjectException;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import com.jira.model.comment.Comment;
 import com.jira.model.connections.DBConnection;
 import com.jira.model.employee.Employee;
-import com.jira.model.employee.EmployeeDAO;
 import com.jira.model.employee.IEmployeeDAO;
+import com.jira.model.employee.IValidator;
 import com.jira.model.exceptions.EmployeeException;
-import com.jira.model.exceptions.IssueExeption;
+import com.jira.model.exceptions.IssueException;
 import com.jira.model.exceptions.ProjectException;
 
 @Component
 public class IssueDAO implements IIssueDAO {
+	@Autowired
+	private IValidator validator;
+	@Autowired
+	private IPartOfProjectDAO partDAO;
+	@Autowired
+	private IEmployeeDAO employeeDAO;
 
 	private static final int STATUS_ID_OF_DONE = 4;
 	private static final int STATUS_ID_OF_IN_PROGRESS = 2;
@@ -34,7 +36,6 @@ public class IssueDAO implements IIssueDAO {
 	private static final String CREATE_ISSUE_SQL = "INSERT INTO issues VALUES(NULL , NULL, ?, ?, ? , ? , NULL, ?, ?, NULL);";
 	private static final String INSERT_ISSUE_ASSIGNEE = "INSERT INTO issues_developers VALUES(?,?)";
 	private static final String UPDATE_ISSUE_DECRIPTION_SQL = "UPDATE issues SET description = ? WHERE issue_id=?";
-	private static final String GET_SPRINT_ID_SQL = "SELECT sprint_id FROM sprints WHERE sprin";
 	private static final String SET_SPRINT_TO_ISSUE_SQL = "UPDATE issues SET sprint_id = ? WHERE issue_id = ?";
 	private static final String GET_ISSUE_COUNT_SQL = "SELECT count(*) as 'issue_count' FROM issues";
 	private static final String GET_ISSUE_SQL = "SELECT * FROM issues WHERE issue_id = ?";
@@ -45,36 +46,21 @@ public class IssueDAO implements IIssueDAO {
 	private static final String ADD_ISSUE_FILE_SQL = "UPDATE issues SET file_path=? WHERE issue_id= ?";
 	private static final String DELETE_ISSUE_SQL = "DELETE FROM issues WHERE issue_id=?";
 
-	@Autowired
-	private IPartOfProjectDAO partDAO;
-	@Autowired
-	private IEmployeeDAO employeeDAO;
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.jira.model.project.IIssueDAO#createIssue(com.jira.model.project.
-	 * Issue)
-	 */
+	// Creating new issue
 	@Override
-	public int createIssue(Issue issue) throws IssueExeption {
-		if (issue == null) {
-			throw new IssueExeption("Invalid issue given");
+	public int createIssue(Issue issue) throws IssueException {
+		if (!validator.objectValidator(issue)) {
+			throw new IssueException("Invalid issue given");
 		}
 		Connection connection = DBConnection.getConnection();
 		int issueID = 0;
 		try {
 			connection.setAutoCommit(false);
-
 			int statusID = partDAO.getStatusID(issue.getStatus());
-
 			int typeID = partDAO.getTypeID(issue.getType());
-
 			int priorityID = partDAO.getPriorityID(issue.getPriority());
-
 			PreparedStatement ps = connection.prepareStatement(CREATE_ISSUE_SQL, Statement.RETURN_GENERATED_KEYS);
 			ps.setInt(1, issue.getSprint().getSprintId());
-
 			ps.setInt(2, statusID);
 			ps.setInt(3, typeID);
 			ps.setString(4, issue.getTitle());
@@ -88,181 +74,83 @@ public class IssueDAO implements IIssueDAO {
 			issue.setIssueId(issueID);
 
 			List<Integer> asignees = issue.getAsignees();
-
 			for (Integer assigneeID : asignees) {
-
 				if (assigneeID != 0) {
 					PreparedStatement insertAsignee = connection.prepareStatement(INSERT_ISSUE_ASSIGNEE);
 					insertAsignee.setInt(1, assigneeID);
 					insertAsignee.setInt(2, issueID);
-
 					insertAsignee.executeUpdate();
 				}
 			}
-
 			connection.commit();
-
 		} catch (SQLException e) {
 			try {
 				connection.rollback();
 			} catch (SQLException e1) {
-				throw new IssueExeption("This issue cannot be created right now", e);
+				throw new IssueException("This issue cannot be created right now", e1);
 			}
-			throw new IssueExeption("This issue cannot be created right now", e);
+			throw new IssueException("This issue cannot be created right now", e);
 		} catch (Exception e) {
-			throw new IssueExeption("This issue cannot be created right now", e);
-
+			throw new IssueException("This issue cannot be created right now", e);
 		} finally {
 			try {
 				connection.setAutoCommit(true);
 			} catch (SQLException e) {
-				throw new IssueExeption("This issue cannot be created right now", e);
+				throw new IssueException("This issue cannot be created right now", e);
 			}
 		}
 		return issueID;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.jira.model.project.IIssueDAO#addDescriptionToIssue(com.jira.model.
-	 * project.Issue)
-	 */
+	// Set issue's sprint
 	@Override
-	public void addDescriptionToIssue(Issue issue) throws IssueExeption {
-		if (issue == null) {
-			throw new IssueExeption("Invalid issue given");
+	public void addIssueToSprint(Issue issue, Sprint sprint) throws IssueException {
+		if ((!validator.objectValidator(issue) || (!validator.objectValidator(sprint)))) {
+			throw new IssueException("Invalid issue or sprint given");
 		}
 		Connection connection = DBConnection.getConnection();
-
-		try {
-			PreparedStatement updateIssue = connection.prepareStatement(UPDATE_ISSUE_DECRIPTION_SQL);
-			updateIssue.setString(1, issue.getDescription());
-			updateIssue.setInt(2, issue.getIssueId());
-			updateIssue.executeUpdate();
-		} catch (SQLException e) {
-			throw new IssueExeption("This issue description couldn't be added");
-		}
-
-	}
-
-	public int updateIssueStatus(int issueId) throws IssueExeption {
-		if (issueId <= 0) {
-			throw new IssueExeption("Invalid issue given");
-		}
-		int newStatusId = 1;
-
-		Connection connection = DBConnection.getConnection();
-		try {
-			connection.setAutoCommit(false);
-			PreparedStatement ps = connection.prepareStatement(GET_ISSUE_SQL);
-			ps.setInt(1, issueId);
-			ResultSet rs = ps.executeQuery();
-			rs.next();
-			int statusId = rs.getInt("status_id");
-			PreparedStatement updateIssue = connection.prepareStatement(UPDATE_STATUS_ID);
-			if (statusId == STATUS_ID_OF_TO_DO) {
-				updateIssue.setInt(1, STATUS_ID_OF_IN_PROGRESS);
-				newStatusId = STATUS_ID_OF_IN_PROGRESS;
-			}
-			if (statusId == STATUS_ID_OF_IN_PROGRESS) {
-				updateIssue.setInt(1, STATUS_ID_OF_DONE);
-				newStatusId = STATUS_ID_OF_DONE;
-			}
-
-			updateIssue.setInt(2, issueId);
-			updateIssue.executeUpdate();
-
-			connection.commit();
-		} catch (SQLException e) {
-			try {
-				connection.rollback();
-			} catch (SQLException e1) {
-				throw new IssueExeption("You can not change the status of issue right now! Try again later!",e1);
-			}
-			throw new IssueExeption("You can not change the status of issue right now! Try again later!",e);
-		} finally {
-			try {
-				connection.setAutoCommit(true);
-			} catch (SQLException e) {
-				throw new IssueExeption("You can not change the status of issue right now! Try again later!",e);
-
-			}
-		}
-		return newStatusId;
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.jira.model.project.IIssueDAO#addIssueToSprint(com.jira.model.project.
-	 * Issue, com.jira.model.project.Sprint)
-	 */
-	@Override
-	public void addIssueToSprint(Issue issue, Sprint sprint) throws IssueExeption {
-		if (issue == null) {
-			throw new IssueExeption("Invalid issue given");
-		}
-		Connection connection = DBConnection.getConnection();
-
 		try {
 			PreparedStatement statusPS = connection.prepareStatement(SET_SPRINT_TO_ISSUE_SQL);
 			statusPS.setInt(1, sprint.getSprintId());
 			statusPS.setInt(2, issue.getIssueId());
-
 			statusPS.executeUpdate();
-
 		} catch (SQLException e) {
 			try {
 				connection.rollback();
 			} catch (SQLException e1) {
-				throw new IssueExeption("This issue cannot be created right now", e);
+				throw new IssueException("This issue cannot be created right now", e1);
 			}
-			throw new IssueExeption("This issue cannot be created right now", e);
+			throw new IssueException("This issue cannot be created right now", e);
 		} finally {
 			try {
 				connection.setAutoCommit(true);
 			} catch (SQLException e) {
-				throw new IssueExeption("This issue cannot be created right now", e);
+				throw new IssueException("This issue cannot be created right now", e);
 			}
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.jira.model.project.IIssueDAO#getIssueCount()
-	 */
+	// Deleting issue by issue id
 	@Override
-	public int getIssueCount() throws IssueExeption {
-		Connection connection = DBConnection.getConnection();
-
-		int issueCount = 0;
-		try {
-			PreparedStatement statusPS = connection.prepareStatement(GET_ISSUE_COUNT_SQL);
-			ResultSet result = statusPS.executeQuery();
-			result.next();
-			issueCount = result.getInt("issue_count");
-
-		} catch (SQLException e) {
-			throw new IssueExeption("There was a problem getting the number", e);
+	public void deleteIssue(int issueId) throws IssueException {
+		if (!validator.positiveNumberValidator(issueId)) {
+			throw new IssueException("Invalid issue id");
 		}
-		return issueCount;
-
+		Connection connection = DBConnection.getConnection();
+		try {
+			PreparedStatement issueDelPS = connection.prepareStatement(DELETE_ISSUE_SQL);
+			issueDelPS.setInt(1, issueId);
+			issueDelPS.executeUpdate();
+		} catch (SQLException e) {
+			throw new IssueException("We can not delete issue right now. Please, try again later!", e);
+		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.jira.model.project.IIssueDAO#getIssue(int)
-	 */
+	// Getting issue by issue id
 	@Override
-	public Issue getIssue(int issueID) throws IssueExeption {
-		if (issueID <= 0) {
-			throw new IssueExeption("Invalid issue given");
+	public Issue getIssue(int issueID) throws IssueException {
+		if (!validator.positiveNumberValidator(issueID)) {
+			throw new IssueException("Invalid issue id");
 		}
 		Connection connection = DBConnection.getConnection();
 		Issue result = null;
@@ -284,10 +172,10 @@ public class IssueDAO implements IIssueDAO {
 			WorkFlow status = partDAO.getStatus(statusID);
 			result = new Issue(title, status);
 			result.setIssueId(issueID);
-			if (pathFile != null) {
+			if (validator.objectValidator(pathFile)) {
 				result.setFilePath(pathFile);
 			}
-			if (description != null) {
+			if (validator.objectValidator(description)) {
 				result.setDescription(description);
 			}
 			result.setType(type);
@@ -305,16 +193,23 @@ public class IssueDAO implements IIssueDAO {
 				result.setEmployees(employeeDAO.getEmployeeById(asigneeId));
 			}
 		} catch (SQLException e) {
-			throw new IssueExeption("Unfortunately your issue couln't be found", e);
+			throw new IssueException("Unfortunately your issue couln't be found", e);
 		} catch (ProjectException e) {
-			throw new IssueExeption("Unfortunately your issue couln't be found", e);
+			throw new IssueException("Unfortunately your issue couln't be found", e);
 		} catch (PartOfProjectException e) {
-			throw new IssueExeption("Unfortunately your issue couln't be found", e);
+			throw new IssueException("Unfortunately your issue couln't be found", e);
+		} catch (EmployeeException e) {
+			throw new IssueException("Unfortunately your issue couln't be found", e);
 		}
 		return result;
 	}
 
-	public List<Comment> getComments(int issueId) throws IssueExeption {
+	// Getting all comments of issue by issue id
+	@Override
+	public List<Comment> getComments(int issueId) throws IssueException {
+		if (!validator.positiveNumberValidator(issueId)) {
+			throw new IssueException("Invalid issue id.");
+		}
 		Connection connection = DBConnection.getConnection();
 		List<Comment> commentsOfIssue = new ArrayList<>();
 		try {
@@ -331,14 +226,20 @@ public class IssueDAO implements IIssueDAO {
 				comment.setDate(localDate);
 				commentsOfIssue.add(comment);
 			}
-
 		} catch (SQLException e) {
-			throw new IssueExeption("We can get comments right now. Please, try again later!");
+			throw new IssueException("We can get comments right now. Please, try again later!", e);
+		} catch (EmployeeException e) {
+			throw new IssueException("We can get comments right now. Please, try again later!", e);
 		}
 		return commentsOfIssue;
 	}
 
-	public void commentIssue(Comment comment) throws IssueExeption {
+	// Adding comment of issue
+	@Override
+	public void commentIssue(Comment comment) throws IssueException {
+		if (!validator.objectValidator(comment)) {
+			throw new IssueException("Invalid comment");
+		}
 		Connection connection = DBConnection.getConnection();
 		try {
 			PreparedStatement ps = connection.prepareStatement(INSERT_ISSUE_COMMENT_SQL);
@@ -347,41 +248,104 @@ public class IssueDAO implements IIssueDAO {
 			ps.setInt(3, comment.getIssueId());
 			ps.setInt(4, comment.getWriter().getEmployeeID());
 			ps.executeUpdate();
-
 		} catch (SQLException e) {
-			throw new IssueExeption("We can insert comment right now. Please, try again later!");
-
+			throw new IssueException("We can insert comment right now. Please, try again later!", e);
 		}
 	}
 
-	public void addIssueFile(Issue issue) throws IssueExeption {
+	// Adding issue's file
+	@Override
+	public void addIssueFile(Issue issue) throws IssueException {
+		if (!validator.objectValidator(issue)) {
+			throw new IssueException("Invalid issue");
+		}
 		Connection connection = DBConnection.getConnection();
 		try {
 			PreparedStatement ps = connection.prepareStatement(ADD_ISSUE_FILE_SQL);
 			ps.setString(1, issue.getFilePath());
 			ps.setInt(2, issue.getIssueId());
 			ps.executeUpdate();
-
 		} catch (SQLException e) {
-			throw new IssueExeption("We can insert file right now. Please, try again later!");
-
+			throw new IssueException("We can insert file right now. Please, try again later!", e);
 		}
 	}
 
+	// Adding description of issue
 	@Override
-	public void deleteIssue(int issueId) throws IssueExeption {
+	public void addDescriptionToIssue(Issue issue) throws IssueException {
+		if (!validator.objectValidator(issue)) {
+			throw new IssueException("Invalid issue given");
+		}
 		Connection connection = DBConnection.getConnection();
 		try {
-			PreparedStatement issueDelPS = connection.prepareStatement(DELETE_ISSUE_SQL);
-			issueDelPS.setInt(1, issueId);
-			issueDelPS.executeUpdate();
-
+			PreparedStatement updateIssue = connection.prepareStatement(UPDATE_ISSUE_DECRIPTION_SQL);
+			updateIssue.setString(1, issue.getDescription());
+			updateIssue.setInt(2, issue.getIssueId());
+			updateIssue.executeUpdate();
 		} catch (SQLException e) {
-			throw new IssueExeption("We can not delete issue right now. Please, try again later!", e);
-
+			throw new IssueException("This issue description couldn't be added", e);
 		}
-
 	}
 
+	// Changing issue status by issue id
+	@Override
+	public int updateIssueStatus(int issueId) throws IssueException {
+		if (validator.positiveNumberValidator(issueId)) {
+			throw new IssueException("Invalid issue id");
+		}
+		int newStatusId = 1;
+		Connection connection = DBConnection.getConnection();
+		try {
+			connection.setAutoCommit(false);
+			PreparedStatement ps = connection.prepareStatement(GET_ISSUE_SQL);
+			ps.setInt(1, issueId);
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			int statusId = rs.getInt("status_id");
+			PreparedStatement updateIssue = connection.prepareStatement(UPDATE_STATUS_ID);
+			if (statusId == STATUS_ID_OF_TO_DO) {
+				updateIssue.setInt(1, STATUS_ID_OF_IN_PROGRESS);
+				newStatusId = STATUS_ID_OF_IN_PROGRESS;
+			}
+			if (statusId == STATUS_ID_OF_IN_PROGRESS) {
+				updateIssue.setInt(1, STATUS_ID_OF_DONE);
+				newStatusId = STATUS_ID_OF_DONE;
+			}
+			updateIssue.setInt(2, issueId);
+			updateIssue.executeUpdate();
+			connection.commit();
+		} catch (SQLException e) {
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {
+				throw new IssueException("You can not change the status of issue right now! Try again later!", e1);
+			}
+			throw new IssueException("You can not change the status of issue right now! Try again later!", e);
+		} finally {
+			try {
+				connection.setAutoCommit(true);
+			} catch (SQLException e) {
+				throw new IssueException("You can not change the status of issue right now! Try again later!", e);
+
+			}
+		}
+		return newStatusId;
+	}
+
+	// Getting IdeaTracker issues count
+	@Override
+	public int getIssueCount() throws IssueException {
+		Connection connection = DBConnection.getConnection();
+		int issueCount = 0;
+		try {
+			PreparedStatement statusPS = connection.prepareStatement(GET_ISSUE_COUNT_SQL);
+			ResultSet result = statusPS.executeQuery();
+			result.next();
+			issueCount = result.getInt("issue_count");
+		} catch (SQLException e) {
+			throw new IssueException("There was a problem getting issues number", e);
+		}
+		return issueCount;
+	}
 
 }

@@ -13,7 +13,7 @@ import com.amazonaws.http.HttpRequest;
 import com.jira.model.employee.EmployeeDAO;
 import com.jira.model.employee.IEmployeeDAO;
 import com.jira.model.exceptions.EmployeeException;
-import com.jira.model.exceptions.IssueExeption;
+import com.jira.model.exceptions.IssueException;
 import com.jira.model.exceptions.ProjectException;
 import com.jira.model.project.IIssueDAO;
 import com.jira.model.project.IProjectDAO;
@@ -32,7 +32,7 @@ public class HomeController {
 	private IIssueDAO issueDAO;
 
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
-	public String showIndex(Model model, HttpServletRequest request) {
+	public String login(Model model, HttpServletRequest request) {
 		try {
 			int usersCount = empDAO.getUserCount();
 			int projectsCount = projectDAO.getProjectCount();
@@ -40,15 +40,12 @@ public class HomeController {
 			model.addAttribute("usersCount", usersCount);
 			model.addAttribute("projectsCount", projectsCount);
 			model.addAttribute("issuesCount", issuesCount);
-			if (request.getSession(false) != null) {
-				model.addAttribute("user", request.getSession().getAttribute("user"));
-			}
 			return "index";
 		} catch (EmployeeException e) {
 			return "redirect:index";
 		} catch (ProjectException e) {
 			return "redirect:index";
-		} catch (IssueExeption e) {
+		} catch (IssueException e) {
 			return "redirect:index";
 		} catch (Exception e) {
 			return "error";
@@ -62,6 +59,15 @@ public class HomeController {
 			model.addAttribute("user", request.getSession().getAttribute("user"));
 		}
 		return "contact";
+	}
+
+	@RequestMapping(value = "/home", method = RequestMethod.GET)
+	public String showHomePage(Model model, HttpServletRequest request) {
+		if (request.getSession(false) != null) {
+			model.addAttribute("user", request.getSession().getAttribute("user"));
+			return "home";
+		}
+		return "index";
 	}
 
 }

@@ -1,7 +1,5 @@
 package com.jira.model.employee;
 
-import static org.hamcrest.CoreMatchers.is;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,25 +9,27 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
-
 import com.jira.model.connections.DBConnection;
 import com.jira.model.employee.Employee.Jobs;
 import com.jira.model.exceptions.EmployeeException;
-import com.jira.model.exceptions.IssueExeption;
+import com.jira.model.exceptions.IssueException;
 import com.jira.model.exceptions.ProjectException;
 import com.jira.model.project.IIssueDAO;
 import com.jira.model.project.IProjectDAO;
 import com.jira.model.project.Issue;
 import com.jira.model.project.Project;
-import com.jira.model.project.ProjectDAO;
 
 @Component
 public class EmployeeDAO implements IEmployeeDAO {
+	@Autowired
+	private IProjectDAO projectDAO;
+	@Autowired
+	private IIssueDAO issueDAO;
+	@Autowired
+	private IValidator validator;
+	
 	private static final String DELETE_USER_SQL = "DELETE from employees where employee_id = ?;";
 	private static final String REGISTER_USER_TO_DB_SQL = "INSERT into employees VALUES(NULL,?,?,?,?,md5(?),?);";
 	private static final String LOGIN_USER_SQL = "SELECT * FROM employees WHERE email = ? AND password = md5(?);";
@@ -50,23 +50,13 @@ public class EmployeeDAO implements IEmployeeDAO {
 	private static final String GET_EMPLOYEES_ISSUES = "SELECT DISTINCT(issue_id) FROM issues_developers WHERE developer_id=?";
 	private static final String UPDATE_AVATAR_SQL = "UPDATE employees SET avatar_path= ?  WHERE employee_id=?";
 
-	@Autowired
-	private IProjectDAO projectDAO;
-	@Autowired
-	private IIssueDAO issueDAO;
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see model.employee.IEmployeeDAO#registerUser(model.employee.Employee)
-	 */
+	// Register user
 	@Override
 	public int registerUser(Employee emp) throws EmployeeException {
-		if (!isEmployeeValid(emp)) {
+		if (!validator.objectValidator(emp)) {
 			throw new EmployeeException("This user is not valid");
 		}
 		Connection connection = DBConnection.getConnection();
-
 		int id = 0;
 		try {
 			connection.setAutoCommit(false);
@@ -79,7 +69,6 @@ public class EmployeeDAO implements IEmployeeDAO {
 
 			PreparedStatement ps = connection.prepareStatement(REGISTER_USER_TO_DB_SQL,
 					Statement.RETURN_GENERATED_KEYS);
-
 			ps.setString(1, emp.getFirstName());
 			ps.setString(2, emp.getLastName());
 			ps.setInt(3, jobID);
@@ -87,11 +76,9 @@ public class EmployeeDAO implements IEmployeeDAO {
 			ps.setString(5, emp.getPassword());
 			ps.setString(6, emp.getAvatarPath());
 			ps.executeUpdate();
-
 			ResultSet rs = ps.getGeneratedKeys();
 			rs.next();
 			id = rs.getInt(1);
-
 			connection.commit();
 		} catch (SQLException e) {
 			try {
@@ -104,20 +91,34 @@ public class EmployeeDAO implements IEmployeeDAO {
 			try {
 				connection.setAutoCommit(true);
 			} catch (SQLException e) {
-				e.getMessage();
+				throw new EmployeeException("User cannot be registered now, please try again later.", e);
 			}
 		}
 		return id;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see model.employee.IEmployeeDAO#loginUser(model.employee.Employee)
-	 */
+	// Checking for unique email when register
+	@Override
+	public int validEmail(String email) throws EmployeeException {
+		if (!validator.stringValidator(email)) {
+			throw new EmployeeException("This email is not valid");
+		}
+		Connection connection = DBConnection.getConnection();
+		try {
+			PreparedStatement ps = connection.prepareStatement(SELECT_NUMBER_WITH_THIS_EMAIL_SQL);
+			ps.setString(1, email);
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			return rs.getInt("employee");
+		} catch (SQLException e) {
+			throw new EmployeeException("Can not check for this email right now! ", e);
+		}
+	}
+
+	// Login user
 	@Override
 	public int loginUser(Employee emp) throws EmployeeException {
-		if (!isEmployeeValid(emp)) {
+		if (!validator.objectValidator(emp)) {
 			throw new EmployeeException("This user is not valid");
 		}
 		Connection connection = DBConnection.getConnection();
@@ -156,14 +157,10 @@ public class EmployeeDAO implements IEmployeeDAO {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see model.employee.IEmployeeDAO#removeUser(model.employee.Employee)
-	 */
+	// Remove user
 	@Override
 	public int removeUser(Employee emp) throws EmployeeException {
-		if (!isEmployeeValid(emp)) {
+		if (!validator.objectValidator(emp)) {
 			throw new EmployeeException("This user is not valid");
 		}
 		Connection connection = DBConnection.getConnection();
@@ -177,192 +174,11 @@ public class EmployeeDAO implements IEmployeeDAO {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see model.employee.IEmployeeDAO#getEmployeeID(model.employee.Employee)
-	 */
-	@Override
-	public int getEmployeeID(Employee emp) throws EmployeeException {
-		if (!isEmployeeValid(emp)) {
-			throw new EmployeeException("This user is not valid");
+	// Getting user by user id
+	public Employee getEmployeeById(int employeeId) throws EmployeeException {
+		if (!validator.positiveNumberValidator(employeeId)) {
+			throw new EmployeeException("This employee id is not valid");
 		}
-		Connection connection = DBConnection.getConnection();
-
-		int assigneeID = 0;
-		try {
-			PreparedStatement asigneePS = connection.prepareStatement(GET_EMPLOYEE_ID_SQL);
-			asigneePS.setString(1, emp.getEmail());
-			ResultSet asigneeRS = asigneePS.executeQuery();
-
-			asigneeRS.next();
-			assigneeID = asigneeRS.getInt("employee_id");
-		} catch (SQLException e) {
-			throw new EmployeeException("There is no such user");
-		}
-		return assigneeID;
-	}
-
-	@Override
-	public int getEmployeeIdByEmail(String email) throws EmployeeException {
-		Connection connection = DBConnection.getConnection();
-
-		int assigneeID = 0;
-		try {
-			PreparedStatement asigneePS = connection.prepareStatement(GET_EMPLOYEE_ID_SQL);
-			asigneePS.setString(1, email);
-			ResultSet asigneeRS = asigneePS.executeQuery();
-
-			asigneeRS.next();
-			assigneeID = asigneeRS.getInt("employee_id");
-		} catch (SQLException e) {
-			throw new EmployeeException("There is no such user");
-		}
-		return assigneeID;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see model.employee.IEmployeeDAO#getUserCount()
-	 */
-	@Override
-	public int getUserCount() throws EmployeeException {
-		Connection connection = DBConnection.getConnection();
-
-		int userCount = 0;
-		try {
-			PreparedStatement usersPS = connection.prepareStatement(SELECT_USERS_COUNT);
-			ResultSet users = usersPS.executeQuery();
-			users.next();
-			userCount = users.getInt("employee_count");
-
-		} catch (SQLException e) {
-			throw new EmployeeException("Couldn't get the count", e);
-		}
-		return userCount;
-
-	}
-
-	private boolean isEmployeeValid(Employee emp) {
-		return emp != null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see model.employee.IEmployeeDAO#validEmail(java.lang.String)
-	 */
-	@Override
-	public int validEmail(String email) throws EmployeeException {
-		Connection connection = DBConnection.getConnection();
-		try {
-			PreparedStatement ps = connection.prepareStatement(SELECT_NUMBER_WITH_THIS_EMAIL_SQL);
-			ps.setString(1, email);
-			ResultSet rs = ps.executeQuery();
-			rs.next();
-			return rs.getInt("employee");
-		} catch (SQLException e) {
-			throw new EmployeeException("Can not check for this email right now! ", e);
-
-		}
-	}
-
-	@Override
-	public List<Project> giveMyProjects(Employee emp) throws EmployeeException {
-		Connection connection = DBConnection.getConnection();
-		List<Project> result = new ArrayList<Project>();
-		Set<Integer> projectsID = new HashSet<Integer>();
-		try {
-			PreparedStatement projectsPS = connection.prepareStatement(SELECT_ALL_USER_PROJECTS);
-			projectsPS.setInt(1, emp.getEmployeeID());
-			ResultSet projectRS = projectsPS.executeQuery();
-			while (projectRS.next()) {
-				int projectid = projectRS.getInt(1);
-				projectsID.add(projectid);
-			}
-			if (emp.getJob() == Jobs.MANAGER) {
-				PreparedStatement projectManPS = connection.prepareStatement(SELECT_ALL_MANAGER_PROJECTS);
-				projectManPS.setInt(1, emp.getEmployeeID());
-				ResultSet projectManRS = projectManPS.executeQuery();
-				while (projectManRS.next()) {
-					int projectid = projectManRS.getInt(1);
-					projectsID.add(projectid);
-				}
-			}
-			for (Integer projectID : projectsID) {
-				result.add(projectDAO.getProject(projectID));
-			}
-
-		} catch (SQLException e) {
-			throw new EmployeeException("We have problems and can't get your projects", e);
-		} catch (ProjectException e) {
-			throw new EmployeeException("We have problems and can't get your projects", e);
-		}
-		return result;
-	}
-
-	public List<Integer> getDevelopers(int issueId) throws EmployeeException {
-		List<Integer> developersId = new ArrayList<>();
-		Connection connection = DBConnection.getConnection();
-		PreparedStatement ps;
-		try {
-			ps = connection.prepareStatement(SELECT_DEVELOPERS_OF_ISSUE_SQL);
-			ps.setInt(1, issueId);
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				developersId.add(rs.getInt(1));
-			}
-
-		} catch (SQLException e1) {
-			throw new EmployeeException("We have problems and can't get developers now!", e1);
-
-		}
-		return developersId;
-
-	}
-
-	public List<Integer> getReviewers(int issueId) throws EmployeeException {
-		List<Integer> reviewersId = new ArrayList<>();
-		Connection connection = DBConnection.getConnection();
-		PreparedStatement ps;
-		try {
-			ps = connection.prepareStatement(SELECT_REVIEWERS_OF_ISSUE_SQL);
-			ps.setInt(1, issueId);
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				reviewersId.add(rs.getInt(1));
-			}
-
-		} catch (SQLException e1) {
-			throw new EmployeeException("We have problems and can't get reviewers now!", e1);
-
-		}
-		return reviewersId;
-
-	}
-
-	public List<Integer> getManagers(int projectId) throws EmployeeException {
-		List<Integer> managersId = new ArrayList<>();
-		Connection connection = DBConnection.getConnection();
-		PreparedStatement ps;
-		try {
-			ps = connection.prepareStatement(SELECT_ALL_PROJECT_MANAGERS);
-			ps.setInt(1, projectId);
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				managersId.add(rs.getInt(1));
-			}
-
-		} catch (SQLException e1) {
-			throw new EmployeeException("We have problems and can't get managers now!", e1);
-
-		}
-		return managersId;
-
-	}
-
-	public Employee getEmployeeById(int employeeId) {
 		Connection connection = DBConnection.getConnection();
 		Employee employee = null;
 		try {
@@ -392,38 +208,114 @@ public class EmployeeDAO implements IEmployeeDAO {
 				}
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new EmployeeException("Can get this employee right now. Try again later!", e);
 		} catch (EmployeeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new EmployeeException("Can get this employee right now. Try again later!", e);
 		}
 		return employee;
-
 	}
 
-	public List<String> getEmployeesNames() {
-		Connection connection = DBConnection.getConnection();
-		List<String> names = new ArrayList<String>();
-		try {
-			PreparedStatement ps = connection.prepareStatement(GET_EMPLOYEE_NAMES);
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				String firstName = rs.getString("first_name");
-				String lastName = rs.getString("last_name");
-				String email = rs.getString("email");
-				names.add(firstName + " " + lastName + ", " + email);
-			}
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	// Getting id of user by user
+	@Override
+	public int getEmployeeID(Employee emp) throws EmployeeException {
+		if (!validator.objectValidator(emp)) {
+			throw new EmployeeException("This user is not valid");
 		}
-		return names;
+		Connection connection = DBConnection.getConnection();
+		int assigneeID = 0;
+		try {
+			PreparedStatement asigneePS = connection.prepareStatement(GET_EMPLOYEE_ID_SQL);
+			asigneePS.setString(1, emp.getEmail());
+			ResultSet asigneeRS = asigneePS.executeQuery();
 
+			asigneeRS.next();
+			assigneeID = asigneeRS.getInt("employee_id");
+		} catch (SQLException e) {
+			throw new EmployeeException("Employee id cannot be taken right now, please try again later.", e);
+		}
+		return assigneeID;
 	}
 
+	// Getting id of user by email
+	@Override
+	public int getEmployeeIdByEmail(String email) throws EmployeeException {
+		if (!validator.stringValidator(email)) {
+			throw new EmployeeException("This email is not valid");
+		}
+		Connection connection = DBConnection.getConnection();
+		int assigneeID = 0;
+		try {
+			PreparedStatement asigneePS = connection.prepareStatement(GET_EMPLOYEE_ID_SQL);
+			asigneePS.setString(1, email);
+			ResultSet asigneeRS = asigneePS.executeQuery();
+
+			asigneeRS.next();
+			assigneeID = asigneeRS.getInt("employee_id");
+		} catch (SQLException e) {
+			throw new EmployeeException("There is no such user", e);
+		}
+		return assigneeID;
+	}
+
+	// Updating avatar of user
+	public void updateAvatar(String avatarPath, int employeeId) throws EmployeeException {
+		if ((!validator.stringValidator(avatarPath)) || (!validator.positiveNumberValidator(employeeId))) {
+			throw new EmployeeException("Invalid avatar path or employee id.");
+		}
+		Connection connection = DBConnection.getConnection();
+		PreparedStatement ps;
+		try {
+			ps = connection.prepareStatement(UPDATE_AVATAR_SQL);
+			ps.setString(1, avatarPath);
+			ps.setInt(2, employeeId);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			throw new EmployeeException("Currently we have a problem getting your image", e);
+		}
+	}
+
+	// Getting all projects of user
+	@Override
+	public List<Project> giveMyProjects(Employee emp) throws EmployeeException {
+		if (!validator.objectValidator(emp)) {
+			throw new EmployeeException("This user is not valid");
+		}
+		Connection connection = DBConnection.getConnection();
+		List<Project> result = new ArrayList<Project>();
+		Set<Integer> projectsID = new HashSet<Integer>();
+		try {
+			PreparedStatement projectsPS = connection.prepareStatement(SELECT_ALL_USER_PROJECTS);
+			projectsPS.setInt(1, emp.getEmployeeID());
+			ResultSet projectRS = projectsPS.executeQuery();
+			while (projectRS.next()) {
+				int projectid = projectRS.getInt(1);
+				projectsID.add(projectid);
+			}
+			if (emp.getJob() == Jobs.MANAGER) {
+				PreparedStatement projectManPS = connection.prepareStatement(SELECT_ALL_MANAGER_PROJECTS);
+				projectManPS.setInt(1, emp.getEmployeeID());
+				ResultSet projectManRS = projectManPS.executeQuery();
+				while (projectManRS.next()) {
+					int projectid = projectManRS.getInt(1);
+					projectsID.add(projectid);
+				}
+			}
+			for (Integer projectID : projectsID) {
+				result.add(projectDAO.getProject(projectID));
+			}
+		} catch (SQLException e) {
+			throw new EmployeeException("We have problems and can't get your projects", e);
+		} catch (ProjectException e) {
+			throw new EmployeeException("We have problems and can't get your projects", e);
+		}
+		return result;
+	}
+
+	// Getting all issues of user by user
 	public List<Issue> getEmployeesIssues(Employee emp) throws EmployeeException {
+		if (!validator.objectValidator(emp)) {
+			throw new EmployeeException("This user is not valid");
+		}
 		Connection connection = DBConnection.getConnection();
 		List<Integer> issuesId = new ArrayList<Integer>();
 		List<Issue> issues = new ArrayList<Issue>();
@@ -437,29 +329,109 @@ public class EmployeeDAO implements IEmployeeDAO {
 			for (Integer id : issuesId) {
 				issues.add(issueDAO.getIssue(id));
 			}
-
 		} catch (SQLException e) {
 			throw new EmployeeException("Currently we have a problem getting your issues", e);
-		} catch (IssueExeption e) {
+		} catch (IssueException e) {
 			throw new EmployeeException("Currently we have a problem getting your issues", e);
 		}
 		return issues;
-
 	}
 
-	public void updateAvatar(String avatarPath, int employeeId) throws EmployeeException {
+	// Getting developers of issue by issue id
+	public List<Integer> getDevelopers(int issueId) throws EmployeeException {
+		if (!validator.positiveNumberValidator(issueId)) {
+			throw new EmployeeException("This issue id is not valid");
+		}
+		List<Integer> developersId = new ArrayList<>();
 		Connection connection = DBConnection.getConnection();
 		PreparedStatement ps;
 		try {
-			ps = connection.prepareStatement(UPDATE_AVATAR_SQL);
-			ps.setString(1, avatarPath);
-			ps.setInt(2, employeeId);
-			ps.executeUpdate();
-		} catch (SQLException e) {
-			throw new EmployeeException("Currently we have a problem getting your image", e);
-
+			ps = connection.prepareStatement(SELECT_DEVELOPERS_OF_ISSUE_SQL);
+			ps.setInt(1, issueId);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				developersId.add(rs.getInt(1));
+			}
+		} catch (SQLException e1) {
+			throw new EmployeeException("We have problems and can't get developers now!", e1);
 		}
-
+		return developersId;
 	}
 
+	// Getting reviewers of issue by issue id
+	public List<Integer> getReviewers(int issueId) throws EmployeeException {
+		if (!validator.positiveNumberValidator(issueId)) {
+			throw new EmployeeException("This issue id is not valid");
+		}
+		List<Integer> reviewersId = new ArrayList<>();
+		Connection connection = DBConnection.getConnection();
+		PreparedStatement ps;
+		try {
+			ps = connection.prepareStatement(SELECT_REVIEWERS_OF_ISSUE_SQL);
+			ps.setInt(1, issueId);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				reviewersId.add(rs.getInt(1));
+			}
+		} catch (SQLException e1) {
+			throw new EmployeeException("We have problems and can't get reviewers now!", e1);
+		}
+		return reviewersId;
+	}
+
+	// Getting managers of project by project id
+	public List<Integer> getManagers(int projectId) throws EmployeeException {
+		if (!validator.positiveNumberValidator(projectId)) {
+			throw new EmployeeException("This project id is not valid");
+		}
+		List<Integer> managersId = new ArrayList<>();
+		Connection connection = DBConnection.getConnection();
+		PreparedStatement ps;
+		try {
+			ps = connection.prepareStatement(SELECT_ALL_PROJECT_MANAGERS);
+			ps.setInt(1, projectId);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				managersId.add(rs.getInt(1));
+			}
+		} catch (SQLException e1) {
+			throw new EmployeeException("We have problems and can't get managers now!", e1);
+		}
+		return managersId;
+	}
+
+	// Getting number of IdeaTracker's users
+	@Override
+	public int getUserCount() throws EmployeeException {
+		Connection connection = DBConnection.getConnection();
+		int userCount = 0;
+		try {
+			PreparedStatement usersPS = connection.prepareStatement(SELECT_USERS_COUNT);
+			ResultSet users = usersPS.executeQuery();
+			users.next();
+			userCount = users.getInt("employee_count");
+		} catch (SQLException e) {
+			throw new EmployeeException("Couldn't get the count", e);
+		}
+		return userCount;
+	}
+
+	// Getting list with names of IdeaTracker's users
+	public List<String> getEmployeesNames() throws EmployeeException {
+		Connection connection = DBConnection.getConnection();
+		List<String> names = new ArrayList<String>();
+		try {
+			PreparedStatement ps = connection.prepareStatement(GET_EMPLOYEE_NAMES);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				String firstName = rs.getString("first_name");
+				String lastName = rs.getString("last_name");
+				String email = rs.getString("email");
+				names.add(firstName + " " + lastName + ", " + email);
+			}
+		} catch (SQLException e) {
+			throw new EmployeeException("Can get employee names right now. Try again later!", e);
+		}
+		return names;
+	}
 }

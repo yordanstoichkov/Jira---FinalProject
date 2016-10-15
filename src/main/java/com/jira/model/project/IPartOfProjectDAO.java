@@ -1,5 +1,7 @@
 package com.jira.model.project;
 
+import com.jira.model.exceptions.PartOfProjectException;
+
 public interface IPartOfProjectDAO {
 
 	int getStatusID(WorkFlow status) throws PartOfProjectException;

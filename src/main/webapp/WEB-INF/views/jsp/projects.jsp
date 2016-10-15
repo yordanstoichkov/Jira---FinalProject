@@ -17,6 +17,9 @@
 
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta http-equiv="Expires" content="Sat, 01 Dec 2001 00:00:00 GMT">
 <script type="text/javascript" src="jquery-3.1.1.min.js"></script>
 <script type="text/javascript" src="apprise.js"></script>
 </head>
@@ -73,10 +76,10 @@
 						</div>
 						<div id="collapseOne" class="panel-collapse collapse in">
 							<div class="panel-body">
-								<div class="col-lg-3 col-md-2" style="padding-top:30px;">
+								<div class="col-lg-3 col-md-2" style="padding-top: 30px;">
 									<form action="./projectmain">
 										<a href="#" data-toggle="tooltip" title="Open project">
-											<button type="submit" id="track" name="projectId" 
+											<button type="submit" id="track" name="projectId"
 												value="${project.projectId}"
 												class="btn btn-outline btn-primary btn-lg">
 												<img src="eye.png" width=17px; height=17px;>
@@ -117,8 +120,8 @@
 											</div>
 										</div>
 										<div class="panel-footer">
-											<a href="./active"><span class="pull-left">View Details</span></a> <span
-												class="pull-right"><i
+											<a href="./active"><span class="pull-left">View
+													Details</span></a> <span class="pull-right"><i
 												class="fa fa-arrow-circle-right"></i></span>
 											<div class="clearfix"></div>
 										</div>
@@ -147,8 +150,8 @@
 										</div>
 
 										<div class="panel-footer">
-											<a href="./active"><span class="pull-left">View Details</span></a> <span
-												class="pull-right"><i
+											<a href="./active"><span class="pull-left">View
+													Details</span></a> <span class="pull-right"><i
 												class="fa fa-arrow-circle-right"></i></span>
 											<div class="clearfix"></div>
 										</div>
@@ -175,8 +178,8 @@
 											</div>
 										</div>
 										<div class="panel-footer">
-											<a href="./active"><span class="pull-left">View Details</span> </a><span
-												class="pull-right"><i
+											<a href="./active"><span class="pull-left">View
+													Details</span> </a><span class="pull-right"><i
 												class="fa fa-arrow-circle-right"></i></span>
 											<div class="clearfix"></div>
 										</div>

@@ -31,9 +31,9 @@ public interface IEmployeeDAO {
 
 	List<Integer> getManagers(int projectId) throws EmployeeException;
 
-	Employee getEmployeeById(int employeeId);
+	Employee getEmployeeById(int employeeId) throws EmployeeException;
 
-	public List<String> getEmployeesNames();
+	public List<String> getEmployeesNames() throws EmployeeException;
 
 	public List<Issue> getEmployeesIssues(Employee emp) throws EmployeeException;
 

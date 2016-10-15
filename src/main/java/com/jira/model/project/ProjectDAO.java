@@ -7,45 +7,36 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import com.jira.model.connections.DBConnection;
 import com.jira.model.employee.Employee;
+import com.jira.model.employee.IValidator;
 import com.jira.model.exceptions.ProjectException;
 import com.jira.model.exceptions.SprintException;
 
 @Component
 public class ProjectDAO implements IProjectDAO {
-	private static final String DELETE_PROJECT_SQL = "DELETE FROM projects WHERE project_id=?";
+	@Autowired
+	private IValidator validator;
+	@Autowired
+	private ISprintDAO sprintDAO;
 
+	private static final String DELETE_PROJECT_SQL = "DELETE FROM projects WHERE project_id=?";
 	private static final String INSERT_PROJECT_OF_MANAGER_SQL = "INSERT INTO project_managers VALUES (?, ?);";
 	private static final String INSERT_PROJECT_SQL = "INSERT INTO projects VALUES (null,null,null, ?);";
 	private static final String SET_RELEASE_DATE_SQL = "UPDATE projects SET release_date= ? WHERE project_id = ?";
 	private static final String SET_START_DATE_SQL = "UPDATE projects SET start_date= ? WHERE project_id = ?";
 	private static final String SELECT_PROJECT_COUNT = "SELECT count(*) as 'project_count' FROM projects";
-	private static final String SELECT_PROJECTS_ID_SQL = "SELECT project_id FROM project_managers where manager_id= ? ";
-	private static final String SELECT_PROJECTS_NAME_SQL = "SELECT title FROM projects where project_id = ? ";
 	private static final String SELECT_PROJECT_SQL = "SELECT * FROM projects WHERE project_id = ?";
 	private static final String SELECT_SPRINTS_SQL = "SELECT s.sprint_id " + "FROM sprints s "
 			+ "JOIN projects p ON (p.project_id=s.project_id) " + "WHERE p.project_id=?;";
-	@Autowired
-	private ISprintDAO sprintDAO;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.jira.model.project.IProjectDAO#createProject(com.jira.model.project.
-	 * Project, com.jira.model.employee.Employee)
-	 */
+	// Creating new project
 	@Override
 	public int createProject(Project project, Employee employee) throws ProjectException {
-		if (project == null || employee == null) {
-			throw new ProjectException("You entered invalid parameters");
+		if ((!validator.objectValidator(project)) || (!validator.objectValidator(employee))) {
+			throw new ProjectException("You entered invalid project or employee");
 		}
 		Connection connection = DBConnection.getConnection();
 		try {
@@ -79,89 +70,33 @@ public class ProjectDAO implements IProjectDAO {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.jira.model.project.IProjectDAO#setReleaseDate(com.jira.model.project.
-	 * Project, java.time.LocalDate)
-	 */
+	// Deleting project
 	@Override
-	public void setReleaseDate(Project project, LocalDate releaseDate) throws ProjectException {
-		if (project == null) {
-			throw new ProjectException("This is illegal project");
+	public int deleteProject(Project project) throws ProjectException {
+		if (!validator.objectValidator(project)) {
+			throw new ProjectException("This is invalid project");
 		}
 		Connection connection = DBConnection.getConnection();
+		int result = 0;
 		try {
-			PreparedStatement ps = connection.prepareStatement(SET_RELEASE_DATE_SQL);
-			Date date = Date.valueOf(releaseDate);
-			ps.setDate(1, date);
-			ps.setInt(2, project.getProjectId());
-			ps.executeUpdate();
-
+			PreparedStatement projectPS = connection.prepareStatement(DELETE_PROJECT_SQL,
+					Statement.RETURN_GENERATED_KEYS);
+			projectPS.setInt(1, project.getProjectId());
+			projectPS.executeUpdate();
+			ResultSet projectRS = projectPS.getGeneratedKeys();
+			projectRS.next();
+			result = projectRS.getInt(1);
 		} catch (SQLException e) {
-			throw new ProjectException(
-					"You can not set release date to your project right now! Please,try again later!");
+			throw new ProjectException("Something went wrong this project cannot be deleted", e);
 		}
+		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.jira.model.project.IProjectDAO#setStartDate(com.jira.model.project.
-	 * Project, java.time.LocalDate)
-	 */
-	@Override
-	public void setStartDate(Project project, LocalDate startDate) throws ProjectException {
-		if (project == null) {
-			throw new ProjectException("This is illegal project");
-		}
-		Connection connection = DBConnection.getConnection();
-		try {
-			Date date = Date.valueOf(startDate);
-			PreparedStatement ps = connection.prepareStatement(SET_START_DATE_SQL);
-			ps.setDate(1, date);
-			ps.setInt(2, project.getProjectId());
-			ps.executeUpdate();
-
-		} catch (SQLException e) {
-			throw new ProjectException("You can not set start date to your project right now! Please,try again later!");
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.jira.model.project.IProjectDAO#getProjectCount()
-	 */
-	@Override
-	public int getProjectCount() throws ProjectException {
-		Connection connection = DBConnection.getConnection();
-
-		int projectCount = 0;
-		try {
-			PreparedStatement projectPS = connection.prepareStatement(SELECT_PROJECT_COUNT);
-			ResultSet result = projectPS.executeQuery();
-			result.next();
-			projectCount = result.getInt("project_count");
-
-		} catch (SQLException e) {
-			throw new ProjectException("there was a problem getting the number");
-		}
-		return projectCount;
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.jira.model.project.IProjectDAO#getProject(int)
-	 */
+	// Getting project by project id
 	@Override
 	public Project getProject(int projectid) throws ProjectException {
-		if (projectid <= 0) {
-			throw new ProjectException("This is illegal project");
+		if (!validator.positiveNumberValidator(projectid)) {
+			throw new ProjectException("This is invalid project id");
 		}
 		Connection connection = DBConnection.getConnection();
 		Project result = null;
@@ -180,32 +115,64 @@ public class ProjectDAO implements IProjectDAO {
 				result.addSprint(sprintDAO.getSprint(sprintID));
 			}
 		} catch (SQLException e) {
-			throw new ProjectException("Something went wrong can't get your project", e);
+			throw new ProjectException("Something went wrong. Can't get your project", e);
 		} catch (SprintException e) {
-			throw new ProjectException("Something went wrong can't get your project", e);
+			throw new ProjectException("Something went wrong. Can't get your project", e);
 		}
 		return result;
 	}
 
+	// Setting start date of project
 	@Override
-	public int deleteProject(Project project) throws ProjectException {
-		if (project == null) {
-			throw new ProjectException("This is illegal project");
+	public void setStartDate(Project project, LocalDate startDate) throws ProjectException {
+		if ((!validator.objectValidator(project)) || (!validator.objectValidator(startDate))) {
+			throw new ProjectException("This is invalid project or date");
 		}
 		Connection connection = DBConnection.getConnection();
-		int result = 0;
 		try {
-			PreparedStatement projectPS = connection.prepareStatement(DELETE_PROJECT_SQL,
-					Statement.RETURN_GENERATED_KEYS);
-			projectPS.setInt(1, project.getProjectId());
-			projectPS.executeUpdate();
-			ResultSet projectRS = projectPS.getGeneratedKeys();
-			projectRS.next();
-			result = projectRS.getInt(1);
+			Date date = Date.valueOf(startDate);
+			PreparedStatement ps = connection.prepareStatement(SET_START_DATE_SQL);
+			ps.setDate(1, date);
+			ps.setInt(2, project.getProjectId());
+			ps.executeUpdate();
 		} catch (SQLException e) {
-			throw new ProjectException("Something went wrong this project cannot be deleted");
+			throw new ProjectException("You can not set start date to your project right now! Please,try again later!",
+					e);
 		}
+	}
 
-		return result;
+	// Setting release date of project
+	@Override
+	public void setReleaseDate(Project project, LocalDate releaseDate) throws ProjectException {
+		if ((!validator.objectValidator(project)) || (!validator.objectValidator(releaseDate))) {
+			throw new ProjectException("This is invalid project or date");
+		}
+		Connection connection = DBConnection.getConnection();
+		try {
+			PreparedStatement ps = connection.prepareStatement(SET_RELEASE_DATE_SQL);
+			Date date = Date.valueOf(releaseDate);
+			ps.setDate(1, date);
+			ps.setInt(2, project.getProjectId());
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			throw new ProjectException(
+					"You can not set release date to your project right now! Please,try again later!", e);
+		}
+	}
+
+	// Getting IdeaTracker's projects count
+	@Override
+	public int getProjectCount() throws ProjectException {
+		Connection connection = DBConnection.getConnection();
+		int projectCount = 0;
+		try {
+			PreparedStatement projectPS = connection.prepareStatement(SELECT_PROJECT_COUNT);
+			ResultSet result = projectPS.executeQuery();
+			result.next();
+			projectCount = result.getInt("project_count");
+		} catch (SQLException e) {
+			throw new ProjectException("there was a problem getting the number", e);
+		}
+		return projectCount;
 	}
 }

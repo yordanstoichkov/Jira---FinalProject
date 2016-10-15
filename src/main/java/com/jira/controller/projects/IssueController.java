@@ -26,7 +26,7 @@ import com.jira.model.comment.Comment;
 import com.jira.model.employee.Employee;
 import com.jira.model.employee.IEmployeeDAO;
 import com.jira.model.exceptions.EmployeeException;
-import com.jira.model.exceptions.IssueExeption;
+import com.jira.model.exceptions.IssueException;
 import com.jira.model.exceptions.ProjectException;
 import com.jira.model.exceptions.SprintException;
 import com.jira.model.project.IIssueDAO;
@@ -125,7 +125,7 @@ public class IssueController {
 			model.addAttribute("sprint", sprint);
 			model.addAttribute("message", e.getMessage());
 			return "newIssue";
-		} catch (IssueExeption e) {
+		} catch (IssueException e) {
 			model.addAttribute("emptyIssue", new Issue(sprint));
 			model.addAttribute("user", emp);
 			model.addAttribute("project", session.getAttribute("project"));
@@ -195,7 +195,7 @@ public class IssueController {
 			issue = issueDAO.getIssue(issueId);
 			model.addAttribute("issue", issue);
 			return "redirect:issue?issueId=" + issueId;
-		} catch (IssueExeption e) {
+		} catch (IssueException e) {
 			return "redirect:issue?issueId=" + issueId;
 		} catch (Exception e) {
 			return "error";
@@ -213,7 +213,7 @@ public class IssueController {
 		try {
 			issueDAO.deleteIssue(issueId);
 			return "redirect:projectmain?projectId=" + project.getProjectId();
-		} catch (IssueExeption e) {
+		} catch (IssueException e) {
 			return "redirect:projectmain?projectId=" + project.getProjectId();
 		} catch (Exception e) {
 			return "error";
@@ -291,7 +291,7 @@ public class IssueController {
 			model.addAttribute("emptycomment", new Comment());
 			model.addAttribute("commentsOfIssue", commentsOfIssue);
 			return "issue";
-		} catch (IssueExeption e) {
+		} catch (IssueException e) {
 			return "redirect:projectmain?projectId=" + project.getProjectId();
 		} catch (EmployeeException e) {
 			return "redirect:projectmain?projectId=" + project.getProjectId();
@@ -342,7 +342,7 @@ public class IssueController {
 				model.addAttribute("activeSprint", activeSprint);
 			}
 			return "active";
-		} catch (IssueExeption e) {
+		} catch (IssueException e) {
 			return "redirect:active";
 		} catch (PartOfProjectException e) {
 			return "redirect:active";

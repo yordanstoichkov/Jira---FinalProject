@@ -2,14 +2,16 @@ package com.jira.model.project;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
-import com.jira.model.exceptions.ProjectException;
+import org.springframework.beans.factory.annotation.Autowired;
+import com.jira.model.employee.IValidator;
 import com.jira.model.exceptions.SprintException;
 
 public class Sprint {
+	@Autowired
+	private IValidator validator;
+
 	private Project project;
 	private List<Issue> issues = new ArrayList<Issue>();
 	private LocalDate endDate;
@@ -19,63 +21,76 @@ public class Sprint {
 	private String title;
 	private String sprintGoal;
 
-	public Sprint(String title) throws ProjectException {
-		this.setTitle(title);
-		this.status = WorkFlow.TO_DO;
-
-	}
-
 	public Sprint() {
 		this.status = WorkFlow.TO_DO;
 	}
 
-	public LocalDate getEndDate() {
-		return endDate;
+	public Sprint(String title) throws SprintException {
+		this();
+		this.setTitle(title);
+	}
+
+	// Setters
+	public void setTitle(String title) throws SprintException {
+		if (validator.stringValidator(title)) {
+			this.title = title;
+		} else {
+			throw new SprintException("Invalid title.");
+		}
+	}
+
+	public void setStartDate(LocalDate startDate) throws SprintException {
+		if (validator.objectValidator(startDate)) {
+			this.startDate = startDate;
+		} else
+			throw new SprintException("You entered invalid start date. Please, try again!");
 	}
 
 	public void setEndDate(LocalDate endDate) throws SprintException {
-		this.endDate = endDate;
-
-	}
-
-	public int getSprintId() {
-		return sprintId;
+		if (validator.objectValidator(endDate)) {
+			this.endDate = endDate;
+		} else
+			throw new SprintException("You entered invalid end date. Please, try again!");
 	}
 
 	public void setSprintId(int sprintId) throws SprintException {
-		if (sprintId > 0) {
+		if (validator.positiveNumberValidator(sprintId)) {
 			this.sprintId = sprintId;
 		} else
 			throw new SprintException("You entered invalid sprint id. Please, try again!");
-
 	}
 
 	public void setProject(Project project) throws SprintException {
-		if (project != null) {
+		if (validator.objectValidator(project)) {
 			this.project = project;
 		} else {
-			throw new SprintException("This is illigal project");
+			throw new SprintException("This is invalid project");
 		}
 	}
 
-	public Project getProject() {
-		return project;
-	}
-
-	public WorkFlow getStatus() {
-		return status;
-	}
-
-	public void setStatus(WorkFlow status) {
-		this.status = status;
-	}
-
-	public void addIssue(Issue issue) throws SprintException {
-		if (issue != null) {
-			this.issues.add(issue);
+	public void setStatus(WorkFlow status) throws SprintException {
+		if (validator.objectValidator(status)) {
+			this.status = status;
 		} else {
-			throw new SprintException("This is illigal issue");
+			throw new SprintException("Invalid status of sprint");
 		}
+	}
+
+	public void setSprintGoal(String sprintGoal) throws SprintException {
+		if (validator.stringValidator(sprintGoal)) {
+			this.sprintGoal = sprintGoal;
+		} else {
+			throw new SprintException("Invalid sprint goal.");
+		}
+	}
+
+	// Getters
+	public String getSprintGoal() {
+		return sprintGoal;
+	}
+
+	public String getTitle() {
+		return title;
 	}
 
 	public List<Issue> getIssues() {
@@ -86,24 +101,28 @@ public class Sprint {
 		return startDate;
 	}
 
-	public void setStartDate(LocalDate startDate) {
-		this.startDate = startDate;
+	public Project getProject() {
+		return project;
 	}
 
-	public String getTitle() {
-		return title;
+	public WorkFlow getStatus() {
+		return status;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	public int getSprintId() {
+		return sprintId;
 	}
 
-	public String getSprintGoal() {
-		return sprintGoal;
+	public LocalDate getEndDate() {
+		return endDate;
 	}
 
-	public void setSprintGoal(String sprintGoal) {
-		this.sprintGoal = sprintGoal;
+	// Adding sprint's issue
+	public void addIssue(Issue issue) throws SprintException {
+		if (validator.objectValidator(issue)) {
+			this.issues.add(issue);
+		} else {
+			throw new SprintException("This is invalid issue");
+		}
 	}
-
 }
