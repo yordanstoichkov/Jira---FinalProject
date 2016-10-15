@@ -142,11 +142,11 @@ public class Issue {
 		}
 	}
 
-	public void setAsignee(int asigneeID) throws ProjectException {
+	public void setAsignee(int asigneeID) throws IssueExeption {
 		if (asigneeID > 0) {
 			this.asignees.add(asigneeID);
 		} else {
-			throw new ProjectException("You entered invalid employee id. ");
+			throw new IssueExeption("You entered invalid employee id. ");
 		}
 	}
 

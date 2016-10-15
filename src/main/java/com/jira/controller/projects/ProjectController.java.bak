@@ -166,29 +166,8 @@ public class ProjectController {
 		}
 		HttpSession session = request.getSession();
 		Project project = (Project) session.getAttribute("project");
-	model.addAttribute("user", session.getAttribute("user"));
-		int toDo = 0;
-		int progress = 0;
-		int done = 0;
-		
-		for (Sprint sprint : project.getSprints()) {
-			if (sprint.getStatus().equals(WorkFlow.TO_DO)) {
-				toDo++;
-			}
-			if (sprint.getStatus().equals(WorkFlow.IN_PROGRESS)) {
-				progress++;
-			}
-			if (sprint.getStatus().equals(WorkFlow.DONE)) {
-				done++;
-			}
-
-		}
-	
+		model.addAttribute("user", session.getAttribute("user"));
 		model.addAttribute("project", project);
-		model.addAttribute("toDo", toDo);
-		model.addAttribute("progress", progress);
-		model.addAttribute("done", done);
-		
 		return "overview";
 	}
 }

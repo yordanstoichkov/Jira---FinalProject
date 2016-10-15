@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.amazonaws.http.HttpRequest;
 import com.jira.model.comment.Comment;
 import com.jira.model.employee.Employee;
 import com.jira.model.employee.IEmployeeDAO;
@@ -52,29 +53,40 @@ public class IssueController {
 	private IPartOfProjectDAO partDAO;
 
 	@RequestMapping(value = "/newIssue", method = RequestMethod.GET)
-	public String addNewIssue(@RequestParam("sprintId") int sprintId, Model model, HttpSession session) {
-		Employee emp = (Employee) session.getAttribute("user");
-		Sprint sprint = null;
-
-		Project project = (Project) session.getAttribute("project");
-		for (Sprint oneSprint : project.getSprints()) {
-			if (oneSprint.getSprintId() == sprintId) {
-				sprint = oneSprint;
-			}
+	public String addNewIssue(@RequestParam("sprintId") int sprintId, Model model, HttpServletRequest request) {
+		if (request.getSession(false) == null) {
+			return "redirect:index";
 		}
-		model.addAttribute("emptyIssue", new Issue(sprint));
-		model.addAttribute("user", emp);
-		model.addAttribute("project", session.getAttribute("project"));
-		model.addAttribute("sprint", sprint);
-		return "newIssue";
+		HttpSession session = request.getSession();
+		Project project = (Project) session.getAttribute("project");
+		try {
+			Employee emp = (Employee) session.getAttribute("user");
+			Sprint sprint = null;
+
+			for (Sprint oneSprint : project.getSprints()) {
+				if (oneSprint.getSprintId() == sprintId) {
+					sprint = oneSprint;
+				}
+			}
+			model.addAttribute("emptyIssue", new Issue(sprint));
+			model.addAttribute("user", emp);
+			model.addAttribute("project", session.getAttribute("project"));
+			model.addAttribute("sprint", sprint);
+			return "newIssue";
+		} catch (Exception e) {
+			return "error";
+		}
 	}
 
 	@RequestMapping(value = "/newIssue", method = RequestMethod.POST)
 	public String createIssue(@ModelAttribute Issue issue, @RequestParam("sprintId") int sprintId,
-			@RequestParam("assignee") String assignee, Model model, HttpServletRequest request, HttpSession session) {
+			@RequestParam("assignee") String assignee, Model model, HttpServletRequest request) {
+		if (request.getSession(false) == null) {
+			return "redirect:index";
+		}
+		HttpSession session = request.getSession();
 		Project project = (Project) session.getAttribute("project");
 		Employee emp = (Employee) session.getAttribute("user");
-		model.addAttribute("user", emp);
 		Sprint sprint = null;
 		try {
 			Set<String> asignees = new HashSet<String>();
@@ -105,25 +117,39 @@ public class IssueController {
 
 			issueDAO.createIssue(issue);
 			sprint.addIssue(issue);
+			return "redirect:issue?issueId=" + issue.getIssueId();
 		} catch (SprintException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			model.addAttribute("emptyIssue", new Issue(sprint));
+			model.addAttribute("user", emp);
+			model.addAttribute("project", session.getAttribute("project"));
+			model.addAttribute("sprint", sprint);
+			model.addAttribute("message", e.getMessage());
+			return "newIssue";
 		} catch (IssueExeption e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-
+			model.addAttribute("emptyIssue", new Issue(sprint));
+			model.addAttribute("user", emp);
+			model.addAttribute("project", session.getAttribute("project"));
+			model.addAttribute("sprint", sprint);
+			model.addAttribute("message", e.getMessage());
+			return "newIssue";
 		} catch (EmployeeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ProjectException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			model.addAttribute("emptyIssue", new Issue(sprint));
+			model.addAttribute("user", emp);
+			model.addAttribute("project", session.getAttribute("project"));
+			model.addAttribute("sprint", sprint);
+			model.addAttribute("message", e.getMessage());
+			return "newIssue";
+		} catch (Exception e) {
+			return "error";
 		}
-		return "redirect:issue?issueId=" + issue.getIssueId();
 	}
 
 	@RequestMapping(value = "/myIssues", method = RequestMethod.GET)
-	public String getMyIssues(Model model, HttpSession session) {
+	public String getMyIssues(Model model, HttpServletRequest request) {
+		if (request.getSession(false) == null) {
+			return "redirect:index";
+		}
+		HttpSession session = request.getSession();
 		Employee emp = (Employee) session.getAttribute("user");
 		try {
 			List<Issue> issues = empDAO.getEmployeesIssues(emp);
@@ -142,188 +168,190 @@ public class IssueController {
 			}
 			model.addAttribute("user", emp);
 			model.addAttribute("issues", orderedIssues);
+			return "yourIssues";
 		} catch (EmployeeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return "redirect:index";
+		} catch (Exception e) {
+			return "error";
 		}
-		return "yourIssues";
+
 	}
 
 	@RequestMapping(value = "/issue", method = RequestMethod.POST)
 	public String addComent(@ModelAttribute Comment comment, Model model, @RequestParam("issueId") int issueId,
-			HttpSession session) {
-		Employee emp = (Employee) session.getAttribute("user");
-		model.addAttribute("user", emp);
+			HttpServletRequest request) {
+		if (request.getSession(false) == null) {
+			return "redirect:index";
+		}
+		HttpSession session = request.getSession();
 		Issue issue = null;
+		Project project = (Project) session.getAttribute("project");
 		try {
 			comment.setIssueId(issueId);
 			comment.setWriter(((Employee) session.getAttribute("user")));
 			comment.setDate(LocalDate.now());
 			issueDAO.commentIssue(comment);
-		} catch (IssueExeption e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
+
 			issue = issueDAO.getIssue(issueId);
+			model.addAttribute("issue", issue);
+			return "redirect:issue?issueId=" + issueId;
 		} catch (IssueExeption e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return "redirect:issue?issueId=" + issueId;
+		} catch (Exception e) {
+			return "error";
 		}
-		model.addAttribute("issue", issue);
-		return "redirect:issue?issueId=" + issueId;
+
 	}
 
 	@RequestMapping(value = "/deleteissue", method = RequestMethod.POST)
-	public String deleteIssue(Model model, @RequestParam("issueId") int issueId, HttpSession session) {
-		Employee emp = (Employee) session.getAttribute("user");
-		model.addAttribute("user", emp);
+	public String deleteIssue(Model model, @RequestParam("issueId") int issueId, HttpServletRequest request) {
+		if (request.getSession(false) == null) {
+			return "redirect:index";
+		}
+		HttpSession session = request.getSession();
 		Project project = (Project) session.getAttribute("project");
-		System.out.println(issueId);
 		try {
 			issueDAO.deleteIssue(issueId);
+			return "redirect:projectmain?projectId=" + project.getProjectId();
 		} catch (IssueExeption e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return "redirect:projectmain?projectId=" + project.getProjectId();
+		} catch (Exception e) {
+			return "error";
 		}
-		return "redirect:projectmain?projectId=" + project.getProjectId();
+
 	}
 
 	@RequestMapping(value = "/issue", method = RequestMethod.GET)
-	public String showIssueInfo(@RequestParam("issueId") int issueId, Model model, HttpSession session) {
-		System.out.println(issueId);
+	public String showIssueInfo(@RequestParam("issueId") int issueId, Model model, HttpServletRequest request) {
+		if (request.getSession(false) == null) {
+			return "redirect:index";
+		}
+		HttpSession session = request.getSession();
 		Project project = (Project) session.getAttribute("project");
-
-		model.addAttribute("project", project);
-
-		int userId = (int) session.getAttribute("userId");
-		model.addAttribute("userId", userId);
-		for (Sprint sprint : project.getSprints()) {
-			for (Issue issue : sprint.getIssues()) {
-				if (issue.getIssueId() == issueId) {
-					model.addAttribute(issue);
-					model.addAttribute("sprint", sprint);
-					break;
+		try {
+			model.addAttribute("project", project);
+			int userId = (int) session.getAttribute("userId");
+			model.addAttribute("userId", userId);
+			for (Sprint sprint : project.getSprints()) {
+				for (Issue issue : sprint.getIssues()) {
+					if (issue.getIssueId() == issueId) {
+						model.addAttribute(issue);
+						model.addAttribute("sprint", sprint);
+						break;
+					}
 				}
 			}
-		}
-		model.addAttribute("user", session.getAttribute("user"));
-		List<Integer> developersId = new ArrayList<Integer>();
-		try {
+			model.addAttribute("user", session.getAttribute("user"));
+			List<Integer> developersId = new ArrayList<Integer>();
+
 			developersId.addAll(empDAO.getDevelopers(issueId));
-		} catch (EmployeeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		// model.addAttribute("developersId", developersId);
-		List<Integer> reviewersId = new ArrayList<Integer>();
-		try {
+
+			// model.addAttribute("developersId", developersId);
+			List<Integer> reviewersId = new ArrayList<Integer>();
+
 			reviewersId.addAll(empDAO.getReviewers(issueId));
-		} catch (EmployeeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		// model.addAttribute("reviewersId", reviewersId);
-		List<Integer> managersId = new ArrayList<Integer>();
-		try {
+			// model.addAttribute("reviewersId", reviewersId);
+			List<Integer> managersId = new ArrayList<Integer>();
 			managersId.addAll(empDAO.getManagers(project.getProjectId()));
-		} catch (EmployeeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		// model.addAttribute("managersId", managersId);
-		List<String> namesOfManagers = new ArrayList<String>();
-		if (managersId != null) {
-			for (Integer empId : managersId) {
-				Employee emp = empDAO.getEmployeeById(empId);
-				if (emp != null) {
-					namesOfManagers.add(emp.getFirstName() + " " + emp.getLastName());
+
+			// model.addAttribute("managersId", managersId);
+			List<String> namesOfManagers = new ArrayList<String>();
+			if (managersId != null) {
+				for (Integer empId : managersId) {
+					Employee emp = empDAO.getEmployeeById(empId);
+					if (emp != null) {
+						namesOfManagers.add(emp.getFirstName() + " " + emp.getLastName());
+					}
 				}
 			}
-		}
-		model.addAttribute("namesOfManagers", namesOfManagers);
-		List<String> namesOfDevelopers = new ArrayList<String>();
-		if (developersId != null) {
-			for (Integer empId : developersId) {
-				Employee emp = empDAO.getEmployeeById(empId);
-				if (emp != null) {
-					namesOfDevelopers.add(emp.getFirstName() + " " + emp.getLastName());
+			model.addAttribute("namesOfManagers", namesOfManagers);
+			List<String> namesOfDevelopers = new ArrayList<String>();
+			if (developersId != null) {
+				for (Integer empId : developersId) {
+					Employee emp = empDAO.getEmployeeById(empId);
+					if (emp != null) {
+						namesOfDevelopers.add(emp.getFirstName() + " " + emp.getLastName());
+					}
 				}
 			}
-		}
-		model.addAttribute("namesOfDevelopers", namesOfDevelopers);
-		List<String> namesOfReviewers = new ArrayList<String>();
-		if (reviewersId != null) {
-			for (Integer empId : reviewersId) {
-				Employee emp = empDAO.getEmployeeById(empId);
-				if (emp != null) {
-					namesOfReviewers.add(emp.getFirstName() + " " + emp.getLastName());
+			model.addAttribute("namesOfDevelopers", namesOfDevelopers);
+			List<String> namesOfReviewers = new ArrayList<String>();
+			if (reviewersId != null) {
+				for (Integer empId : reviewersId) {
+					Employee emp = empDAO.getEmployeeById(empId);
+					if (emp != null) {
+						namesOfReviewers.add(emp.getFirstName() + " " + emp.getLastName());
+					}
 				}
 			}
-		}
-		model.addAttribute("namesOfReviewers", namesOfReviewers);
-		List<Comment> commentsOfIssue = new ArrayList<Comment>();
-		try {
+			model.addAttribute("namesOfReviewers", namesOfReviewers);
+			List<Comment> commentsOfIssue = new ArrayList<Comment>();
 			commentsOfIssue.addAll(issueDAO.getComments(issueId));
+
+			model.addAttribute("emptycomment", new Comment());
+			model.addAttribute("commentsOfIssue", commentsOfIssue);
+			return "issue";
 		} catch (IssueExeption e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return "redirect:projectmain?projectId=" + project.getProjectId();
+		} catch (EmployeeException e) {
+			return "redirect:projectmain?projectId=" + project.getProjectId();
+		} catch (Exception e) {
+			return "error";
 		}
-		model.addAttribute("emptycomment", new Comment());
-		model.addAttribute("commentsOfIssue", commentsOfIssue);
-		System.out.println(commentsOfIssue);
-		return "issue";
+
 	}
 
 	@RequestMapping(value = "/active", method = RequestMethod.POST)
-	public String updateIssueStatus(@RequestParam("issueId") int issueId, Model model, HttpSession session) {
+	public String updateIssueStatus(@RequestParam("issueId") int issueId, Model model, HttpServletRequest request) {
+		if (request.getSession(false) == null) {
+			return "redirect:index";
+		}
+		HttpSession session = request.getSession();
 		Project project = (Project) session.getAttribute("project");
-		model.addAttribute("project", project);
-		Employee user=(Employee) session.getAttribute("user");
-		model.addAttribute("user", user);
-		model.addAttribute("userId", user.getEmployeeID());
-		Sprint activeSprint = (Sprint) session.getAttribute("activeSprint");
-		// for (Sprint sprint : project.getSprints()) {
-		// if (sprint.getStatus() == WorkFlow.IN_PROGRESS) {
-		// model.addAttribute("sprint", sprint);
-		// activeSprint = sprint;
-		// }
-		// }
-		for (Issue issue : activeSprint.getIssues()) {
-			if (issue.getIssueId() == issueId) {
-				try {
+		try {
+			model.addAttribute("project", project);
+			Employee user = (Employee) session.getAttribute("user");
+			model.addAttribute("userId", user.getEmployeeID());
+			model.addAttribute("user", user);
+			Sprint activeSprint = (Sprint) session.getAttribute("activeSprint");
+
+			for (Issue issue : activeSprint.getIssues()) {
+				if (issue.getIssueId() == issueId) {
+
 					int newIssueId = issueDAO.updateIssueStatus(issueId);
 					WorkFlow status = partDAO.getStatus(newIssueId);
 					issue.setStatus(status);
-				} catch (IssueExeption e) {
-
-				} catch (PartOfProjectException e) {
 
 				}
 			}
+
+			boolean isSprintDone = true;
+			for (Issue issue : activeSprint.getIssues()) {
+				if ((issue.getStatus().equals(WorkFlow.TO_DO)) || (issue.getStatus().equals(WorkFlow.IN_PROGRESS))) {
+					isSprintDone = false;
+					break;
+				}
+			}
+			if (isSprintDone) {
+				sprintDAO.updateSprintStatus(activeSprint.getSprintId());
+
+				activeSprint.setStatus(WorkFlow.DONE);
+				model.addAttribute("activeSprint", null);
+				model.addAttribute("message", "Your sprint is already done. You can start a new one.");
+			} else {
+				model.addAttribute("activeSprint", activeSprint);
+			}
+			return "active";
+		} catch (IssueExeption e) {
+			return "redirect:active";
+		} catch (PartOfProjectException e) {
+			return "redirect:active";
+		} catch (SprintException e) {
+			return "redirect:active";
+		} catch (Exception e) {
+			return "error";
 		}
 
-		boolean isSprintDone = true;
-		for (Issue issue : activeSprint.getIssues()) {
-			if ((issue.getStatus().equals(WorkFlow.TO_DO)) || (issue.getStatus().equals(WorkFlow.IN_PROGRESS))) {
-				isSprintDone = false;
-				break;
-			}
-		}
-		if (isSprintDone) {
-			try {
-				sprintDAO.updateSprintStatus(activeSprint.getSprintId());
-			} catch (SprintException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			activeSprint.setStatus(WorkFlow.DONE);
-			model.addAttribute("activeSprint", null);
-			model.addAttribute("message", "Your sprint is already done. You can start a new one.");
-		} else {
-			model.addAttribute("activeSprint", activeSprint);
-		}
-		return "active";
 	}
 
 }

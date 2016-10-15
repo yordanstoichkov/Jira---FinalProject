@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,33 +47,44 @@ public class SprintController {
 	private ISprintDAO sprintDAO;
 
 	@RequestMapping(value = "/startsprint", method = RequestMethod.POST)
-	public String startSprint(@RequestParam("sprintId") int sprintId, Model model, HttpSession session) {
+	public String startSprint(@RequestParam("sprintId") int sprintId, Model model, HttpServletRequest request) {
+		if (request.getSession(false) == null) {
+			return "redirect:index";
+		}
+		HttpSession session = request.getSession();
 		Project project = (Project) session.getAttribute("project");
 		model.addAttribute("project", project);
-		for (Sprint sprint : project.getSprints()) {
-			if (sprint.getSprintId() == sprintId) {
-				model.addAttribute("sprint", sprint);
+		try {
+			for (Sprint sprint : project.getSprints()) {
+				if (sprint.getSprintId() == sprintId) {
+					model.addAttribute("sprint", sprint);
+				}
 			}
+			model.addAttribute("user", session.getAttribute("user"));
+			return "startSprint";
+		} catch (Exception e) {
+			return "error";
 		}
-		model.addAttribute("user", session.getAttribute("user"));
-		return "startSprint";
 	}
 
 	@RequestMapping(value = "/beginsprint", method = RequestMethod.POST)
 	public String beginSprint(@RequestParam("sprintGoal") String sprintGoal,
 			@RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate,
-			@RequestParam("sprintId") int sprintId, Model model, HttpSession session) {
-		try {
-			Project project = (Project) session.getAttribute("project");
-			Employee emp = (Employee) session.getAttribute("user");
-			model.addAttribute("user", emp);
-			Sprint curSprint = null;
-			for (Sprint sprint : project.getSprints()) {
-				if (sprint.getSprintId() == sprintId) {
-					curSprint = sprint;
-					break;
-				}
+			@RequestParam("sprintId") int sprintId, Model model, HttpServletRequest request) {
+		if (request.getSession(false) == null) {
+			return "redirect:index";
+		}
+		HttpSession session = request.getSession();
+		Project project = (Project) session.getAttribute("project");
+		Sprint curSprint = null;
+		model.addAttribute("user", session.getAttribute("user"));
+		for (Sprint sprint : project.getSprints()) {
+			if (sprint.getSprintId() == sprintId) {
+				curSprint = sprint;
+				break;
 			}
+		}
+		try {
 			String[] sDate = startDate.split("-");
 			String[] eDate = endDate.split("-");
 			int month = 0, year = 0, day = 0;
@@ -98,61 +110,79 @@ public class SprintController {
 			System.out.println(curSprint.getStartDate().toEpochDay());
 			curSprint.setStatus(WorkFlow.IN_PROGRESS);
 			sprintDAO.startSprint(curSprint);
+			return "redirect:active";
 		} catch (SprintException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			model.addAttribute("sprint", curSprint);
+			model.addAttribute("message", e.getMessage());
+			return "startSprint";
+		} catch (Exception e) {
+			return "error";
 		}
-		return "redirect:active";
+
 	}
 
 	@RequestMapping(value = "/active", method = RequestMethod.GET)
-	public String getActiveSprintOfProject(Model model, HttpSession session) {
+	public String getActiveSprintOfProject(Model model, HttpServletRequest request) {
+		if (request.getSession(false) == null) {
+			return "redirect:index";
+		}
+		HttpSession session = request.getSession();
 		Project project = (Project) session.getAttribute("project");
 		model.addAttribute("project", project);
-		boolean isActiveSprint = false;
-		for (Sprint sprint : project.getSprints()) {
-			if (sprint.getStatus() == WorkFlow.IN_PROGRESS) {
-				isActiveSprint = true;
-				session.setAttribute("activeSprint", sprint);
-				model.addAttribute("activeSprint", sprint);
-			} else {
-				model.addAttribute("activeSprint", null);
+		try {
+			boolean isActiveSprint = false;
+			for (Sprint sprint : project.getSprints()) {
+				if (sprint.getStatus() == WorkFlow.IN_PROGRESS) {
+					isActiveSprint = true;
+					session.setAttribute("activeSprint", sprint);
+					model.addAttribute("activeSprint", sprint);
+				} else {
+					model.addAttribute("activeSprint", null);
+				}
 			}
+			if (!isActiveSprint) {
+				model.addAttribute("message", "There is no active sprint. You can start a new one.");
+			}
+			model.addAttribute("user", session.getAttribute("user"));
+			int userId = (int) session.getAttribute("userId");
+			model.addAttribute("userId", userId);
+			return "active";
+		} catch (Exception e) {
+			return "error";
 		}
-		if (!isActiveSprint) {
-			model.addAttribute("message", "There is no active sprint. You can start a new one.");
-		}
-		model.addAttribute("user", session.getAttribute("user"));
-		int userId = (int) session.getAttribute("userId");
-		model.addAttribute("userId", userId);
-		return "active";
 	}
 
 	@RequestMapping(value = "/projectmain", method = RequestMethod.POST)
-	public String addSprint(@ModelAttribute Sprint sprint,Model model, HttpSession session) {
-		Employee emp = (Employee) session.getAttribute("user");
-		model.addAttribute("user", emp);
+	public String addSprint(@ModelAttribute Sprint sprint, HttpServletRequest request) {
+		if (request.getSession(false) == null) {
+			return "redirect:index";
+		}
+		HttpSession session = request.getSession();
 		Project project = (Project) session.getAttribute("project");
 		try {
 			sprint.setProject(project);
 			project.addSprint(sprint);
 			sprintDAO.createSprint(sprint);
+			return "redirect:/projectmain?projectId=" + project.getProjectId();
 		} catch (SprintException e) {
-
+			return "redirect:/projectmain?projectId=" + project.getProjectId();
 		} catch (ProjectException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return "redirect:/projectmain?projectId=" + project.getProjectId();
+		}catch (Exception e) {
+			return "error";
 		}
 
-		return "redirect:/projectmain?projectId=" + project.getProjectId();
 	}
 
 	@RequestMapping(value = "done", method = RequestMethod.GET)
-	public String getDoneSprints(Model model, HttpSession session) {
+	public String getDoneSprints(Model model, HttpServletRequest request) {
+		if (request.getSession(false) == null) {
+			return "redirect:index";
+		}
+		HttpSession session = request.getSession();
+		model.addAttribute("user", session.getAttribute("user"));
 		Project project = (Project) session.getAttribute("project");
 		model.addAttribute("project", project);
-		Employee emp = (Employee) session.getAttribute("user");
-		model.addAttribute("user", emp);
 		return "done";
 	}
 
