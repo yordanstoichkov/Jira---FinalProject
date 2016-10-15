@@ -78,6 +78,7 @@ public class SprintController {
 		Project project = (Project) session.getAttribute("project");
 		Sprint curSprint = null;
 		model.addAttribute("user", session.getAttribute("user"));
+		model.addAttribute("project", project);
 		for (Sprint sprint : project.getSprints()) {
 			if (sprint.getSprintId() == sprintId) {
 				curSprint = sprint;
@@ -85,6 +86,9 @@ public class SprintController {
 			}
 		}
 		try {
+			if(startDate==null||endDate==null||startDate.trim().equals("")||endDate.trim().equals("")){
+				throw new SprintException("Dates must be given, to begin spring");
+			}
 			String[] sDate = startDate.split("-");
 			String[] eDate = endDate.split("-");
 			int month = 0, year = 0, day = 0;

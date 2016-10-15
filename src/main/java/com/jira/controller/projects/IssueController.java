@@ -27,13 +27,12 @@ import com.jira.model.employee.Employee;
 import com.jira.model.employee.IEmployeeDAO;
 import com.jira.model.exceptions.EmployeeException;
 import com.jira.model.exceptions.IssueException;
-import com.jira.model.exceptions.ProjectException;
+import com.jira.model.exceptions.PartOfProjectException;
 import com.jira.model.exceptions.SprintException;
 import com.jira.model.project.IIssueDAO;
 import com.jira.model.project.IPartOfProjectDAO;
 import com.jira.model.project.ISprintDAO;
 import com.jira.model.project.Issue;
-import com.jira.model.project.PartOfProjectException;
 import com.jira.model.project.Project;
 import com.jira.model.project.Sprint;
 import com.jira.model.project.WorkFlow;
@@ -101,6 +100,7 @@ public class IssueController {
 				}
 			}
 
+			model.addAttribute("emptyIssue", new Issue(sprint));
 			issue.setSprint(sprint);
 			for (String str : asignees) {
 				if (str != null && !str.trim().equals("")) {
@@ -117,23 +117,21 @@ public class IssueController {
 
 			issueDAO.createIssue(issue);
 			sprint.addIssue(issue);
+			model.addAttribute("emptyIssue", new Issue(sprint));
 			return "redirect:issue?issueId=" + issue.getIssueId();
 		} catch (SprintException e) {
-			model.addAttribute("emptyIssue", new Issue(sprint));
 			model.addAttribute("user", emp);
 			model.addAttribute("project", session.getAttribute("project"));
 			model.addAttribute("sprint", sprint);
 			model.addAttribute("message", e.getMessage());
 			return "newIssue";
 		} catch (IssueException e) {
-			model.addAttribute("emptyIssue", new Issue(sprint));
 			model.addAttribute("user", emp);
 			model.addAttribute("project", session.getAttribute("project"));
 			model.addAttribute("sprint", sprint);
 			model.addAttribute("message", e.getMessage());
 			return "newIssue";
 		} catch (EmployeeException e) {
-			model.addAttribute("emptyIssue", new Issue(sprint));
 			model.addAttribute("user", emp);
 			model.addAttribute("project", session.getAttribute("project"));
 			model.addAttribute("sprint", sprint);

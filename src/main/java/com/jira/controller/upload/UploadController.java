@@ -37,40 +37,41 @@ public class UploadController {
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	public String uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("issueId") int issueId,
-			Model model, HttpSession session) throws IssueException {
-		try {
-			Issue issue = null;
-			Project project = (Project) session.getAttribute("project");
-			for (Sprint sprint : project.getSprints()) {
-				for (Issue oneIssue : sprint.getIssues()) {
-					if (oneIssue.getIssueId() == issueId) {
-						issue = oneIssue;
-						break;
-					}
+			Model model, HttpSession session) {
+
+		Issue issue = null;
+		Project project = (Project) session.getAttribute("project");
+		for (Sprint sprint : project.getSprints()) {
+			for (Issue oneIssue : sprint.getIssues()) {
+				if (oneIssue.getIssueId() == issueId) {
+					issue = oneIssue;
+					break;
 				}
 			}
-			Employee emp = (Employee) session.getAttribute("user");
-			model.addAttribute("user", emp);
-			String[] path = file.getOriginalFilename().split("\\\\");
-			String fileName = path[path.length - 1];
-			File picture = new File(WebInitializer.LOCATION + fileName);
+		}
+		Employee emp = (Employee) session.getAttribute("user");
+		model.addAttribute("user", emp);
+		String[] path = file.getOriginalFilename().split("\\\\");
+		String fileName = path[path.length - 1];
+		File picture = new File(WebInitializer.LOCATION + fileName);
+		try {
 			FileCopyUtils.copy(file.getBytes(), picture);
 			String url = s3Con.s3Upload(fileName, issue.getTitle() + "" + issue.getIssueId());
-			issue.setFilePath(url);	
-			picture.delete();
+			issue.setFilePath(url);
 			issueDAO.addIssueFile(issue);
+			return "redirect:issue?issueId=" + issueId;
 		} catch (IOException e) {
-			throw new IssueException("We can not upload this file right now. Try again later!", e);
+			return "error";
 		} catch (IssueException e1) {
-			throw new IssueException("We can not upload this file right now. Try again later!", e1);
+			return "error";
+		} finally {
+			picture.delete();
 		}
 
-		return "redirect:issue?issueId=" + issueId;
 	}
 
 	@RequestMapping(value = "/profile", method = RequestMethod.POST)
-	public String updateAvatar(@RequestParam("file") MultipartFile file, Model model, HttpSession session)
-			throws IssueException {
+	public String updateAvatar(@RequestParam("file") MultipartFile file, Model model, HttpSession session) {
 		Employee user = (Employee) session.getAttribute("user");
 		model.addAttribute("user", user);
 		String[] path = file.getOriginalFilename().split("\\\\");
@@ -81,15 +82,16 @@ public class UploadController {
 			String url = s3Con.s3Upload(fileName, user.getEmail());
 			user.setAvatarPath(url);
 			employeeDAO.updateAvatar(url, user.getEmployeeID());
-			
+
+			return "profile";
 		} catch (IOException e) {
-			throw new IssueException("We can not upload this picture right now. Try again later!", e);
+			return "error";
 
 		} catch (EmployeeException e) {
-			throw new IssueException("We can not upload this picture right now. Try again later!", e);
-
+			return "error";
+		} finally {
+			avatar.delete();
 		}
-		avatar.delete();
-		return "profile";
+
 	}
 }

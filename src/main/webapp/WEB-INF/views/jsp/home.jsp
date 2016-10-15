@@ -16,7 +16,7 @@
 		<div class="zaglavie">
 			<h1 class="page-header"
 				style="color: #1b5c9e; padding-left: 50px; padding-top: 250px">
-				Create your projects here!</h1>
+				<spring:message code="slogan2" /></h1>
 
 		</div>
 	</div>

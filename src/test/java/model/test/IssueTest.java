@@ -14,7 +14,6 @@ import com.jira.model.project.IIssueDAO;
 import com.jira.model.project.Issue;
 import com.jira.model.project.IssueDAO;
 import com.jira.model.project.IssueType;
-import com.jira.model.project.PartOfProjectException;
 import com.jira.model.project.PriorityLevel;
 import com.jira.model.project.Project;
 import com.jira.model.project.Sprint;
@@ -23,8 +22,8 @@ public class IssueTest {
 	private IIssueDAO dao = new IssueDAO();
 
 	@Test
-	public void test() throws ProjectException, EmployeeException, IssueException, PartOfProjectException, SprintException {
-	
+	public void test() throws ProjectException, EmployeeException, SprintException, IssueException {
+
 		Issue testIssue = new Issue();
 
 		testIssue.setIssueId(dao.createIssue(testIssue));

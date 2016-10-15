@@ -73,6 +73,23 @@
 			}
 
 		}
+		function validateForm() {
+			$("#demo").empty();
+			var text;
+			var x = trim(document.forms["form"]["title"].value);
+			var y = trim(document.forms["form"]["description"].value);
+			var z = trim(document.forms["form"]["assignee"].value);
+			if (x == null || x == "" || z == null || z == "" || y == null
+					|| y == "") {
+				text = "All inputs must be filled out";
+				$("#demo").append(text);
+				return false;
+			}
+
+		}
+		function trim(value) {
+			return value.replace(/^\s+|\s+$/g, "");
+		}
 	</script>
 	<div class="row">
 		<div class="zaglavie">
@@ -80,54 +97,62 @@
 				<c:out value="${sprint.title}"></c:out>
 			</h1>
 		</div>
+		<c:if test="${not empty message }">
+			<p>
+				<span style="color: #ff3333; font-size: 140%"><c:out
+						value="${message}"></c:out></span>
+			</p>
+		</c:if>
+		<span id="demo" style="color: #ff3333; font-size: 140%"></span>
 	</div>
-	<form:form commandName="emptyIssue">
+	<form:form name="form" commandName="emptyIssue"
+		onsubmit="return validateForm()">
+
 		<div class="form-group"
 			style="width: 400px; margin-left: 280px; color: #1b5c9e;">
-			<label>Enter issue title: </label>
-			<form:input path="title" class="form-control" style="color: #1b5c9e;"
-				placeholder="Enter title..." />
+			<label><spring:message code="issue.title" />: </label>
+			<form:input name="title" path="title" class="form-control"
+				style="color: #1b5c9e;" placeholder="Enter title..." />
 			<form:errors path="title" cssClass="error" />
-			<span id="title.errors" class="error">Title is required!</span>
 		</div>
 		<div class="form-group"
 			style="width: 200px; margin-left: 280px; color: #1b5c9e; display: inline-block;">
-			<label>Issue type: </label>
+			<label><spring:message code="issue.type" />: </label>
 			<form:select path="type" class="form-control">
-				<form:option value="TASK">Task</form:option>
-				<form:option value="BUG">Bug</form:option>
+				<form:option value="TASK"><spring:message code="task" /></form:option>
+				<form:option value="BUG"><spring:message code="bug" /></form:option>
 			</form:select>
 		</div>
 		<div class="form-group"
 			style="width: 200px; margin-left: 50px; color: #1b5c9e; display: inline-block;">
 
-			<label>Issue prioity: </label>
+			<label><spring:message code="issue.priority" />: </label>
 			<form:select path="priority" class="form-control">
-				<form:option value="LOW">Low</form:option>
-				<form:option value="MIDDLE">Middle</form:option>
-				<form:option value="HIGH">High</form:option>
+				<form:option value="LOW"><spring:message code="low" /></form:option>
+				<form:option value="MIDDLE"><spring:message code="medium" /></form:option>
+				<form:option value="HIGH"><spring:message code="high" /></form:option>
 			</form:select>
 		</div>
 
 		<div class="form-group"
 			style="width: 500px; margin-left: 280px; color: #1b5c9e;">
-			<label>Description:</label>
-			<form:textarea path="description" class="form-control" rows="4"
-				placeholder="Enter description..."></form:textarea>
+			<label><spring:message code="description" />:</label>
+			<form:textarea name="description" path="description"
+				class="form-control" rows="4" placeholder="Enter description..."></form:textarea>
 		</div>
 		<div class="form-group input-group"
 			style="width: 500px; margin-left: 280px; color: #1b5c9e; padding-top: 20px;">
 
-			<label>Assign employees:</label>
+			<label><spring:message code="issue.asign" />:</label>
 		</div>
 		<div id="myform" class="form-group input-group"
 			style="width: 500px; margin-left: 280px; color: #1b5c9e;">
 
 			<input name="assignee" id="employee" type="text" class="form-control"
 				list="suggestions" onkeyup="getEmployeeName()" /> <span
-				class="input-group-btn"> <img src="yes.png" width="20"
-				height="20" onclick="setanotherfield()" />
-			<datalist id="suggestions">
+				class="input-group-btn"> <img src="plus.png" width="20"
+				height="20" onclick="setanotherfield()" /> <datalist
+					id="suggestions">
 
 				</datalist>
 			</span>

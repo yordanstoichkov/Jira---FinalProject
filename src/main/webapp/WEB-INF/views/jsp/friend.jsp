@@ -42,30 +42,30 @@
 
 			<c:if test="${ friend.job=='MANAGER'}">
 
-				<span style="color: #1b5c9e; display: inline; font-size: 80%">&nbsp;&nbsp;&nbsp;Job:
+				<span style="color: #1b5c9e; display: inline; font-size: 80%">&nbsp;&nbsp;&nbsp;<spring:message code="job" />:
 				</span>
 				<img src="manager.png" width=30px; height=30px;
 					style="color: #1b5c9e; display: inline" />
 
-				<span style="font-size: 70%"> Manager</span>
+				<span style="font-size: 70%"> <spring:message code="manager" /></span>
 			</c:if>
 
 			<c:if test="${  friend.job=='DEVELOPER'}">
-				<span style="color: #1b5c9e; display: inline; font-size: 80%">&nbsp;&nbsp;&nbsp;Job:
+				<span style="color: #1b5c9e; display: inline; font-size: 80%">&nbsp;&nbsp;&nbsp;<spring:message code="job" />:
 				</span>
 
 				<img src="developer.png" width=35px; height=35px;
 					style="color: #1b5c9e; display: inline" />
-				<span style="font-size: 70%">Developer</span>
+				<span style="font-size: 70%"><spring:message code="developer" /></span>
 
 			</c:if>
 			<c:if test="${ friend.job=='REVIEWER'}">
-				<span style="color: #1b5c9e; display: inline; font-size: 80%">&nbsp;&nbsp;&nbsp;Job:
+				<span style="color: #1b5c9e; display: inline; font-size: 80%">&nbsp;&nbsp;&nbsp;<spring:message code="job" />:
 				</span>
 
 				<img src="reviewer.png" width=35px; height=35px;
 					style="color: #1b5c9e; display: inline" />
-				<span style="font-size: 70%"> Reviewer</span>
+				<span style="font-size: 70%"> <spring:message code="qa" /></span>
 
 			</c:if>
 		</h3>

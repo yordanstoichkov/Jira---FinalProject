@@ -19,7 +19,7 @@
 		<div class="row">
 			<div class="col-lg-12">
 				<div class="panel panel-default">
-					<div class="panel-heading">All your issues</div>
+					<div class="panel-heading"><spring:message code="all.issue" /></div>
 					<!-- /.panel-heading -->
 					<div class="panel-body">
 						<table width="100%"
@@ -27,10 +27,10 @@
 							id="dataTables-example">
 							<thead>
 								<tr>
-									<th>Issue name</th>
-									<th>Type</th>
-									<th>Status</th>
-									<th>Priority</th>
+									<th><spring:message code="issue.name" /></th>
+									<th><spring:message code="type" /></th>
+									<th><spring:message code="status" /></th>
+									<th><spring:message code="priority" /></th>
 
 								</tr>
 							</thead>

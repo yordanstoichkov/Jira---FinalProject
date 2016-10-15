@@ -2,6 +2,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@page session="false"%>
 <link href="sprint.css" rel="stylesheet">
 <link href="dataTables.bootstrap.css" rel="stylesheet">
@@ -28,22 +29,23 @@
 						<table class="table table-striped table-bordered table-hover">
 							<thead>
 								<tr>
-									<th colspan="3"><b><c:out value="${activeSprint.title}"></c:out></b></th>
+									<th colspan="3"><b><c:out
+												value="${activeSprint.title}"></c:out></b></th>
 
 								</tr>
 								<tr>
 									<th><div class="col-xs-3">
 											<i class="fa fa-times" style="font-size: 1.0em; color: red"></i>
-										</div> <b>To Do</b></th>
+										</div> <b><spring:message code="to" /></b></th>
 									<th>
 										<div class="col-xs-3">
 											<i class="fa fa-cog" style="font-size: 1.0em; color: orange"></i>
-										</div> <b>In Progress</b>
+										</div> <b><spring:message code="inprogres" /></b>
 									</th>
 									<th><div class="col-xs-3">
 											<i class="fa fa-check" style="font-size: 1.0em; color: green">
 											</i>
-										</div> <b>Done</b></th>
+										</div> <b><spring:message code="done" /></b></th>
 								</tr>
 							</thead>
 							<tbody>

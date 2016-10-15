@@ -42,17 +42,21 @@ public class ServiceController {
 
 	@RequestMapping(value = "/givenames", method = RequestMethod.GET)
 	public List<String> getNames(@RequestParam("start") String name, Model model) {
-		List<String> names = new ArrayList<String>();
-		List<String> result = new ArrayList<String>();
-		name = name.toLowerCase();
-		names.addAll(empDAO.getEmployeesNames());
-		for (String str : names) {
-			String[] twoNames = str.split(" ");
-			if (twoNames[0].toLowerCase().startsWith(name) || twoNames[1].toLowerCase().startsWith(name)) {
-				result.add(str);
+		try {
+			List<String> names = new ArrayList<String>();
+			List<String> result = new ArrayList<String>();
+			name = name.toLowerCase();
+			names.addAll(empDAO.getEmployeesNames());
+			for (String str : names) {
+				String[] twoNames = str.split(" ");
+				if (twoNames[0].toLowerCase().startsWith(name) || twoNames[1].toLowerCase().startsWith(name)) {
+					result.add(str);
+				}
 			}
+			return result;
+		} catch (EmployeeException e) {
+			return null;
 		}
-		return result;
 	}
 
 }

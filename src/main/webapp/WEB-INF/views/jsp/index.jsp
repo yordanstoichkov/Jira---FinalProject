@@ -1,8 +1,10 @@
-<%@page errorPage="error.jsp"%>
-<%@include file="menu.jsp"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="ISO-8859-1"%>
+<%@page errorPage="error.jsp"%>`
 <%@page session="false"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <head>
 <link href="font-awesome.min.css" rel="stylesheet" type="text/css">
 <link href="<c:url value="background.css"></c:url>" rel="stylesheet"
@@ -20,14 +22,17 @@
 <meta http-equiv="Expires" content="Sat, 01 Dec 2001 00:00:00 GMT">
 </head>
 <body>
-
+	<a href="<spring:message code="lang"/>"> <img height="30"
+		width="30" src="<spring:message code="pic"/>"></a>
 	<div class="container">
 		<div class="row">
 			<div class="col-md-4 col-md-offset-4">
 
 				<div class="forma">
 					<div class="panel-heading">
-						<h1 class="panel-title" style="color: #5c85d6; font-size: 250%;">Login</h1>
+						<h1 class="panel-title" style="color: #5c85d6; font-size: 250%;">
+							<spring:message code="login.login" />
+						</h1>
 					</div>
 					<div class="panel-body">
 						<c:if test="${not empty message }">
@@ -42,22 +47,27 @@
 
 								<div class="form-group">
 									<input class="form-control" placeholder="E-mail" name="email"
-										type="email" autofocus>
+										type="username" autofocus>
 								</div>
 								<div class="form-group">
-									<input class="form-control" placeholder="Password"
+									<input class="form-control"
+										placeholder="<spring:message code="password" />"
 										name="password" type="password" value="">
 								</div>
 
 								<div class="checkbox">
 									<label> <input name="remember" type="checkbox"
-										value="Remember Me"><span style="color: #5c85d6;">Remember
-											Me</span>
+										value="Remember Me"><span style="color: #5c85d6;"><spring:message
+												code="login.remember" /></span>
 									</label>
 								</div>
 								<!-- Change this to a button or input when using this as a form -->
-								<button type="submit" class="btn btn-lg btn-success btn-block">Login</button>
+								<button type="submit" class="btn btn-lg btn-success btn-block">
+									<spring:message code="login.login" />
+								</button>
 							</fieldset>
+							<span style="color: #5c85d6;"><a href="./reg"><spring:message
+										code="register.register"></spring:message></a></span>
 						</form:form>
 					</div>
 				</div>
@@ -70,13 +80,15 @@
 		<h3>
 			<span class="user" style="color: #2e5cb8"><i
 				class="fa fa-group" style="font-size: 1.0em; color: #2e5cb8"></i>&nbsp;IdeaTracker
-				users: ${usersCount}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span
-				class="project" style="color: #2e5cb8"><i
-				class="fa fa-folder-open" style="font-size: 1.0em; color: #2e5cb8"></i>&nbsp;IdeaTracker
-				projects: ${projectsCount}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span
-				class="issue" style="color: #2e5cb8"><i
-				class="fa fa-thumb-tack" style="font-size: 1.0em; color: #2e5cb8"></i>&nbsp;IdeaTracker
-				issues: ${issuesCount}</span>
+				<spring:message code="login.users" />:
+				${usersCount}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span class="project"
+				style="color: #2e5cb8"><i class="fa fa-folder-open"
+				style="font-size: 1.0em; color: #2e5cb8"></i>&nbsp;IdeaTracker <spring:message
+					code="login.projects" />:
+				${projectsCount}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span class="issue"
+				style="color: #2e5cb8"><i class="fa fa-thumb-tack"
+				style="font-size: 1.0em; color: #2e5cb8"></i>&nbsp;IdeaTracker <spring:message
+					code="login.issues" />: ${issuesCount}</span>
 
 
 		</h3>

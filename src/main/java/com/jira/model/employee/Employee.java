@@ -4,12 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.jira.model.exceptions.EmployeeException;
 
 public class Employee {
-	@Autowired
-	private IValidator validator;
-	
+	private IValidator validator = new Validator();
+
 	private static final int MIN_SIZE_OF_PASSWORD = 6;
 	private static final String DEFAULT_AVATAR_URL = "https://s3.amazonaws.com/avatars-jira/default.png";
-	private static final String NAME_REGEX = "/^[a-z ,.'-]+$/i";
+	private static final String NAME_REGEX = "/^[A-Za-z ,.'-]+$/i";
 	private static final String EMAIL_REGEX = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
 	private String firstName;
 	private String lastName;
@@ -38,7 +37,7 @@ public class Employee {
 	}
 
 	public void setFirstName(String firstName) throws EmployeeException {
-		if (validator.stringValidator(firstName) && isNameValid(firstName)) {
+		if (validator.stringValidator(firstName)) {
 			this.firstName = firstName;
 		} else {
 			throw new EmployeeException("Illegal first name");
@@ -46,7 +45,7 @@ public class Employee {
 	}
 
 	public void setLastName(String lastName) throws EmployeeException {
-		if (validator.stringValidator(lastName) && isNameValid(lastName)) {
+		if (validator.stringValidator(lastName)) {
 			this.lastName = lastName;
 		} else {
 			throw new EmployeeException("Illegal last name");

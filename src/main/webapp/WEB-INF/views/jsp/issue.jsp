@@ -55,27 +55,27 @@
 				<c:out value="${issue.title}"></c:out>
 				<div class="podravni">
 					<c:if test="${ issue.status=='TO_DO'}">
-						<span style="color: #1b5c9e; display: inline; font-size: 80%">Workflow:
+						<span style="color: #1b5c9e; display: inline; font-size: 80%"><spring:message code="workflow" />:
 						</span>
 						<i class="fa fa-times"
 							style="font-size: 1.0em; color: red; display: inline"></i>
-						<span style="font-size: 70%"> To Do</span>
+						<span style="font-size: 70%"> <spring:message code="to" /></span>
 					</c:if>
 
 					<c:if test="${ issue.status=='IN_PROGRESS'}">
-						<span style="color: #1b5c9e; display: inline; font-size: 80%">Workflow:
+						<span style="color: #1b5c9e; display: inline; font-size: 80%"><spring:message code="workflow" />:
 						</span>
 
 						<i class="fa fa-cog" style="font-size: 1.0em; color: orange"></i>
-						<span style="font-size: 70%"> In Progress</span>
+						<span style="font-size: 70%"> <spring:message code="inprogres" /></span>
 
 					</c:if>
 					<c:if test="${ issue.status=='DONE'}">
-						<span style="color: #1b5c9e; display: inline; font-size: 80%">Workflow:
+						<span style="color: #1b5c9e; display: inline; font-size: 80%"><spring:message code="workflow" />:
 						</span>
 
 						<i class="fa fa-check" style="font-size: 1.0em; color: green">
-							<span style="font-size: 70%"> Done</span>
+							<span style="font-size: 70%"> <spring:message code="done" /></span>
 
 						</i>
 					</c:if>
@@ -84,30 +84,30 @@
 				<c:if test="${ issue.priority=='LOW'}">
 					<span style="color: #1b5c9e; display: inline; font-size: 80%">
 						&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
-						&nbsp; &nbsp;Priority: </span>
+						&nbsp; &nbsp;<spring:message code="priority" />: </span>
 					<img src="low.png" width=25px; height=25px;
 						style="color: #1b5c9e; display: inline" />
-					<span style="font-size: 70%"> Low</span>
+					<span style="font-size: 70%"> <spring:message code="low" /></span>
 				</c:if>
 
 				<c:if test="${ issue.priority=='MEDIUM'}">
 					<span style="color: #1b5c9e; display: inline; font-size: 80%">
 						&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
-						&nbsp; &nbsp;Priority: </span>
+						&nbsp; &nbsp;<spring:message code="priority" />: </span>
 
 					<img src="medium.png" width=25px; height=25px;
 						style="color: #1b5c9e; display: inline" />
-					<span style="font-size: 70%"> Medium</span>
+					<span style="font-size: 70%"> <spring:message code="medium" /></span>
 
 				</c:if>
 				<c:if test="${ issue.priority=='HIGH'}">
 					<span style="color: #1b5c9e; display: inline; font-size: 80%">
 						&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
-						&nbsp; &nbsp;Priority: </span>
+						&nbsp; &nbsp;<spring:message code="priority" />: </span>
 
 					<img src="high.png" width=25px; height=25px;
 						style="color: #1b5c9e; display: inline" />
-					<span style="font-size: 70%"> High</span>
+					<span style="font-size: 70%"> <spring:message code="high" /></span>
 
 
 				</c:if>
@@ -121,7 +121,7 @@
 			<div class="col-lg-4">
 				<div class="panel panel-info">
 					<div class="panel-heading">
-						<b>Description</b>
+						<b><spring:message code="description" /></b>
 					</div>
 					<div class="panel-body">
 						<c:out value="${issue.description}"></c:out>
@@ -137,30 +137,30 @@
 		style="margin-left: 300px;" onsubmit="Validatebodypanelbumper()">
 
 		<div class="form-group" style="width: 200px; color: #1b5c9e;">
-			<label>Choose pdf file to upload</label><input type="file" id="file"
+			<label><spring:message code="choosepdffile" /></label><input type="file" id="file"
 				name="file" accept="application/pdf" />
 		</div>
 
 		<div class="form-group" style="width: 200px; color: #1b5c9e;">
 
-			<button type="submit" name="issueId" value="${issue.issueId}" >Upload file</button>
+			<button type="submit" name="issueId" value="${issue.issueId}" ><spring:message code="uploadfile" /></button>
 
 		</div>
 	</form>
 	<div style="padding-left: 300px">
 		<c:if test="${not empty issue.filePath}">
-			<a href="${issue.filePath}" download>Get issue file</a>
+			<a href="${issue.filePath}" download><spring:message code="getfile" /></a>
 		</c:if>
 	</div>
 	<div class="row">
 		<div class="col-lg-6">
 			<div class="panel panel-defaultt">
-				<div class="panel-heading">Team</div>
+				<div class="panel-heading"><spring:message code="team" /></div>
 				<!-- /.panel-heading -->
 				<div class="panel-body">
 					<div class="alert alert-info">
 						<img src="manager.png" width=30px; height=30px;
-							style="color: #1b5c9e; display: inline" /><span>&nbsp;Manager:
+							style="color: #1b5c9e; display: inline" /><span>&nbsp;<spring:message code="manager" />:
 							<c:forEach items="${namesOfManagers}" var="name">
 								<c:out value="${name}"></c:out>,
 
@@ -169,7 +169,7 @@
 					</div>
 					<div class="alert alert-info">
 						<img src="team.png" width=35px; height=35px;
-							style="color: #1b5c9e; display: inline" /><span>&nbsp;Developers:
+							style="color: #1b5c9e; display: inline" /><span>&nbsp;<spring:message code="developer" />:
 							<c:forEach items="${namesOfDevelopers}" var="name">
 								<c:out value="${name}"></c:out>
 
@@ -179,7 +179,7 @@
 					</div>
 					<div class="alert alert-info">
 						<img src="reviewer.png" width=35px; height=35px;
-							style="color: #1b5c9e; display: inline" /><span>&nbsp;Reviewers:
+							style="color: #1b5c9e; display: inline" /><span>&nbsp;<spring:message code="reviewer" />:
 							<c:forEach items="${namesOfReviewers}" var="name">
 								<c:out value="${name}"></c:out>
 
@@ -195,7 +195,7 @@
 	<div class="chats" style="width: 1300px; padding-left: 300px;">
 		<div class="chat-panel panel panel-defaultt">
 			<div class="panel-heading">
-				<i class="fa fa-comments fa-fw"></i> Comments
+				<i class="fa fa-comments fa-fw"></i> <spring:message code="comments" />
 				<div class="btn-group pull-right"></div>
 			</div>
 			<!-- /.panel-heading -->
@@ -229,12 +229,12 @@
 			<!-- /.panel-body -->
 			<div class="panel-footer">
 				<div class="input-group">
-					<form:form commandName="emptycomment">
-						<span class="input-group-btn"> <form:input path="comment"
+					<form:form commandName="emptycomment" onsubmit = "return validateForm()">
+						<span class="input-group-btn"> <form:input name="title" path="comment"
 								id="btn-input" type="text" class="form-control input-sm"
 								placeholder="Type your message here..." style="width: 800px;" />
 							<button type="submit" class="btn btn-warning btn-sm"
-								name="issueId" value="${issue.issueId}" id="btn-chat">Send</button>
+								name="issueId" value="${issue.issueId}" id="btn-chat"><spring:message code="send" /></button>
 						</span>
 					</form:form>
 				</div>

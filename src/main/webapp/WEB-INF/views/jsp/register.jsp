@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="ISO-8859-1"%>
-<%@include file="menu.jsp"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <link href="bootstrap.min.css" rel="stylesheet">
 <link href="metisMenu.min.css" rel="stylesheet">
@@ -28,12 +28,16 @@
 					});
 		}
 	</script>
-	<div class="container" style="padding-top:100px;">
+	<a href="<spring:message code="lang"/>"> <img height="30"
+		width="30" src="<spring:message code="pic"/>"></a>
+	<div class="container" style="padding-top: 100px;">
 		<div class="row">
 			<div class="col-md-4 col-md-offset-4">
 
 				<div class="panel-heading">
-					<h1 class="panel-title" style="color: #2e5cb8;; font-size: 250%;">Register</h1>
+					<h1 class="panel-title" style="color: #2e5cb8;; font-size: 250%;">
+						<spring:message code="register.register" />
+					</h1>
 				</div>
 				<div class="panel-body">
 
@@ -45,11 +49,13 @@
 					<form role="form" method="post" action="./reg">
 						<fieldset>
 							<div class="form-group">
-								<input class="form-control" placeholder="First name"
+								<input class="form-control"
+									placeholder="<spring:message code="regist.firstName" />"
 									name="firstname" type="text" autofocus>
 							</div>
 							<div class="form-group">
-								<input class="form-control" placeholder="Last name"
+								<input class="form-control"
+									placeholder="<spring:message code="register.lastName" />"
 									name="lastname" type="text" autofocus>
 							</div>
 							<div id="answer"></div>
@@ -61,24 +67,32 @@
 							</div>
 
 							<div class="form-group">
-								<input class="form-control" placeholder="Password"
+								<input class="form-control"
+									placeholder="<spring:message code="password" />"
 									name="password" type="password" value="">
 							</div>
 							<div class="form-group">
-								<input class="form-control" placeholder="Password"
+								<input class="form-control"
+									placeholder="<spring:message code="password" />"
 									name="passwordrepeat" type="password" value="">
 							</div>
 							<div class="form-group">
-								<label style="color: #2e5cb8;;" for="username">Choose your
-									job: </label> <select class="form-control" name="job">
-									<option value="MANAGER">Manager</option>
-									<option value="DEVELOPER">Developer</option>
-									<option value="QA">QA</option>
+								<label style="color: #2e5cb8;" for="username"><spring:message
+										code="register.job" />: </label> <select class="form-control"
+									name="job">
+									<option value="MANAGER"><spring:message code="manager" /></option>
+									<option value="DEVELOPER"><spring:message
+											code="developer" /></option>
+									<option value="QA"><spring:message code="qa" /></option>
 								</select>
 							</div>
 							<div class="checkbox"></div>
 							<!-- Change this to a button or input when using this as a form -->
-							<button type="submit" class="btn btn-lg btn-success btn-block">Register</button>
+							<button type="submit" class="btn btn-lg btn-success btn-block">
+								<spring:message code="register.register" />
+							</button>
+							<span style="color: #5c85d6;"><a href="./"><spring:message
+										code="login.login"></spring:message></a></span>
 						</fieldset>
 					</form>
 				</div>

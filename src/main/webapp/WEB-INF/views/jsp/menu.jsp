@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@page session="false"%>
 <%@page errorPage="error.jsp"%>
 <!DOCTYPE html>
@@ -19,7 +20,6 @@
 </head>
 
 <body>
-
 	<script>
 		$(document).ready(function() {
 			$("#sticker").sticky({
@@ -32,62 +32,61 @@
 
 			<ul class="menu">
 				<li><img src="logo.png" width=90px; height=57px;></li>
+				<li><a href="<spring:message code="lang"/>"> <img
+						height="30" width="30" src="<spring:message code="pic"/>"></a></li>
 				<li><a href="./home"><i class="fa fa-home"
-						style="font-size: 2.0em;"></i> Home</a></li>
+						style="font-size: 2.0em;"></i> <spring:message code="menu.home" /></a></li>
 				<li><a href="./projects"><i class="fa fa-paste"
-						style="font-size: 2.0em;"></i>Projects</a></li>
+						style="font-size: 2.0em;"></i> <spring:message
+							code="menu.projects" /></a></li>
 				<li><a href="./contact"><i class="fa fa-phone"
-						style="font-size: 2.0em;"></i> Contact</a></li>
+						style="font-size: 2.0em;"></i> <spring:message code="menu.contact" /></a></li>
 
 
-				<%
-					if (request.getSession(false) == null) {
-				%>
-				<li style="float: right"><a class="active" href="./reg">Register</a></li>
-				<%
-					} else {
-				%>
+
+
 				<li><a href="./myIssues"><i class="fa fa-pencil"
-						style="font-size: 2.0em;"></i>Your issues</a></li>
-				<li style="float: right; padding-right:20px;padding-top:5px"><div class="dropdown">
+						style="font-size: 2.0em;"></i> <spring:message
+							code="menu.yourIssues" /></a></li>
+				<li style="float: right; padding-right: 20px; padding-top: 5px"><div
+						class="dropdown">
 						<a onclick="myFunction()" class="dropbtn"><img
-							src="${user.avatarPath}" width="25" height="30" /> Hi, <%=request.getSession().getAttribute("username")%></a>
+							src="${user.avatarPath}" width="25" height="30" /> <spring:message
+								code="menu.greeting" />, <%=request.getSession().getAttribute("username")%></a>
 						<div id="myDropdown" class="dropdown-content">
-							<a href="./profile" ">Profile</a>  
-							<a class="active" href="./logout">LogOut</a>
+							<a href="./profile""><spring:message code="profile" /></a> <a
+								class="active" href="./logout"><spring:message code="logout" /></a>
 						</div>
 					</div></li>
 
+			</ul>
+			<script>
+				/* When the user clicks on the button,
+				 toggle between hiding and showing the dropdown content */
+				function myFunction() {
+					document.getElementById("myDropdown").classList
+							.toggle("show");
+				}
 
-				<script>
-					/* When the user clicks on the button,
-					 toggle between hiding and showing the dropdown content */
-					function myFunction() {
-						document.getElementById("myDropdown").classList
-								.toggle("show");
-					}
+				// Close the dropdown if the user clicks outside of it
+				window.onclick = function(event) {
+					if (!event.target.matches('.dropbtn')) {
 
-					// Close the dropdown if the user clicks outside of it
-					window.onclick = function(event) {
-						if (!event.target.matches('.dropbtn')) {
-
-							var dropdowns = document
-									.getElementsByClassName("dropdown-content");
-							var i;
-							for (i = 0; i < dropdowns.length; i++) {
-								var openDropdown = dropdowns[i];
-								if (openDropdown.classList.contains('show')) {
-									openDropdown.classList.remove('show');
-								}
+						var dropdowns = document
+								.getElementsByClassName("dropdown-content");
+						var i;
+						for (i = 0; i < dropdowns.length; i++) {
+							var openDropdown = dropdowns[i];
+							if (openDropdown.classList.contains('show')) {
+								openDropdown.classList.remove('show');
 							}
 						}
 					}
-				</script>
+				}
+			</script>
 
-				<%
-					}
-				%>
-			</ul>
+
+
 			<div class="clearfix"></div>
 		</nav>
 	</div>

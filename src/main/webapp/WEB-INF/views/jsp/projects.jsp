@@ -2,6 +2,7 @@
 	pageEncoding="ISO-8859-1"%>
 <%@include file="menu.jsp"%>
 <%@page errorPage="error.jsp"%>
+<%@page session="false"%>
 <%@ page import="java.util.List"%>
 <%@page import="java.util.ArrayList"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
@@ -17,9 +18,6 @@
 
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Cache-Control" content="no-cache">
-<meta http-equiv="Expires" content="Sat, 01 Dec 2001 00:00:00 GMT">
 <script type="text/javascript" src="jquery-3.1.1.min.js"></script>
 <script type="text/javascript" src="apprise.js"></script>
 </head>
@@ -29,8 +27,8 @@
 			<button type="button" id="mybtn" class="btn btn-primary btn-lg"
 				style="margin-left: 80px; width: 300px;">
 				<i class="fa fa-plus"
-					style="font-size: 1.5em; padding-right: 15px; padding-top: 5px"></i>Create
-				new project
+					style="font-size: 1.5em; padding-right: 15px; padding-top: 5px"></i>
+				<spring:message code="project.create" />
 			</button>
 		</div>
 
@@ -44,13 +42,14 @@
 				<span class="close">×</span>
 				<form:form name="form" commandName="emptyproject"
 					onsubmit="return validateForm()">
-					<label>Enter title*</label>
+					<label><spring:message code="project.title" />*</label>
 					<form:input type="text" name="title" path="title"
 						cssErrorClass="error" />
 					<p id="demo"></p>
 					<form:errors path="title" cssClass="error"></form:errors>
 					<br />
-					<input type="submit" value="Create project" />
+					<input type="submit"
+						value="<spring:message code="project.create" />" />
 				</form:form>
 			</div>
 
@@ -113,15 +112,15 @@
 													</div>
 													<div id="status">
 														<h3>
-															<b>To Do</b>
+															<b><spring:message code="to" /></b>
 														</h3>
 													</div>
 												</div>
 											</div>
 										</div>
 										<div class="panel-footer">
-											<a href="./active"><span class="pull-left">View
-													Details</span></a> <span class="pull-right"><i
+											<a href="./active"><span class="pull-left"><spring:message
+														code="details" /></span></a> <span class="pull-right"><i
 												class="fa fa-arrow-circle-right"></i></span>
 											<div class="clearfix"></div>
 										</div>
@@ -142,7 +141,7 @@
 													</div>
 													<div id="status">
 														<h3>
-															<b>In Progress</b>
+															<b><spring:message code="inprogres" /></b>
 														</h3>
 													</div>
 												</div>
@@ -150,8 +149,8 @@
 										</div>
 
 										<div class="panel-footer">
-											<a href="./active"><span class="pull-left">View
-													Details</span></a> <span class="pull-right"><i
+											<a href="./active"><span class="pull-left"><spring:message
+														code="details" /></span></a> <span class="pull-right"><i
 												class="fa fa-arrow-circle-right"></i></span>
 											<div class="clearfix"></div>
 										</div>
@@ -171,15 +170,15 @@
 													</div>
 													<div>
 														<h3>
-															<b>Done</b>
+															<b><spring:message code="done" /></b>
 														</h3>
 													</div>
 												</div>
 											</div>
 										</div>
 										<div class="panel-footer">
-											<a href="./active"><span class="pull-left">View
-													Details</span> </a><span class="pull-right"><i
+											<a href="./active"><span class="pull-left"><spring:message
+														code="details" /></span> </a><span class="pull-right"><i
 												class="fa fa-arrow-circle-right"></i></span>
 											<div class="clearfix"></div>
 										</div>

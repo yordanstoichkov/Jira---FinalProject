@@ -24,11 +24,10 @@
 			<ul class="sidebar-nav">
 				<li><h1 style="font-size: 125%; color: green">${project.title}</h1>
 				<li>
-				<li><a href="./projectmain?projectId=${project.projectId}">Project
-						Plan</a></li>
-				<li><a href="./active">Active Sprint</a></li>
-				<li><a href="./done">Done Sprints</a></li>
-				<li><a href="./overview">Project Overview</a></li>
+				<li><a href="./projectmain?projectId=${project.projectId}"><spring:message code="nav.plan" /></a></li>
+				<li><a href="./active"><spring:message code="nav.active" /></a></li>
+				<li><a href="./done"><spring:message code="nav.done" /></a></li>
+				<li><a href="./overview"><spring:message code="nav.overvie" /></a></li>
 			</ul>
 		</div>
 		<!-- /#sidebar-wrapper -->

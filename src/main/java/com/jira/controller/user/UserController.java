@@ -33,9 +33,6 @@ public class UserController {
 			new SecurityContextLogoutHandler().logout(request, response, auth);
 		}
 		request.getSession().invalidate();
-		response.setHeader("Pragma", "no-cache");
-		response.setHeader("Cache-Control", "no-cache");
-		response.setDateHeader("Expires", 0);
 		return "redirect:index";
 	}
 
@@ -53,28 +50,23 @@ public class UserController {
 			model.addAttribute("user", login);
 			if (loginID > 0) {
 				HttpSession session = request.getSession();
-				session.setMaxInactiveInterval(1000);
+				session.setMaxInactiveInterval(100000);
 				session.setAttribute("username", login.getFirstName());
 				session.setAttribute("userId", loginID);
 				session.setAttribute("user", login);
-
 				if (rememberMe != null && rememberMe.equals("Remember Me")) {
-					Cookie remMe = new Cookie("email", email);
+					Cookie remMe = new Cookie("userId", ""+loginID);
 					response.addCookie(remMe);
-
 				}
-				return "redirect:home";
-
 			} else {
 				request.setAttribute("message", "Wrong username or password");
-				return "index";
-
 			}
-
+			return "home";
 		} catch (EmployeeException e) {
 			request.setAttribute("message", e.getMessage());
 			return "index";
 		} catch (Exception e) {
+			e.printStackTrace();
 			return "error";
 		}
 	}
@@ -151,10 +143,16 @@ public class UserController {
 			return "redirect:profile";
 		}
 		model.addAttribute("user", emp);
-		Employee friend = empDAO.getEmployeeById(id);
-		model.addAttribute("friend", friend);
+		Employee friend;
+		try {
+			friend = empDAO.getEmployeeById(id);
 
-		return "friend";
+			model.addAttribute("friend", friend);
+
+			return "friend";
+		} catch (EmployeeException e) {
+			return "index";
+		}
 	}
 
 }

@@ -1,6 +1,7 @@
 <%@page errorPage="error.jsp"%>
 <%@page session="false"%>
 <%@include file="menu.jsp"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -23,7 +24,6 @@
 			style="padding-left: 70px;"></img>
 	</p>
 	<p>
-	
 	<div class="zaglavie" style="margin-left: 50px; padding-left: 100px;">
 		<h4 class="page-header" style="color: #1b5c9e;">
 			&nbsp;&nbsp;&nbsp;Email:
@@ -34,18 +34,20 @@
 
 	<div class="zaglavie">
 		<h4 class="page-header" style="color: #1b5c9e;">
-			&nbsp;&nbsp;&nbsp;Contact us:<br /> <span style="padding-left: 110px">Gergana
-				Barilska,</span><br /> <span style="padding-left: 110px">Yordan
-				Stoichkov</span>
+			&nbsp;&nbsp;&nbsp;
+			<spring:message code="contactus" />
+			:<br /> <span style="padding-left: 110px">Gergana Barilska,</span><br />
+			<span style="padding-left: 110px">Yordan Stoichkov</span>
 		</h4>
 		<h4 class="page-header" style="color: #1b5c9e;">
-			We are the right choice!
+			<spring:message code="slogan" />
+			!
 		</h4>
 	</div>
 	</p>
 	<div class="logo">
 		<img src="logo.png" width=610px; height=460px;
 			style="color: #1b5c9e; display: inline" />
-	</div>	
+	</div>
 </body>
 </html>
