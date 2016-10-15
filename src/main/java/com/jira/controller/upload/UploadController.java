@@ -50,6 +50,7 @@ public class UploadController {
 				}
 			}
 			Employee emp = (Employee) session.getAttribute("user");
+			model.addAttribute("user", emp);
 			String[] path = file.getOriginalFilename().split("\\\\");
 			String fileName = path[path.length - 1];
 			File picture = new File(WebInitializer.LOCATION + fileName);

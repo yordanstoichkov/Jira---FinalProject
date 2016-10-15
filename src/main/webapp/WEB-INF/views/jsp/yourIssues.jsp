@@ -28,29 +28,46 @@
 							<thead>
 								<tr>
 									<th>Issue name</th>
-									<th>Last modiefied</th>
+									<th>Type</th>
 									<th>Status</th>
 									<th>Priority</th>
+
 								</tr>
 							</thead>
 							<tbody>
 								<c:forEach items="${issues}" var="issue">
 									<tr class="odd gradeX">
+										<td>${issue.title}</td>
 										<td><c:if test="${issue.type == 'TASK'}">
 												<img src="task.png" height="20" width="20">
+												<c:out value=" Task"></c:out>
 											</c:if> <c:if test="${issue.type == 'BUG'}">
 												<img src="bug.png" height="20" width="20">
-											</c:if>${issue.title}</td>
-										<td>${issue.lastUpdate}</td>
-										<td>${issue.status}</td>
+												<c:out value=" Bug"></c:out>
+											</c:if></td>
+										<td><c:if test="${issue.status == 'IN_PROGRESS'}">
+												<i class="fa fa-cog" style="font-size: 1.5em; color: orange"></i>
+												<c:out value=" In Progress"></c:out>
+											</c:if> <c:if test="${issue.status == 'DONE'}">
+												<i class="fa fa-check"
+													style="font-size: 1.5em; color: green"> </i>
+												<c:out value=" Done"></c:out>
+											</c:if> <c:if test="${issue.status == 'TO_DO'}">
+												<i class="fa fa-times" style="font-size: 1.5em; color: red"></i>
+												<c:out value=" To Do"></c:out>
+											</c:if></td>
 										<td class="center"><c:if
 												test="${issue.priority == 'MEDIUM'}">
 												<img src="medium.png" height="20" width="20">
+												<c:out value=" Medium"></c:out>
 											</c:if> <c:if test="${issue.priority == 'HIGH'}">
 												<img src="high.png" height="20" width="20">
+												<c:out value=" High"></c:out>
 											</c:if> <c:if test="${issue.priority == 'LOW'}">
 												<img src="low.png" height="20" width="20">
-											</c:if>${issue.priority}</td>
+												<c:out value=" Low"></c:out>
+											</c:if></td>
+
 									</tr>
 								</c:forEach>
 							</tbody>

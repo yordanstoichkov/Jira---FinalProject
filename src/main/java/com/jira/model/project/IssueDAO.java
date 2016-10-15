@@ -179,14 +179,14 @@ public class IssueDAO implements IIssueDAO {
 			try {
 				connection.rollback();
 			} catch (SQLException e1) {
-				throw new IssueExeption("You can not change the status of issue right now! Try again later!",e1);
+				throw new IssueExeption("You can not change the status of issue right now! Try again later!", e1);
 			}
-			throw new IssueExeption("You can not change the status of issue right now! Try again later!",e);
+			throw new IssueExeption("You can not change the status of issue right now! Try again later!", e);
 		} finally {
 			try {
 				connection.setAutoCommit(true);
 			} catch (SQLException e) {
-				throw new IssueExeption("You can not change the status of issue right now! Try again later!",e);
+				throw new IssueExeption("You can not change the status of issue right now! Try again later!", e);
 
 			}
 		}
@@ -314,10 +314,6 @@ public class IssueDAO implements IIssueDAO {
 		return result;
 	}
 
-	public static java.sql.Date localTimeToDate(LocalDateTime lt) {
-		return new java.sql.Date(lt.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
-	}
-
 	public List<Comment> getComments(int issueId) throws IssueExeption {
 		Connection connection = DBConnection.getConnection();
 		List<Comment> commentsOfIssue = new ArrayList<>();
@@ -346,7 +342,6 @@ public class IssueDAO implements IIssueDAO {
 		Connection connection = DBConnection.getConnection();
 		try {
 			PreparedStatement ps = connection.prepareStatement(INSERT_ISSUE_COMMENT_SQL);
-			Date.valueOf(comment.getDate());
 			ps.setDate(1, Date.valueOf(comment.getDate()));
 			ps.setString(2, comment.getComment());
 			ps.setInt(3, comment.getIssueId());
@@ -382,11 +377,12 @@ public class IssueDAO implements IIssueDAO {
 			issueDelPS.executeUpdate();
 
 		} catch (SQLException e) {
-			throw new IssueExeption("We delete issue right now. Please, try again later!", e);
+			throw new IssueExeption("We can not delete issue right now. Please, try again later!", e);
 
 		}
 
 	}
 
+	
 
 }

@@ -73,6 +73,8 @@ public class IssueController {
 	public String createIssue(@ModelAttribute Issue issue, @RequestParam("sprintId") int sprintId,
 			@RequestParam("assignee") String assignee, Model model, HttpServletRequest request, HttpSession session) {
 		Project project = (Project) session.getAttribute("project");
+		Employee emp = (Employee) session.getAttribute("user");
+		model.addAttribute("user", emp);
 		Sprint sprint = null;
 		try {
 			Set<String> asignees = new HashSet<String>();
@@ -150,6 +152,8 @@ public class IssueController {
 	@RequestMapping(value = "/issue", method = RequestMethod.POST)
 	public String addComent(@ModelAttribute Comment comment, Model model, @RequestParam("issueId") int issueId,
 			HttpSession session) {
+		Employee emp = (Employee) session.getAttribute("user");
+		model.addAttribute("user", emp);
 		Issue issue = null;
 		try {
 			comment.setIssueId(issueId);
@@ -172,6 +176,8 @@ public class IssueController {
 
 	@RequestMapping(value = "/deleteissue", method = RequestMethod.POST)
 	public String deleteIssue(Model model, @RequestParam("issueId") int issueId, HttpSession session) {
+		Employee emp = (Employee) session.getAttribute("user");
+		model.addAttribute("user", emp);
 		Project project = (Project) session.getAttribute("project");
 		System.out.println(issueId);
 		try {
@@ -274,6 +280,7 @@ public class IssueController {
 		Project project = (Project) session.getAttribute("project");
 		model.addAttribute("project", project);
 		Employee user=(Employee) session.getAttribute("user");
+		model.addAttribute("user", user);
 		model.addAttribute("userId", user.getEmployeeID());
 		Sprint activeSprint = (Sprint) session.getAttribute("activeSprint");
 		// for (Sprint sprint : project.getSprints()) {

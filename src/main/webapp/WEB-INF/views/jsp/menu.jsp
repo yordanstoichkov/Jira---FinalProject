@@ -53,7 +53,7 @@
 						<a onclick="myFunction()" class="dropbtn"><img
 							src="${user.avatarPath}" width="25" height="30" /> Hi, <%=request.getSession().getAttribute("username")%></a>
 						<div id="myDropdown" class="dropdown-content">
-							<a href="./profile" ">Profile</a> <a href="#contact">Account Statistics</a> <a
+							<a href="./profile" ">Profile</a>  <a
 								class="active" href="./logout">LogOut</a>
 						</div>
 					</div></li>

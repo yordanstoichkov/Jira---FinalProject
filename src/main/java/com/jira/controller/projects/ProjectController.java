@@ -51,12 +51,12 @@ public class ProjectController {
 	private IPartOfProjectDAO partDAO;
 
 	@RequestMapping(value = "/projects", method = RequestMethod.GET)
-	public String getProjects(Model model, HttpServletRequest request) {
+	public String getProjects(Model model, HttpServletRequest request, HttpSession session) {
 
 		if (request.getSession(false) == null) {
 			return "redirect:index";
 		}
-		HttpSession session = request.getSession();
+		 session = request.getSession();
 		Employee emp = (Employee) session.getAttribute("user");
 		List<Project> projects = new ArrayList<Project>();
 		try {
@@ -88,6 +88,7 @@ public class ProjectController {
 	@RequestMapping(value = "/projects", method = RequestMethod.POST)
 	public String addProjects(@ModelAttribute Project project, Model model, HttpSession session) {
 		Employee emp = (Employee) session.getAttribute("user");
+		model.addAttribute("user", emp);
 		try {
 			projectDAO.createProject(project, emp);
 		} catch (ProjectException e) {
@@ -101,6 +102,7 @@ public class ProjectController {
 
 		try {
 			Employee emp = (Employee) session.getAttribute("user");
+			model.addAttribute("user", emp);
 			List<Project> projects = new ArrayList<Project>();
 			projects.addAll(empDAO.giveMyProjects(emp));
 			Project result = null;
@@ -161,6 +163,8 @@ public class ProjectController {
 
 	@RequestMapping(value = "/overview", method = RequestMethod.GET)
 	public String projectOverView(Model model, HttpSession session) {
+		Employee emp = (Employee) session.getAttribute("user");
+		model.addAttribute("user", emp);
 		Project project = (Project) session.getAttribute("project");
 		int toDo = 0;
 		int progress = 0;

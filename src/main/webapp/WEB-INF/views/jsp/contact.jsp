@@ -23,6 +23,7 @@
 			style="padding-left: 70px;"></img>
 	</p>
 	<p>
+	
 	<div class="zaglavie" style="margin-left: 50px; padding-left: 100px;">
 		<h4 class="page-header" style="color: #1b5c9e;">
 			&nbsp;&nbsp;&nbsp;Email:

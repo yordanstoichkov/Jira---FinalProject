@@ -43,36 +43,17 @@
 	<%
 		if (request.getSession(false) != null) {
 	%>
-	<div class="row" style="padding-top:100px; ">
-		<div class="zaglavie">
-			<h1 class="page-header" style="color: #1b5c9e; padding-left:50px">
-				Plan Idea
-				<br>
-
-			</h1>
-
-		</div>
-	</div>
 	<div class="row">
 		<div class="zaglavie">
-			<h1 class="page-header" style="color: #1b5c9e; padding-left:50px">
-				Track Idea
-				<br>
-
-			</h1>
-
-		</div>
-	</div><div class="row">
-		<div class="zaglavie">
-			<h1 class="page-header" style="color: #1b5c9e; padding-left:50px">
-				Create Idea
-				<br>
+			<h1 class="page-header"
+				style="color: #1b5c9e; padding-left: 50px; padding-top: 250px">
+				Create your projects here!
 
 			</h1>
 
 		</div>
 	</div>
-	
+
 	<div class="logo">
 		<img src="logo.png" width=610px; height=460px;
 			style="color: #1b5c9e; display: inline" />

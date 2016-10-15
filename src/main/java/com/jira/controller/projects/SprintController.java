@@ -64,6 +64,8 @@ public class SprintController {
 			@RequestParam("sprintId") int sprintId, Model model, HttpSession session) {
 		try {
 			Project project = (Project) session.getAttribute("project");
+			Employee emp = (Employee) session.getAttribute("user");
+			model.addAttribute("user", emp);
 			Sprint curSprint = null;
 			for (Sprint sprint : project.getSprints()) {
 				if (sprint.getSprintId() == sprintId) {
@@ -127,7 +129,9 @@ public class SprintController {
 	}
 
 	@RequestMapping(value = "/projectmain", method = RequestMethod.POST)
-	public String addSprint(@ModelAttribute Sprint sprint, HttpSession session) {
+	public String addSprint(@ModelAttribute Sprint sprint,Model model, HttpSession session) {
+		Employee emp = (Employee) session.getAttribute("user");
+		model.addAttribute("user", emp);
 		Project project = (Project) session.getAttribute("project");
 		try {
 			sprint.setProject(project);
@@ -147,6 +151,8 @@ public class SprintController {
 	public String getDoneSprints(Model model, HttpSession session) {
 		Project project = (Project) session.getAttribute("project");
 		model.addAttribute("project", project);
+		Employee emp = (Employee) session.getAttribute("user");
+		model.addAttribute("user", emp);
 		return "done";
 	}
 
