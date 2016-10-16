@@ -119,8 +119,9 @@
 											</div>
 										</div>
 										<div class="panel-footer">
-											<a href="./active"><span class="pull-left"><spring:message
-														code="details" /></span></a> <span class="pull-right"><i
+											<a href="./projectmain?projectId=${project.projectId}"><span
+												class="pull-left"><spring:message code="details" /></span></a>
+											<span class="pull-right"><i
 												class="fa fa-arrow-circle-right"></i></span>
 											<div class="clearfix"></div>
 										</div>
@@ -149,8 +150,9 @@
 										</div>
 
 										<div class="panel-footer">
-											<a href="./active"><span class="pull-left"><spring:message
-														code="details" /></span></a> <span class="pull-right"><i
+											<a href="./projectmain?projectId=${project.projectId}"><span
+												class="pull-left"><spring:message code="details" /></span></a>
+											<span class="pull-right"><i
 												class="fa fa-arrow-circle-right"></i></span>
 											<div class="clearfix"></div>
 										</div>
@@ -177,8 +179,9 @@
 											</div>
 										</div>
 										<div class="panel-footer">
-											<a href="./active"><span class="pull-left"><spring:message
-														code="details" /></span> </a><span class="pull-right"><i
+											<a href="./projectmain?projectId=${project.projectId}"><span
+												class="pull-left"><spring:message code="details" /></span>
+											</a><span class="pull-right"><i
 												class="fa fa-arrow-circle-right"></i></span>
 											<div class="clearfix"></div>
 										</div>

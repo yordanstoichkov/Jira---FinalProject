@@ -28,6 +28,7 @@ public class HomeController {
 	@Autowired
 	private IIssueDAO issueDAO;
 
+	// Open index page and if there is cookie or session to home page
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String showIndex(Model model, HttpServletRequest request) {
 		Cookie[] cookies = request.getCookies();
@@ -44,9 +45,6 @@ public class HomeController {
 					}
 				}
 			}
-		}
-		if (request.getSession(false) != null) {
-			return "redirect:home";
 		}
 		try {
 			int usersCount = empDAO.getUserCount();
@@ -69,6 +67,7 @@ public class HomeController {
 
 	}
 
+	// Opens Contact page
 	@RequestMapping(value = "/contact", method = RequestMethod.GET)
 	public String showContact(Model model, HttpServletRequest request) {
 		if (request.getSession(false) != null) {
@@ -77,6 +76,7 @@ public class HomeController {
 		return "contact";
 	}
 
+	// Opens home page when logged in
 	@RequestMapping(value = "/home", method = RequestMethod.GET)
 	public String showHome(Model model, HttpServletRequest request) {
 		if (request.getSession(false) != null) {

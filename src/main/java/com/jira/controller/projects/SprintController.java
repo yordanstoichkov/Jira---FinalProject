@@ -43,9 +43,13 @@ import com.jira.model.project.WorkFlow;
 @Component
 @Controller
 public class SprintController {
+	private static final int POSITION_OF_DAY = 2;
+	private static final int POSITION_OF_MONTH = 1;
+	private static final int POSITION_OF_YEAR = 0;
 	@Autowired
 	private ISprintDAO sprintDAO;
 
+	// Opens page with form for sprint start information
 	@RequestMapping(value = "/startsprint", method = RequestMethod.POST)
 	public String startSprint(@RequestParam("sprintId") int sprintId, Model model, HttpServletRequest request) {
 		if (request.getSession(false) == null) {
@@ -67,6 +71,7 @@ public class SprintController {
 		}
 	}
 
+	// Put the information for the starting sprint in the database.
 	@RequestMapping(value = "/beginsprint", method = RequestMethod.POST)
 	public String beginSprint(@RequestParam("sprintGoal") String sprintGoal,
 			@RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate,
@@ -86,7 +91,7 @@ public class SprintController {
 			}
 		}
 		try {
-			if(startDate==null||endDate==null||startDate.trim().equals("")||endDate.trim().equals("")){
+			if (startDate == null || endDate == null || startDate.trim().equals("") || endDate.trim().equals("")) {
 				throw new SprintException("Dates must be given, to begin spring");
 			}
 			String[] sDate = startDate.split("-");
@@ -94,15 +99,15 @@ public class SprintController {
 			int month = 0, year = 0, day = 0;
 			int endMonth = 0, endYear = 0, endDay = 0;
 			for (int num = 0; num < sDate.length; num++) {
-				if (num == 0) {
+				if (num == POSITION_OF_YEAR) {
 					year = Integer.parseInt(sDate[num]);
 					endYear = Integer.parseInt(eDate[num]);
 				}
-				if (num == 1) {
+				if (num == POSITION_OF_MONTH) {
 					month = Integer.parseInt(sDate[num]);
 					endMonth = Integer.parseInt(eDate[num]);
 				}
-				if (num == 2) {
+				if (num == POSITION_OF_DAY) {
 					day = Integer.parseInt(sDate[num]);
 					endDay = Integer.parseInt(eDate[num]);
 				}
@@ -125,6 +130,7 @@ public class SprintController {
 
 	}
 
+	// Opens the page of the active sprint
 	@RequestMapping(value = "/active", method = RequestMethod.GET)
 	public String getActiveSprintOfProject(Model model, HttpServletRequest request) {
 		if (request.getSession(false) == null) {
@@ -140,12 +146,12 @@ public class SprintController {
 					isActiveSprint = true;
 					session.setAttribute("activeSprint", sprint);
 					model.addAttribute("activeSprint", sprint);
-				} else {
-					model.addAttribute("activeSprint", null);
+					break;
 				}
 			}
 			if (!isActiveSprint) {
 				model.addAttribute("message", "There is no active sprint. You can start a new one.");
+				model.addAttribute("activeSprint", null);
 			}
 			model.addAttribute("user", session.getAttribute("user"));
 			int userId = (int) session.getAttribute("userId");
@@ -157,6 +163,7 @@ public class SprintController {
 		}
 	}
 
+	// Creates new sprint
 	@RequestMapping(value = "/projectmain", method = RequestMethod.POST)
 	public String addSprint(@ModelAttribute Sprint sprint, HttpServletRequest request) {
 		if (request.getSession(false) == null) {
@@ -173,12 +180,13 @@ public class SprintController {
 			return "redirect:/projectmain?projectId=" + project.getProjectId();
 		} catch (ProjectException e) {
 			return "redirect:/projectmain?projectId=" + project.getProjectId();
-		}catch (Exception e) {
+		} catch (Exception e) {
 			return "error";
 		}
 
 	}
 
+	// Opens page for done sprints
 	@RequestMapping(value = "done", method = RequestMethod.GET)
 	public String getDoneSprints(Model model, HttpServletRequest request) {
 		if (request.getSession(false) == null) {

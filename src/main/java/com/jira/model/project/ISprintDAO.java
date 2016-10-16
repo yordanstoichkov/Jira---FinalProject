@@ -1,5 +1,7 @@
 package com.jira.model.project;
 
+import java.util.List;
+
 import com.jira.model.exceptions.SprintException;
 
 public interface ISprintDAO {
@@ -12,4 +14,5 @@ public interface ISprintDAO {
 
 	void updateSprintStatus(int sprintId) throws SprintException;
 
+	List<Sprint> getActiveSprint() throws SprintException;
 }

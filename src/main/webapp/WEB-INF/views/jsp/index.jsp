@@ -22,6 +22,23 @@
 <meta http-equiv="Expires" content="Sat, 01 Dec 2001 00:00:00 GMT">
 </head>
 <body>
+	<script>
+		function validateForm() {
+			$("#demo").empty();
+			var text;
+			var z = trim(document.forms["form"]["email"].value);
+			var a = trim(document.forms["form"]["password"].value);
+			if (z == null || z == "" || a == null || a == "") {
+				text = "All inputs must be filled out";
+				$("#demo").append(text);
+				return false;
+			}
+
+		}
+		function trim(value) {
+			return value.replace(/^\s+|\s+$/g, "");
+		}
+	</script>
 	<a href="<spring:message code="lang"/>"> <img height="30"
 		width="30" src="<spring:message code="pic"/>"></a>
 	<div class="container">
@@ -35,22 +52,22 @@
 						</h1>
 					</div>
 					<div class="panel-body">
-						<c:if test="${not empty message }">
-							<p>
-								<span style="color: #ff3333; font-size: 140%"><c:out
-										value="${message}"></c:out></span>
-							</p>
-						</c:if>
-
-						<form:form>
+						<span id="demo" style="color: #ff3333; font-size: 140%"><c:if
+								test="${not empty message }">
+								<p>
+									<span style="color: #ff3333; font-size: 140%"><c:out
+											value="${message}"></c:out></span>
+								</p>
+							</c:if> </span>
+						<form:form id="form" onsubmit="return validateForm()">
 							<fieldset>
 
 								<div class="form-group">
-									<input class="form-control" placeholder="E-mail" name="email"
-										type="username" autofocus>
+									<input id="email" class="form-control" placeholder="E-mail"
+										name="email" type="username" autofocus>
 								</div>
 								<div class="form-group">
-									<input class="form-control"
+									<input id="password" class="form-control"
 										placeholder="<spring:message code="password" />"
 										name="password" type="password" value="">
 								</div>

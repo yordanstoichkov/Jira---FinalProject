@@ -11,8 +11,6 @@ import com.jira.model.exceptions.SprintException;
 
 public class Sprint {
 	private IValidator validator = new Validator();
-
-
 	private Project project;
 	private List<Issue> issues = new ArrayList<Issue>();
 	private LocalDate endDate;

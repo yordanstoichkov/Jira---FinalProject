@@ -8,12 +8,14 @@
 <link rel="stylesheet" href="addtypes.css">
 <link href="plan.css" rel="stylesheet">
 <link href="iconic.css" rel="stylesheet">
-    <link href="bootstrap.min.css" rel="stylesheet">
+<link href="bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 	<c:if test="${manager=='1'}">
 		<div class="createSP">
-			<button type="button" class="sprintButton" id="sprintBtn"><spring:message code="sprint.create" /></button>
+			<button type="button" class="sprintButton" id="sprintBtn">
+				<spring:message code="sprint.create" />
+			</button>
 		</div>
 	</c:if>
 	<div class="col-lg-12" style="padding-left: 300px">
@@ -25,35 +27,54 @@
 				<table>
 					<thead>
 						<tr>
-							<th colspan="4"><h1 style="font-size: 130%"><spring:message code="sprint" />:
-									${sprint.title}</h1></th>
-							<c:if test="${not empty activeSprint}">
+							<th colspan="4"><h1 style="font-size: 130%">
+									<spring:message code="sprint" />
+									: ${sprint.title}
+								</h1></th>
+							<c:if test="${manager=='0'}">
 								<th><span style="padding-right: 8px; padding-top: 3px;">
 
-										<button style="float: right;" data-toggle="tooltip"
-											title="There is active sprint" class="btn" disabled><spring:message code="sprint.start" /></button>
-								</span></th>
+											<button style="float: right;" data-toggle="tooltip"
+												title="You are not the manager" class="btn" disabled>
+												<spring:message code="sprint.start" />
+											</button>
+									</span></th>
 							</c:if>
-							<c:if test="${empty activeSprint}">
-								<c:choose>
-									<c:when test="${empty sprint.issues}">
-										<th><span style="padding-right: 8px; padding-top: 3px;">
+							<c:if test="${manager=='1'}">
+								<c:if test="${not empty activeSprint}">
+									<th><span style="padding-right: 8px; padding-top: 3px;">
 
-												<button style="float: right;" data-toggle="tooltip"
-													title="There are not issues in this sprint" class="btn"
-													disabled><spring:message code="sprint.start" /></button>
-										</span></th>
-									</c:when>
-									<c:otherwise>
-										<th><form action="./startsprint" method="post">
-												<span style="padding-right: 8px; padding-top: 3px;">
-													<button style="float: right" name="sprintId"
-														value="${sprint.sprintId}" type="submit"
-														class="btn btn-warning"><spring:message code="sprint.start" /></button>
-												</span>
-											</form></th>
-									</c:otherwise>
-								</c:choose>
+											<button style="float: right;" data-toggle="tooltip"
+												title="There is active sprint" class="btn" disabled>
+												<spring:message code="sprint.start" />
+											</button>
+									</span></th>
+								</c:if>
+								<c:if test="${empty activeSprint}">
+									<c:choose>
+										<c:when test="${empty sprint.issues}">
+											<th><span style="padding-right: 8px; padding-top: 3px;">
+
+													<button style="float: right;" data-toggle="tooltip"
+														title="There are not issues in this sprint" class="btn"
+														disabled>
+														<spring:message code="sprint.start" />
+													</button>
+											</span></th>
+										</c:when>
+										<c:otherwise>
+											<th><form action="./startsprint" method="post">
+													<span style="padding-right: 8px; padding-top: 3px;">
+														<button style="float: right" name="sprintId"
+															value="${sprint.sprintId}" type="submit"
+															class="btn btn-warning">
+															<spring:message code="sprint.start" />
+														</button>
+													</span>
+												</form></th>
+										</c:otherwise>
+									</c:choose>
+								</c:if>
 							</c:if>
 						</tr>
 						<tr>
@@ -89,8 +110,7 @@
 											title="${employee.firstName}" height="20" width="20"
 											src="${employee.avatarPath}"></a>
 									</c:forEach></td>
-								<td><form action="./issue"
-										style="display: inline">
+								<td><form action="./issue" style="display: inline">
 										<input type="image" src="info.png" width=20px height=20px
 											name="issueId" value="${issue.issueId}"
 											title="Open issue details" />
@@ -106,9 +126,11 @@
 						<tr>
 							<td style="text-align: left" colspan="5"><form
 									action="./newIssue">
-									<button type="submit" style="margin-bottom:8px;" class="btn btn-danger" id="myBtn"
-										name="sprintId" value="${sprint.sprintId}">
-										<i class="fa fa-plus-circle"></i> <spring:message code="issue.add" />
+									<button type="submit" style="margin-bottom: 8px;"
+										class="btn btn-danger" id="myBtn" name="sprintId"
+										value="${sprint.sprintId}">
+										<i class="fa fa-plus-circle"></i>
+										<spring:message code="issue.add" />
 									</button>
 								</form></td>
 						</tr>
@@ -128,7 +150,9 @@
 		<div class="sprintModal-content">
 			<span class="close1">x</span>
 			<h1
-				style="padding-left: 200px; padding-bottom: 30px; padding-top: 15px; font-size: 150%"><spring:message code="sprint.create" /></h1>
+				style="padding-left: 200px; padding-bottom: 30px; padding-top: 15px; font-size: 150%">
+				<spring:message code="sprint.create" />
+			</h1>
 			<form:form name="form" commandName="emptysprint"
 				onsubmit="return validateForm()">
 				<fieldset class="contact-inner">
@@ -137,7 +161,8 @@
 					</p>
 					<p id="demo"></p>
 					<p class="contact-submit">
-						<input type="submit" value="<spring:message code="sprint.create" />">
+						<input type="submit"
+							value="<spring:message code="sprint.create" />">
 					</p>
 				</fieldset>
 			</form:form>

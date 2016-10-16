@@ -129,7 +129,7 @@
 			<label><spring:message code="issue.priority" />: </label>
 			<form:select path="priority" class="form-control">
 				<form:option value="LOW"><spring:message code="low" /></form:option>
-				<form:option value="MIDDLE"><spring:message code="medium" /></form:option>
+				<form:option value="MEDIUM"><spring:message code="medium" /></form:option>
 				<form:option value="HIGH"><spring:message code="high" /></form:option>
 			</form:select>
 		</div>

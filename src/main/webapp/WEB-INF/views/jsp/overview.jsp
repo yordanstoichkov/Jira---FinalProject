@@ -10,6 +10,7 @@
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
 <script type="text/javascript" src="jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="jquery.canvasjs.min.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -22,17 +23,6 @@
 <link href="font-awesome.min.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-	<div class="row">
-		<div class="zaglavie">
-			<h1 class="page-header" style="color: #1b5c9e;">
-				<c:out value="${project.title}"></c:out>
-				<br>
-
-			</h1>
-
-		</div>
-	</div>
-
 	<script type="text/javascript">
 		window.onload = function() {
 
@@ -57,6 +47,18 @@
 			chart.render();
 		}
 	</script>
+	<div class="row">
+		<div class="zaglavie">
+			<h1 class="page-header" style="color: #1b5c9e;">
+				<c:out value="${project.title}"></c:out>
+				<br>
+
+			</h1>
+
+		</div>
+	</div>
+
+
 
 	<div id="chartContainer"
 		style="padding-top: 0px; height: 300px; width: 100%; margin-left: 60px;"></div>

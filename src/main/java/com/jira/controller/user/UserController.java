@@ -23,9 +23,11 @@ import com.jira.model.exceptions.EmployeeException;
 
 @Controller
 public class UserController {
+	private static final int TWO_MINUTES = 120000;
 	@Autowired
 	private IEmployeeDAO empDAO;
 
+	// Logs user out
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	public String logout(Model model, HttpServletRequest request, HttpServletResponse response) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -36,6 +38,7 @@ public class UserController {
 		return "redirect:index";
 	}
 
+	// Logs user in
 	@RequestMapping(value = "/index", method = RequestMethod.POST)
 	public String login(Model model, HttpServletRequest request, HttpServletResponse response) {
 		String email = request.getParameter("email");
@@ -50,12 +53,12 @@ public class UserController {
 			model.addAttribute("user", login);
 			if (loginID > 0) {
 				HttpSession session = request.getSession();
-				session.setMaxInactiveInterval(100000);
+				session.setMaxInactiveInterval(TWO_MINUTES);
 				session.setAttribute("username", login.getFirstName());
 				session.setAttribute("userId", loginID);
 				session.setAttribute("user", login);
 				if (rememberMe != null && rememberMe.equals("Remember Me")) {
-					Cookie remMe = new Cookie("userId", ""+loginID);
+					Cookie remMe = new Cookie("userId", "" + loginID);
 					response.addCookie(remMe);
 				}
 			} else {
@@ -63,6 +66,7 @@ public class UserController {
 			}
 			return "home";
 		} catch (EmployeeException e) {
+			e.printStackTrace();
 			request.setAttribute("message", e.getMessage());
 			return "index";
 		} catch (Exception e) {
@@ -71,6 +75,7 @@ public class UserController {
 		}
 	}
 
+	// Registers user
 	@RequestMapping(value = "/reg", method = RequestMethod.POST)
 	public String register(Model model, HttpServletRequest request, HttpServletResponse response) {
 		String firstName = request.getParameter("firstname");
@@ -84,16 +89,7 @@ public class UserController {
 			}
 
 			String jobPar = request.getParameter("job");
-			Jobs job = null;
-			if (jobPar.equals(Jobs.DEVELOPER.toString())) {
-				job = Jobs.DEVELOPER;
-			}
-			if (jobPar.equals(Jobs.MANAGER.toString())) {
-				job = Jobs.MANAGER;
-			}
-			if (jobPar.equals(Jobs.QA.toString())) {
-				job = Jobs.QA;
-			}
+			Jobs job = Jobs.valueOf(jobPar);
 
 			Employee regUser;
 			int empID = 0;
@@ -104,7 +100,7 @@ public class UserController {
 			model.addAttribute("user", regUser);
 			if (empID != 0) {
 				request.setAttribute("message", "You are registered now login");
-				return "redirect:index";
+				return "index";
 			}
 
 			return "register";
@@ -116,11 +112,13 @@ public class UserController {
 		}
 	}
 
+	// Opens register page
 	@RequestMapping(value = "/reg", method = RequestMethod.GET)
 	public String register(Model model) {
 		return "register";
 	}
 
+	// Opens profile page
 	@RequestMapping(value = "/profile", method = RequestMethod.GET)
 	public String getProfile(Model model, HttpServletRequest request) {
 		if (request.getSession(false) == null) {
@@ -132,6 +130,7 @@ public class UserController {
 		return "profile";
 	}
 
+	// Opens friend's profile page
 	@RequestMapping(value = "/friend", method = RequestMethod.GET)
 	public String getFriendProfile(@RequestParam("id") int id, Model model, HttpServletRequest request) {
 		if (request.getSession(false) == null) {

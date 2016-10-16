@@ -6,6 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.jira.model.connections.DBConnection;
@@ -20,7 +23,7 @@ public class SprintDAO implements ISprintDAO {
 	private IValidator validator = new Validator();
 
 	@Autowired
-	private IIssueDAO issueDAO;
+	private IIssueDAO issueDAO= new IssueDAO();
 	@Autowired
 	private IPartOfProjectDAO partDAO;
 
@@ -30,9 +33,10 @@ public class SprintDAO implements ISprintDAO {
 	private static final String INSERT_SPRINT_SQL = "INSERT INTO sprints VALUES (null, null, null, ?, ?, ?, NULL);";
 	private static final String SELECT_SPRINT_STATUS_SQL = "SELECT status_id FROM statuses WHERE status = ?";
 	private static final String SELECT_SPRINT_SQL = "SELECT * FROM sprints WHERE sprint_id = ?";
-	private static final String SELECT_ISSUES_SQL = "SELECT issue_id " + "FROM issues " + "WHERE sprint_id=?";
+	private static final String SELECT_ISSUES_SQL = "SELECT issue_id FROM issues WHERE sprint_id=?";
 	private static final String START_SPRINT_SQL = "UPDATE sprints SET start_date=?, end_date=?, sprint_goal=?, status_id=? WHERE sprint_id=?";
 	private static final String UPDATE_SPRINT_STATUS_SQL = "UPDATE sprints SET status_id=? WHERE sprint_id=?";
+	private static final String SELECT_SPRINT_IN_ONE_STATUS_SQL = "SELECT * FROM sprints WHERE status_id = ?";
 
 	// Creating new sprint
 	@Override
@@ -89,9 +93,15 @@ public class SprintDAO implements ISprintDAO {
 			sprintRS.next();
 			String title = sprintRS.getString("title");
 			int statusID = sprintRS.getInt("status_id");
+			Date startDate = sprintRS.getDate("start_date");
+			Date endDate = sprintRS.getDate("end_date");
 			WorkFlow status = partDAO.getStatus(statusID);
 			result = new Sprint(title);
 			result.setSprintId(sprintID);
+			if (status.equals(WorkFlow.IN_PROGRESS)) {
+				result.setStartDate(startDate.toLocalDate());
+				result.setEndDate(endDate.toLocalDate());
+			}
 			result.setStatus(status);
 			PreparedStatement issuePS = connection.prepareStatement(SELECT_ISSUES_SQL);
 			issuePS.setInt(1, sprintID);
@@ -108,6 +118,46 @@ public class SprintDAO implements ISprintDAO {
 			throw new SprintException("Something went wrong can't get your sprint", e);
 		}
 		return result;
+	}
+
+	public List<Sprint> getActiveSprint() throws SprintException {
+		Connection connection = DBConnection.getConnection();
+		List<Sprint> activeSprints = new ArrayList<Sprint>();
+		try {
+			PreparedStatement ps = connection.prepareStatement(SELECT_SPRINT_IN_ONE_STATUS_SQL);
+			ps.setInt(1, STATUS_ID_OF_IN_PROGRESS);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				int sprintId = rs.getInt("sprint_id");
+				Date sprintEndDate = rs.getDate("end_date");
+				Sprint sprint = new Sprint();
+				if (sprintEndDate == null) {
+					continue;
+				}
+				sprint.setEndDate(sprintEndDate.toLocalDate());
+				sprint.setSprintId(sprintId);
+				activeSprints.add(sprint);
+			}
+			for (Sprint sprint : activeSprints) {
+				int sprintID = sprint.getSprintId();
+				PreparedStatement issuePS = connection.prepareStatement(SELECT_ISSUES_SQL);
+				issuePS.setInt(1, sprintID);
+				ResultSet issuesRS = issuePS.executeQuery();
+				while (issuesRS.next()) {
+					int issueID = issuesRS.getInt(1);
+					sprint.addIssue(issueDAO.getIssue(issueID));
+				}
+			}
+			return activeSprints;
+		} catch (SQLException e) {
+			throw new SprintException("We can not get sprints right now.", e);
+		} catch (SprintException e) {
+			throw new SprintException("We can not get sprints right now.", e);
+		} catch (IssueException e) {
+			throw new SprintException("We can not get sprints right now.", e);
+
+		}
+
 	}
 
 	// Setting start date, end date, goal,status and id of sprint

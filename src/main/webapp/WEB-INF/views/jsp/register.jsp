@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="ISO-8859-1"%>
-	<%@page session="false"%>
+<%@page session="false"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
@@ -10,9 +10,12 @@
 <link href="sb-admin-2.css" rel="stylesheet">
 <link href="font-awesome.min.css" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="jquery-3.1.1.min.js"></script>
+<sec:csrfMetaTags />
 </head>
 <body>
 	<script>
+		var header = $("meta[name='_csrf_header']").attr("content");
+		var token = $("meta[name='_csrf']").attr("content");
 		function checkEmail() {
 			var email = $("#email").val();
 			$.get(
@@ -28,6 +31,30 @@
 						$("#answer").append(img)
 					});
 		}
+		function validateForm() {
+			$("#demo").empty();
+			var text;
+			var x = trim(document.forms["form"]["firstname"].value);
+			var y = trim(document.forms["form"]["lastname"].value);
+			var z = trim(document.forms["form"]["email"].value);
+			var a = trim(document.forms["form"]["password1"].value);
+			var b = trim(document.forms["form"]["password2"].value);
+			if (x == null || x == "" || z == null || z == "" || y == null
+					|| y == "" || b == null || b == "" || a == null || a == "") {
+				text = "All inputs must be filled out";
+				$("#demo").append(text);
+				return false;
+			}
+			if (a != b) {
+				text = "Passwords must be the same";
+				$("#demo").append(text);
+				return false;
+			}
+
+		}
+		function trim(value) {
+			return value.replace(/^\s+|\s+$/g, "");
+		}
 	</script>
 	<a href="<spring:message code="lang"/>"> <img height="30"
 		width="30" src="<spring:message code="pic"/>"></a>
@@ -41,39 +68,42 @@
 					</h1>
 				</div>
 				<div class="panel-body">
-
-					<c:if test="${not empty message }">
-						<p>
-							<c:out value="${message}"></c:out>
-						</p>
-					</c:if>
-					<form role="form" method="post" action="./reg">
+					<span id="demo" style="color: #ff3333; font-size: 140%"> <c:if
+							test="${not empty message }">
+							<p>
+								<c:out value="${message}"></c:out>
+							</p>
+						</c:if>
+					</span>
+					<form id="form" role="form" method="post" action="./reg"
+						onsubmit="return validateForm()">
 						<fieldset>
 							<div class="form-group">
-								<input class="form-control"
+								<input id="firstname" class="form-control"
 									placeholder="<spring:message code="regist.firstName" />"
 									name="firstname" type="text" autofocus>
 							</div>
 							<div class="form-group">
-								<input class="form-control"
+								<input id="lastname" class="form-control"
 									placeholder="<spring:message code="register.lastName" />"
 									name="lastname" type="text" autofocus>
 							</div>
 							<div id="answer"></div>
 							<div class="form-group">
 
-								<input class="form-control" id="email" placeholder="E-mail"
-									name="email" type="email" autofocus onblur="checkEmail()">
+								<input id="email" class="form-control" id="email"
+									placeholder="E-mail" name="email" type="email" autofocus
+									onblur="checkEmail()">
 
 							</div>
 
 							<div class="form-group">
-								<input class="form-control"
+								<input id="password1" class="form-control"
 									placeholder="<spring:message code="password" />"
 									name="password" type="password" value="">
 							</div>
 							<div class="form-group">
-								<input class="form-control"
+								<input id="password2" class="form-control"
 									placeholder="<spring:message code="password" />"
 									name="passwordrepeat" type="password" value="">
 							</div>

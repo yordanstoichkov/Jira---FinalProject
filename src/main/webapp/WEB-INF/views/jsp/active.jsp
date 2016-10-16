@@ -19,7 +19,13 @@
 
 </head>
 <body>
-
+	<div style="margin-left: 350px">
+		<c:if test="${not empty message}">
+			<h2>
+				<c:out value="${message}"></c:out>
+			</h2>
+		</c:if>
+	</div>
 	<div class="row">
 		<div class="col-lg-6">
 			<div class="panel panel-default">
@@ -120,7 +126,7 @@
 													items="${issue.asignees}" var="asignee">
 													<c:if test="${asignee==userId}">
 														<a href="#" data-toggle="tooltip" title="You made it!">
-															<input type="image" src="done.png" width=20px;
+															<input type="image" src="yes.png" width=20px;
 															height=20px; align="right" ; name="issueId"
 															class="btTxt submit" id="saveForm" />
 														</a>
@@ -143,13 +149,7 @@
 		</div>
 		<!-- /.panel -->
 	</div>
-	<div style="margin-left: 350px">
-		<c:if test="${not empty message}">
-			<h2>
-				<c:out value="${message}"></c:out>
-			</h2>
-		</c:if>
-	</div>
+
 	<script>
 		$(document).ready(function() {
 			$('[data-toggle="tooltip"]').tooltip();

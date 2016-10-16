@@ -43,7 +43,6 @@ import com.jira.model.project.WorkFlow;
 public class IssueController {
 	@Autowired
 	private IEmployeeDAO empDAO;
-
 	@Autowired
 	private ISprintDAO sprintDAO;
 	@Autowired
@@ -51,6 +50,7 @@ public class IssueController {
 	@Autowired
 	private IPartOfProjectDAO partDAO;
 
+	// Opens the page with form for new Issue.And adds empty issue do be filled.
 	@RequestMapping(value = "/newIssue", method = RequestMethod.GET)
 	public String addNewIssue(@RequestParam("sprintId") int sprintId, Model model, HttpServletRequest request) {
 		if (request.getSession(false) == null) {
@@ -77,6 +77,7 @@ public class IssueController {
 		}
 	}
 
+	// Gets the Issue with the filled information and send it to the Database.
 	@RequestMapping(value = "/newIssue", method = RequestMethod.POST)
 	public String createIssue(@ModelAttribute Issue issue, @RequestParam("sprintId") int sprintId,
 			@RequestParam("assignee") String assignee, Model model, HttpServletRequest request) {
@@ -142,6 +143,7 @@ public class IssueController {
 		}
 	}
 
+	// Opens the page with user's issues taken from the database.
 	@RequestMapping(value = "/myIssues", method = RequestMethod.GET)
 	public String getMyIssues(Model model, HttpServletRequest request) {
 		if (request.getSession(false) == null) {
@@ -175,6 +177,7 @@ public class IssueController {
 
 	}
 
+	// Adds comment to Issue
 	@RequestMapping(value = "/issue", method = RequestMethod.POST)
 	public String addComent(@ModelAttribute Comment comment, Model model, @RequestParam("issueId") int issueId,
 			HttpServletRequest request) {
@@ -201,6 +204,7 @@ public class IssueController {
 
 	}
 
+	// Deletes issue
 	@RequestMapping(value = "/deleteissue", method = RequestMethod.POST)
 	public String deleteIssue(Model model, @RequestParam("issueId") int issueId, HttpServletRequest request) {
 		if (request.getSession(false) == null) {
@@ -219,6 +223,7 @@ public class IssueController {
 
 	}
 
+	// Opens detailed page for an issue
 	@RequestMapping(value = "/issue", method = RequestMethod.GET)
 	public String showIssueInfo(@RequestParam("issueId") int issueId, Model model, HttpServletRequest request) {
 		if (request.getSession(false) == null) {
@@ -244,15 +249,12 @@ public class IssueController {
 
 			developersId.addAll(empDAO.getDevelopers(issueId));
 
-			// model.addAttribute("developersId", developersId);
 			List<Integer> reviewersId = new ArrayList<Integer>();
 
 			reviewersId.addAll(empDAO.getReviewers(issueId));
-			// model.addAttribute("reviewersId", reviewersId);
 			List<Integer> managersId = new ArrayList<Integer>();
 			managersId.addAll(empDAO.getManagers(project.getProjectId()));
 
-			// model.addAttribute("managersId", managersId);
 			List<String> namesOfManagers = new ArrayList<String>();
 			if (managersId != null) {
 				for (Integer empId : managersId) {
@@ -300,6 +302,7 @@ public class IssueController {
 
 	}
 
+	// Make one issue move through the workflow statuses
 	@RequestMapping(value = "/active", method = RequestMethod.POST)
 	public String updateIssueStatus(@RequestParam("issueId") int issueId, Model model, HttpServletRequest request) {
 		if (request.getSession(false) == null) {
@@ -313,7 +316,12 @@ public class IssueController {
 			model.addAttribute("userId", user.getEmployeeID());
 			model.addAttribute("user", user);
 			Sprint activeSprint = (Sprint) session.getAttribute("activeSprint");
-
+			if (activeSprint.getStartDate().isAfter(LocalDate.now())) {
+				model.addAttribute("message",
+						"This operation cannot be done now. Sprint's start date is " + activeSprint.getStartDate());
+				model.addAttribute("activeSprint", activeSprint);
+				return "active";
+			}
 			for (Issue issue : activeSprint.getIssues()) {
 				if (issue.getIssueId() == issueId) {
 
@@ -348,6 +356,7 @@ public class IssueController {
 		} catch (SprintException e) {
 			return "redirect:active";
 		} catch (Exception e) {
+			e.printStackTrace();
 			return "error";
 		}
 

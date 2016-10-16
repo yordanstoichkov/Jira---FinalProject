@@ -17,29 +17,34 @@ import com.jira.model.exceptions.EmployeeException;
 
 @RestController
 public class ServiceController {
+	private static final String EMPTY_JSON = "{}";
+	private static final String ALLOW_IMAGE = "yes.png";
+	private static final String REJECT_IMAGE = "no.png";
 	@Autowired
 	private IEmployeeDAO empDAO;
 
+	// Check the email and returs if it is free and allowed or not with an image
 	@RequestMapping(value = "/checkemail", method = RequestMethod.GET)
 	public String getProjects(@RequestParam("email") String email, Model model) {
 		int check = 0;
 		if (!Employee.isEmailValid(email)) {
-			return "no.png";
+			return REJECT_IMAGE;
 		}
 		EmployeeDAO dao;
 		try {
-			check = new EmployeeDAO().validEmail(email);
+			check = empDAO.validEmail(email);
 		} catch (EmployeeException e) {
-			return "{}";
+			return EMPTY_JSON;
 		}
 		if (check != 0) {
-			return "no.png";
+			return REJECT_IMAGE;
 		} else {
-			return "yes.png";
+			return ALLOW_IMAGE;
 		}
 
 	}
 
+	// Get's employees names and email from the data base starting with a prefix
 	@RequestMapping(value = "/givenames", method = RequestMethod.GET)
 	public List<String> getNames(@RequestParam("start") String name, Model model) {
 		try {
@@ -48,8 +53,7 @@ public class ServiceController {
 			name = name.toLowerCase();
 			names.addAll(empDAO.getEmployeesNames());
 			for (String str : names) {
-				String[] twoNames = str.split(" ");
-				if (twoNames[0].toLowerCase().startsWith(name) || twoNames[1].toLowerCase().startsWith(name)) {
+				if (str.toLowerCase().startsWith(name)) {
 					result.add(str);
 				}
 			}

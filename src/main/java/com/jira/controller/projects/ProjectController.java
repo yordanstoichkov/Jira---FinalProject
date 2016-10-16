@@ -30,11 +30,14 @@ import com.jira.model.project.WorkFlow;
 @Component
 @Controller
 public class ProjectController {
+	private static final int NUMBER_FOR_NOT_MANAGER = 0;
+	private static final int NUMBER_FOR_PROJECT_MANAGER = 1;
 	@Autowired
 	private IEmployeeDAO empDAO;
 	@Autowired
 	private IProjectDAO projectDAO;
 
+	// Opens the page with all user's projects
 	@RequestMapping(value = "/projects", method = RequestMethod.GET)
 	public String getProjects(Model model, HttpServletRequest request) {
 		if (request.getSession(false) == null) {
@@ -62,11 +65,12 @@ public class ProjectController {
 		} catch (EmployeeException e) {
 			e.printStackTrace();
 			return "redirect:index";
-		}catch (Exception e) {
+		} catch (Exception e) {
 			return "error";
 		}
 	}
 
+	// Creates new project with manager the user
 	@RequestMapping(value = "/projects", method = RequestMethod.POST)
 	public String addProjects(@ModelAttribute Project project, Model model, HttpServletRequest request) {
 		if (request.getSession(false) == null) {
@@ -79,12 +83,13 @@ public class ProjectController {
 			return "redirect:projects";
 		} catch (ProjectException e) {
 			return "redirect:projects";
-		}catch (Exception e) {
+		} catch (Exception e) {
 			return "error";
 		}
 
 	}
 
+	// Deletes project
 	@RequestMapping(value = "/deleteProject", method = RequestMethod.POST)
 	public String deleteProjects(@RequestParam("projectId") int projectId, Model model, HttpServletRequest request) {
 		if (request.getSession(false) == null) {
@@ -107,12 +112,13 @@ public class ProjectController {
 			return "redirect:projects";
 		} catch (ProjectException e) {
 			return "redirect:projects";
-		}catch (Exception e) {
+		} catch (Exception e) {
 			return "error";
 		}
 
 	}
 
+	// Opens the project page of one project
 	@RequestMapping(value = "/projectmain", method = RequestMethod.GET)
 	public String getProject(@RequestParam("projectId") int projectId, Model model, HttpServletRequest request) {
 		if (request.getSession(false) == null) {
@@ -123,14 +129,14 @@ public class ProjectController {
 		model.addAttribute("user", emp);
 		List<Project> projects = new ArrayList<Project>();
 		List<Integer> managers = new ArrayList<Integer>();
-		int manager = 0;
+		int manager = NUMBER_FOR_NOT_MANAGER;
 		try {
 			managers.addAll(empDAO.getManagers(projectId));
 			projects.addAll(empDAO.giveMyProjects(emp));
 
 			for (Integer id : managers) {
 				if (emp.getEmployeeID() == id) {
-					manager = 1;
+					manager = NUMBER_FOR_PROJECT_MANAGER;
 				}
 			}
 			Project result = null;
@@ -153,11 +159,12 @@ public class ProjectController {
 			return "yourProject";
 		} catch (EmployeeException e) {
 			return "redirect:projects";
-		}catch (Exception e) {
+		} catch (Exception e) {
 			return "error";
 		}
 	}
 
+	// Opens the project overvie page. Gives chart's information
 	@RequestMapping(value = "/overview", method = RequestMethod.GET)
 	public String projectOverView(Model model, HttpServletRequest request) {
 		if (request.getSession(false) == null) {
@@ -165,11 +172,11 @@ public class ProjectController {
 		}
 		HttpSession session = request.getSession();
 		Project project = (Project) session.getAttribute("project");
-	model.addAttribute("user", session.getAttribute("user"));
+		model.addAttribute("user", session.getAttribute("user"));
 		int toDo = 0;
 		int progress = 0;
 		int done = 0;
-		
+
 		for (Sprint sprint : project.getSprints()) {
 			if (sprint.getStatus().equals(WorkFlow.TO_DO)) {
 				toDo++;
@@ -182,12 +189,12 @@ public class ProjectController {
 			}
 
 		}
-	
+
 		model.addAttribute("project", project);
 		model.addAttribute("toDo", toDo);
 		model.addAttribute("progress", progress);
 		model.addAttribute("done", done);
-		
+
 		return "overview";
 	}
 }

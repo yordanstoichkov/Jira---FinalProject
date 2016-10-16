@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import com.jira.model.comment.Comment;
 import com.jira.model.connections.DBConnection;
 import com.jira.model.employee.Employee;
+import com.jira.model.employee.EmployeeDAO;
 import com.jira.model.employee.IEmployeeDAO;
 import com.jira.model.employee.IValidator;
 import com.jira.model.employee.Validator;
@@ -26,10 +27,8 @@ import com.jira.model.exceptions.ProjectException;
 public class IssueDAO implements IIssueDAO {
 	private IValidator validator = new Validator();
 
-	@Autowired
-	private IPartOfProjectDAO partDAO;
-	@Autowired
-	private IEmployeeDAO employeeDAO;
+	private IPartOfProjectDAO partDAO = new PartOfProjectDAO();
+	private IEmployeeDAO employeeDAO = new EmployeeDAO();
 
 	private static final int STATUS_ID_OF_DONE = 4;
 	private static final int STATUS_ID_OF_IN_PROGRESS = 2;

@@ -28,6 +28,7 @@ import com.jira.model.project.Sprint;
 
 @Controller
 public class UploadController {
+	private static final String PATH_SEPARATOR = "\\\\";
 	@Autowired
 	private S3Connection s3Con;
 	@Autowired
@@ -35,6 +36,7 @@ public class UploadController {
 	@Autowired
 	private IEmployeeDAO employeeDAO;
 
+	// Uploads pdf file for an issue into S3
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	public String uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("issueId") int issueId,
 			Model model, HttpSession session) {
@@ -51,7 +53,7 @@ public class UploadController {
 		}
 		Employee emp = (Employee) session.getAttribute("user");
 		model.addAttribute("user", emp);
-		String[] path = file.getOriginalFilename().split("\\\\");
+		String[] path = file.getOriginalFilename().split(PATH_SEPARATOR);
 		String fileName = path[path.length - 1];
 		File picture = new File(WebInitializer.LOCATION + fileName);
 		try {
@@ -70,11 +72,12 @@ public class UploadController {
 
 	}
 
+	// Uploads and updates image avatar of the user.
 	@RequestMapping(value = "/profile", method = RequestMethod.POST)
 	public String updateAvatar(@RequestParam("file") MultipartFile file, Model model, HttpSession session) {
 		Employee user = (Employee) session.getAttribute("user");
 		model.addAttribute("user", user);
-		String[] path = file.getOriginalFilename().split("\\\\");
+		String[] path = file.getOriginalFilename().split(PATH_SEPARATOR);
 		String fileName = path[path.length - 1];
 		File avatar = new File(WebInitializer.LOCATION + fileName);
 		try {
