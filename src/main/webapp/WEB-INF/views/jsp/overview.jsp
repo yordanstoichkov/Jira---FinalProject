@@ -16,39 +16,82 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="author" content="">
-<link href="bootstrap.min.css" rel="stylesheet">
-<link href="metisMenu.min.css" rel="stylesheet">
+
 <link href="sb-admin-2.css" rel="stylesheet">
 <link href="morris.css" rel="stylesheet">
 <link href="font-awesome.min.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-	<script src="jquery.min.js"></script>
-	<script src="bootstrap.min.js"></script>
-	<script src="metisMenu.min.js"></script>
-	<script src="excanvas.min.js"></script>
-	<script src="jquery.flot.js"></script>
-	<script src="jquery.flot.pie.js"></script>
-	<script src="jquery.flot.resize.js"></script>
-	<script src="jquery.flot.time.js"></script>
-	<script src="jquery.flot.tooltip.min.js"></script>
-	<script src="flot-data.js"></script>
-	<script src="sb-admin-2.js"></script>
-
 	<div class="row">
 		<div class="zaglavie">
 			<h1 class="page-header" style="color: #1b5c9e;">
 				<c:out value="${project.title}"></c:out>
+				<br>
+
 			</h1>
+
 		</div>
 	</div>
-	<div class="col-lg-6" style="padding-left: 280px">
 
-		<div class="panel-body">
-			<div class="flot-chart">
-				<div class="flot-chart-content" id="flot-pie-chart"></div>
+	<script type="text/javascript">
+		window.onload = function() {
+
+			var chart = new CanvasJS.Chart("chartContainer", {
+				theme : "theme2",//theme1
+				animationEnabled : true, // change to true
+				data : [ {
+					// Change type to "bar", "area", "spline", "pie",etc.
+					type : "pie",
+					dataPoints : [ {
+						label : "In Progress",
+						y : "${progress}"
+					}, {
+						label : "To Do",
+						y : "${toDo}"
+					}, {
+						label : "Done",
+						y : "${done}"
+					} ]
+				} ]
+			});
+			chart.render();
+		}
+	</script>
+
+	<div id="chartContainer"
+		style="padding-top: 0px; height: 300px; width: 100%; margin-left: 60px;"></div>
+
+	<div class="row">
+		<div class="col-lg-6">
+			<div class="panel panel-default">
+				<div class="panel-heading" style="float: center">Sprints</div>
+				<!-- /.panel-heading -->
+				<div class="panel-body">
+					<div class="table-responsive">
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th><i class="fa fa-times"
+										style="font-size: 1.0em; color: red; display: inline"></i> <c:out
+											value="   "></c:out>To Do</th>
+									<th><i class="fa fa-cog"
+										style="font-size: 1.0em; color: orange"></i> <c:out
+											value="   "></c:out>In Progress</th>
+									<th><i class="fa fa-check"
+										style="font-size: 1.0em; color: green"></i> <c:out value="   "></c:out>Done</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><c:out value="${toDo}"></c:out></td>
+									<td><c:out value="${progress}"></c:out></td>
+									<td><c:out value="${done}"></c:out></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
 			</div>
-
 		</div>
 	</div>
 </body>

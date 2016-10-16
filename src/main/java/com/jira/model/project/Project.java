@@ -7,11 +7,12 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.jira.model.employee.IValidator;
+import com.jira.model.employee.Validator;
 import com.jira.model.exceptions.ProjectException;
 
 public class Project {
-	@Autowired
-	private IValidator validator;
+	private IValidator validator = new Validator();
+
 
 	@NotNull
 	private String title;

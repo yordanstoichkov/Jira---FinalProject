@@ -20,6 +20,6 @@ public class Validator implements IValidator {
 	// Used to validate id of users, projects, issues etc
 	@Override
 	public boolean positiveNumberValidator(int number) {
-		return number > 0;
+		return number >= 0;
 	}
 }

@@ -229,8 +229,8 @@
 			<!-- /.panel-body -->
 			<div class="panel-footer">
 				<div class="input-group">
-					<form:form commandName="emptycomment" onsubmit = "return validateForm()">
-						<span class="input-group-btn"> <form:input name="title" path="comment"
+					<form:form name="form" commandName="emptycomment" onsubmit = "return validateForm()">
+						<span class="input-group-btn"> <form:input name="comment" path="comment"
 								id="btn-input" type="text" class="form-control input-sm"
 								placeholder="Type your message here..." style="width: 800px;" />
 							<button type="submit" class="btn btn-warning btn-sm"
@@ -244,12 +244,10 @@
 	</div>
 	<script>
 		function validateForm() {
-			$("#demo").empty();
 			var text;
-			var x = trim(document.forms["form"]["title"].value);
+			var x = trim(document.forms["form"]["comment"].value);
 			if (x == null || x == "") {
 				text = "Name must be filled out";
-				$("#demo").append(text);
 				return false;
 			}
 		}

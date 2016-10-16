@@ -152,6 +152,7 @@ public class SprintController {
 			model.addAttribute("userId", userId);
 			return "active";
 		} catch (Exception e) {
+			e.printStackTrace();
 			return "error";
 		}
 	}

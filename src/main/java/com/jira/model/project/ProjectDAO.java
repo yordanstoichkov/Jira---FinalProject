@@ -12,13 +12,14 @@ import org.springframework.stereotype.Component;
 import com.jira.model.connections.DBConnection;
 import com.jira.model.employee.Employee;
 import com.jira.model.employee.IValidator;
+import com.jira.model.employee.Validator;
 import com.jira.model.exceptions.ProjectException;
 import com.jira.model.exceptions.SprintException;
 
 @Component
 public class ProjectDAO implements IProjectDAO {
-	@Autowired
-	private IValidator validator;
+	private IValidator validator = new Validator();
+
 	@Autowired
 	private ISprintDAO sprintDAO;
 

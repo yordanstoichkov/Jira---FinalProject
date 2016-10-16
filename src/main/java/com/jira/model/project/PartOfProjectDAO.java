@@ -8,13 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.jira.model.connections.DBConnection;
 import com.jira.model.employee.IValidator;
+import com.jira.model.employee.Validator;
 import com.jira.model.exceptions.IssueException;
 import com.jira.model.exceptions.PartOfProjectException;
 
 @Component
 public class PartOfProjectDAO implements IPartOfProjectDAO {
-	@Autowired
-	private IValidator validator;
+	private IValidator validator = new Validator();
+
 
 	private static final String SELECT_STATUS_ID = "SELECT status_id FROM statuses WHERE status = ?;";
 	private static final String SELECT_TYPE_ID = "SELECT type_id FROM issue_types WHERE type = ?;";

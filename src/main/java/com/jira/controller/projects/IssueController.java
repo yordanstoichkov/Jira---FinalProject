@@ -294,6 +294,7 @@ public class IssueController {
 		} catch (EmployeeException e) {
 			return "redirect:projectmain?projectId=" + project.getProjectId();
 		} catch (Exception e) {
+			e.printStackTrace();
 			return "error";
 		}
 

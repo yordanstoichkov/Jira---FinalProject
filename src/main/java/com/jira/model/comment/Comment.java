@@ -4,11 +4,11 @@ import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.jira.model.employee.Employee;
 import com.jira.model.employee.IValidator;
+import com.jira.model.employee.Validator;
 import com.jira.model.exceptions.IssueException;
 
 public class Comment {
-	@Autowired
-	private IValidator validator;
+	private IValidator validator = new Validator();
 
 	private String comment;
 	private Employee writer;
@@ -22,12 +22,13 @@ public class Comment {
 	public Comment(String comment, Employee writer) throws IssueException {
 		this.setComment(comment);
 		this.setWriter(writer);
-		this.date = LocalDate.now();
 	}
+
 	public Comment(int issueId, Employee writer) throws IssueException {
 		this.setWriter(writer);
 		this.setIssueId(issueId);
 	}
+
 	public Comment(String comment, Employee writer, LocalDate date, int issueId) throws IssueException {
 		this(comment, writer);
 		this.setDate(date);

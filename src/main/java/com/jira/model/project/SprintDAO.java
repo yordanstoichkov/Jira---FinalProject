@@ -10,14 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.jira.model.connections.DBConnection;
 import com.jira.model.employee.IValidator;
+import com.jira.model.employee.Validator;
 import com.jira.model.exceptions.IssueException;
 import com.jira.model.exceptions.PartOfProjectException;
 import com.jira.model.exceptions.SprintException;
 
 @Component
 public class SprintDAO implements ISprintDAO {
-	@Autowired
-	private IValidator validator;
+	private IValidator validator = new Validator();
+
 	@Autowired
 	private IIssueDAO issueDAO;
 	@Autowired
@@ -36,7 +37,7 @@ public class SprintDAO implements ISprintDAO {
 	// Creating new sprint
 	@Override
 	public int createSprint(Sprint sprint) throws SprintException {
-		if (validator.objectValidator(sprint)) {
+		if (!validator.objectValidator(sprint)) {
 			throw new SprintException("Invalid sprint entered");
 		}
 		Connection connection = DBConnection.getConnection();
@@ -76,7 +77,7 @@ public class SprintDAO implements ISprintDAO {
 	// Getting sprint by sprint id
 	@Override
 	public Sprint getSprint(int sprintID) throws SprintException {
-		if (validator.positiveNumberValidator(sprintID)) {
+		if (!validator.positiveNumberValidator(sprintID)) {
 			throw new SprintException("Invalid sprint id entered");
 		}
 		Connection connection = DBConnection.getConnection();
@@ -112,7 +113,7 @@ public class SprintDAO implements ISprintDAO {
 	// Setting start date, end date, goal,status and id of sprint
 	@Override
 	public void startSprint(Sprint sprint) throws SprintException {
-		if (validator.objectValidator(sprint)) {
+		if (!validator.objectValidator(sprint)) {
 			throw new SprintException("Invalid sprint entered");
 		}
 
@@ -136,7 +137,7 @@ public class SprintDAO implements ISprintDAO {
 	// Changing sprint status by sprint id
 	@Override
 	public void updateSprintStatus(int sprintId) throws SprintException {
-		if (validator.positiveNumberValidator(sprintId)) {
+		if (!validator.positiveNumberValidator(sprintId)) {
 			throw new SprintException("Invalid issue given");
 		}
 		Connection connection = DBConnection.getConnection();

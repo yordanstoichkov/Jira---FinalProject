@@ -6,11 +6,12 @@ import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.jira.model.employee.IValidator;
+import com.jira.model.employee.Validator;
 import com.jira.model.exceptions.SprintException;
 
 public class Sprint {
-	@Autowired
-	private IValidator validator;
+	private IValidator validator = new Validator();
+
 
 	private Project project;
 	private List<Issue> issues = new ArrayList<Issue>();

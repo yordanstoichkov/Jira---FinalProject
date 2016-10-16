@@ -89,7 +89,7 @@
 											title="${employee.firstName}" height="20" width="20"
 											src="${employee.avatarPath}"></a>
 									</c:forEach></td>
-								<td><form action="./issue" method="put"
+								<td><form action="./issue"
 										style="display: inline">
 										<input type="image" src="info.png" width=20px height=20px
 											name="issueId" value="${issue.issueId}"

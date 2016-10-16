@@ -7,12 +7,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.jira.model.employee.Employee;
 import com.jira.model.employee.IValidator;
+import com.jira.model.employee.Validator;
 import com.jira.model.exceptions.IssueException;
 import com.jira.model.exceptions.ProjectException;
 
 public class Issue {
-	@Autowired
-	private IValidator validator;
+	private IValidator validator = new Validator();
+
 
 	private Sprint sprint;
 	private IssueType type;

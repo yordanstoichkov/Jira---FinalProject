@@ -17,14 +17,15 @@ import com.jira.model.connections.DBConnection;
 import com.jira.model.employee.Employee;
 import com.jira.model.employee.IEmployeeDAO;
 import com.jira.model.employee.IValidator;
+import com.jira.model.employee.Validator;
 import com.jira.model.exceptions.EmployeeException;
 import com.jira.model.exceptions.IssueException;
 import com.jira.model.exceptions.ProjectException;
 
 @Component
 public class IssueDAO implements IIssueDAO {
-	@Autowired
-	private IValidator validator;
+	private IValidator validator = new Validator();
+
 	@Autowired
 	private IPartOfProjectDAO partDAO;
 	@Autowired
@@ -290,7 +291,7 @@ public class IssueDAO implements IIssueDAO {
 	// Changing issue status by issue id
 	@Override
 	public int updateIssueStatus(int issueId) throws IssueException {
-		if (validator.positiveNumberValidator(issueId)) {
+		if (!validator.positiveNumberValidator(issueId)) {
 			throw new IssueException("Invalid issue id");
 		}
 		int newStatusId = 1;

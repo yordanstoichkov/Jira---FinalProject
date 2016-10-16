@@ -45,7 +45,6 @@ public class ProjectController {
 		List<Project> projects = new ArrayList<Project>();
 		try {
 			projects.addAll(empDAO.giveMyProjects(emp));
-
 			for (Project project : projects) {
 				for (Sprint sprint : project.getSprints()) {
 					for (Issue issue : sprint.getIssues()) {
@@ -59,9 +58,9 @@ public class ProjectController {
 			session.setAttribute("projects", projects);
 			model.addAttribute("projects", projects);
 			model.addAttribute("user", emp);
-			// sending to projects.jsp
 			return "projects";
 		} catch (EmployeeException e) {
+			e.printStackTrace();
 			return "redirect:index";
 		}catch (Exception e) {
 			return "error";

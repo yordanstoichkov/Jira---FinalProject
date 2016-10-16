@@ -27,8 +27,8 @@ public class EmployeeDAO implements IEmployeeDAO {
 	private IProjectDAO projectDAO;
 	@Autowired
 	private IIssueDAO issueDAO;
-	@Autowired
-	private IValidator validator;
+	private IValidator validator = new Validator();
+
 	
 	private static final String DELETE_USER_SQL = "DELETE from employees where employee_id = ?;";
 	private static final String REGISTER_USER_TO_DB_SQL = "INSERT into employees VALUES(NULL,?,?,?,?,md5(?),?);";
