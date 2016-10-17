@@ -17,7 +17,7 @@ public class S3Connection {
 		String s3bucketName = "avatars-jira";
 
 		AmazonS3 s3client = new AmazonS3Client(
-				new BasicAWSCredentials("AKIAIGWUWTQCDQBO6YPA", "m7ki8hDzeVbUYLe5CBtsZ5HZYOj6wArcsS4ViujV"));
+				new BasicAWSCredentials("", ""));
 		try {
 			System.out.println("Uploading a new object to S3 from a file\n");
 			File file = new File(uploadPath);
